@@ -1,0 +1,231 @@
+/* ============================================== */
+/* global */
+/* ============================================== */
+
+* {
+    color: gray;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*:focus { 
+    border: none;
+    outline: none;
+}
+
+* {
+    scrollbar-color: #aaaaff #111111;
+    scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+}
+
+::-webkit-scrollbar-track {
+      background: transparent; 
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    background: #aaaaff; 
+    border-left: 2px solid #111111;
+    border-right: 2px solid #111111;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  	background: #aaaaff; 
+    border-top: 2px solid #111111;
+    border-bottom: 2px solid #111111;
+}
+
+::-webkit-scrollbar-thumb:hover {
+      background: #aaaaff; 
+}
+
+::-webkit-scrollbar-button:horizontal {
+    background: #aaaaff;
+    width: 5px;
+}
+
+::-webkit-scrollbar-button:vertical {
+    background: #aaaaff;
+    height: 5px;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    overflow: auto;
+    scrollbar-color: #5f6681 #051039;
+    scrollbar-width: auto;
+}
+
+body {
+    font-family: arial;
+    font-size: 16px;
+}
+
+button {
+    background-color: black;
+    border: none;
+    padding: 5px 10px 5px 5px;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+}
+
+button:disabled,
+button:disabled:hover {
+      border: 1px solid #aaaaaa;
+      background-color: black;
+      cursor: not-allowed;
+}
+
+button:hover {
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+button:active {
+    background-color: black;
+}
+
+input {
+    background-color: white;
+    border: none;
+    border-radius: 0;
+    padding: 5px 10px 5px 10px;
+    font-size: 16px;
+    color: black;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: black;
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+input[readonly] {
+    cursor: pointer;
+}
+
+select {
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+}
+
+textarea {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 5px 10px 5px 10px;
+    font-family: arial;
+    font-size: 16px;
+    color: white;
+    width: 100%;
+    resize: none;
+    cursor: auto;
+}
+
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ============================================== */
+/* hello */
+/* ============================================== */
+
+.hello {
+    background-color: lightgray;
+    display: inline-block;
+    border: 1px solid black;
+    padding: 10px;
+}
+
+/* ============================================== */
+/* user */
+/* ============================================== */
+
+.user1 {
+    border: 2px solid black;
+    max-width: 450px;
+    margin: auto;
+    margin-top: 50px;
+}
+
+.user2 {
+    background-color: black;
+    height: 50px;
+    position: relative;
+    color: white;
+}
+
+.user3 {
+	position: absolute;
+    top: 50%;
+    left: 0px;
+    transform: translate(0px, -50%);
+    color: white;
+    width: 100%;
+    text-align: center;
+}
+
+.user4 {
+    padding: 5px;
+}
+
+.user5 {
+    background-color: black;
+    margin: 5px;
+    position: relative;
+    height: 30px;
+}
+
+.user6 {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translate(0px, -50%);
+    color: white;
+}
+
+.user7 {
+    border: none;
+    position: absolute;
+    top: 50%;
+    left: 150px;
+    right: 3px;
+    height: 25px;
+    transform: translate(0px, -50%);
+    padding: 0px 5px;
+}
+
+.user8 {
+    height: 50px;
+    position: relative;
+    margin: 5px;
+}
+
+.user9 {
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    transform: translate(0px, -50%);
+    width: 100%;
+    text-align: center;
+}
+
+.user10 {
+    margin: 0px 1px;
+}
+
+/* ============================================== */

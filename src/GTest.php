@@ -10,10 +10,18 @@ class GTest {
         if($_method == "string") {
             $this->runString($_module, $_method);
         }
+        else if($_method == "user") {
+            $this->runUser($_module, $_method);
+        }
     }
     //===============================================
     public function runString($_module, $_method) {
-        echo "Bonjour tout le monde.";
+        echo sprintf("<p>Bonjour tout le monde.</p>\n");
+    }
+    //===============================================
+    public function runUser($_module, $_method) {
+        $lUserUi = new GUserUi();
+        $lUserUi->run();
     }
     //===============================================
 }
