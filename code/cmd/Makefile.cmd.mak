@@ -7,13 +7,10 @@ GBUILD = build
 GBUILD_G = build_g
 GTARGET = $(GBIN)/rdv_cpp.exe
 #================================================
-GINCS =\
-    -I$(GSRC)/manager \
-    -I$(GSRC)/libs/include \
-	-I/usr/include/libxml2 \
-	-I/usr/local/include \
-
 GDEVS =
+
+GINCS =\
+	-I/usr/local/include \
 
 GLIBS =\
     -L/usr/local/lib \
