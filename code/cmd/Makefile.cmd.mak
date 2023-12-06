@@ -22,10 +22,11 @@ GOBJS_G =\
     $(patsubst $(GSRC)/%.cpp, $(GBUILD_G)/%.o, $(wildcard $(GSRC)/*.cpp)) \
 
 GCFLAGS =\
+    -O0 -g \
     -std=gnu++11 \
     
 GCFLAGS_G =\
-    -g \
+    -O0 -g \
     -std=gnu++11 \
 #================================================
 # cpp
@@ -42,13 +43,7 @@ compile_g: $(GOBJS_G)
 $(GBUILD)/%.o: $(GSRC)/%.cpp
 	@if ! [ -d $(GBUILD) ] ; then mkdir -p $(GBUILD) ; fi
 	g++ $(GCFLAGS) -c $< -o $@ $(GINCS)
-$(GBUILD)/%.o: $(GSRC)/manager/%.cpp
-	@if ! [ -d $(GBUILD) ] ; then mkdir -p $(GBUILD) ; fi
-	g++ $(GCFLAGS) -c $< -o $@ $(GINCS)
 $(GBUILD_G)/%.o: $(GSRC)/%.cpp
-	@if ! [ -d $(GBUILD_G) ] ; then mkdir -p $(GBUILD_G) ; fi
-	g++ $(GCFLAGS_G) -c $< -o $@ $(GINCS)
-$(GBUILD_G)/%.o: $(GSRC)/manager/%.cpp
 	@if ! [ -d $(GBUILD_G) ] ; then mkdir -p $(GBUILD_G) ; fi
 	g++ $(GCFLAGS_G) -c $< -o $@ $(GINCS)
 run:
