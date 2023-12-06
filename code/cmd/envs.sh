@@ -1,9 +1,6 @@
 #================================================
-# gitignore
+export "LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH"
 #================================================
-
-/**/.cproject
-/**/.project
-/**/.settings/
-
+export "GPROJECT_ENV=TEST"
+export "GPROJECT_DATA=/var/lib/readydev"
 #================================================
