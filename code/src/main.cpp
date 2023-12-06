@@ -20,7 +20,8 @@ void tata() {
 }
 //===============================================
 void titi() {
-    posix_print_stack_trace();
+    //posix_print_stack_trace();
+    GBackTrace::log_stack();
 }
 //===============================================
 int main(int _argc, char** _argv) {

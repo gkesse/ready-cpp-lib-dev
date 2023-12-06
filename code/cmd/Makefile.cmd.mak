@@ -22,11 +22,11 @@ GOBJS_G =\
     $(patsubst $(GSRC)/%.cpp, $(GBUILD_G)/%.o, $(wildcard $(GSRC)/*.cpp)) \
 
 GCFLAGS =\
-    -O0 -g \
+    -g -rdynamic -fsanitize=address \
     -std=gnu++11 \
     
 GCFLAGS_G =\
-    -O0 -g \
+    -g -rdynamic -fsanitize=address \
     -std=gnu++11 \
 #================================================
 # cpp
