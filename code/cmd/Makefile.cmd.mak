@@ -1,31 +1,28 @@
 #================================================
 SHELL := /bin/bash
 #================================================
-GSRC = ../code/src
+GSRC = ../src
 GBIN = bin
 GBUILD = build
 GBUILD_G = build_g
-GTARGET = $(GBIN)/rdv_cpp_server.exe
+GTARGET = $(GBIN)/rdv_cpp.exe
 #================================================
 GINCS =\
     -I$(GSRC)/manager \
     -I$(GSRC)/libs/include \
 	-I/usr/include/libxml2 \
 	-I/usr/local/include \
-	
+
+GDEVS =
+
 GLIBS =\
-    -L$(GSRC)/libs/lib \
     -L/usr/local/lib \
-    -lb64c -lbase64 -ltinyexpr -lmd5 -ldatetime \
-    -lxml2 -lmysqlcppconn -lcurl -lssl -lcrypto -ljson-c \
 	
 GOBJS =\
     $(patsubst $(GSRC)/%.cpp, $(GBUILD)/%.o, $(wildcard $(GSRC)/*.cpp)) \
-    $(patsubst $(GSRC)/manager/%.cpp, $(GBUILD)/%.o, $(wildcard $(GSRC)/manager/*.cpp)) \
 
 GOBJS_G =\
     $(patsubst $(GSRC)/%.cpp, $(GBUILD_G)/%.o, $(wildcard $(GSRC)/*.cpp)) \
-    $(patsubst $(GSRC)/manager/%.cpp, $(GBUILD_G)/%.o, $(wildcard $(GSRC)/manager/*.cpp)) \
 
 GCFLAGS =\
     -std=gnu++11 \
