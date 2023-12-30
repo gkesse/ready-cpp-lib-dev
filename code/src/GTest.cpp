@@ -1,5 +1,6 @@
 //===============================================
 #include "GTest.h"
+#include "GString.h"
 //===============================================
 GTest::GTest()
 : GObject() {
@@ -27,5 +28,17 @@ void GTest::run(int _argc, char** _argv) {
 //===============================================
 void GTest::runString(int _argc, char** _argv) {
     printf("%s...\n", __PRETTY_FUNCTION__);
+
+    GString lData;
+    lData.print();
+
+    GString lData2("Bonjour tout le monde.");
+    lData2.print();
+
+    GString lData3 = "Bonjour tout le monde (2).";
+    lData3.print();
+
+    GString lData4 = GString("Bonjour tout le monde (3).");
+    lData3.print();
 }
 //===============================================

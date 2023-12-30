@@ -22,11 +22,11 @@ GOBJS_G =\
     $(patsubst $(GSRC)/%.cpp, $(GBUILD_G)/%.o, $(wildcard $(GSRC)/*.cpp)) \
 
 GCFLAGS =\
-	-g -rdynamic \
     -std=gnu++11 \
     
 GCFLAGS_G =\
-	-g -rdynamic \
+	-g \
+	-rdynamic \
     -std=gnu++11 \
 #================================================
 # cpp
