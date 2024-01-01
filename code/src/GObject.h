@@ -3,6 +3,7 @@
 #define _GObject_
 //===============================================
 #include "GInclude.h"
+#include "GString.h"
 //===============================================
 class GObject {
 public:

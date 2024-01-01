@@ -12,7 +12,7 @@ GProcess::~GProcess() {
 }
 //===============================================
 void GProcess::run(int _argc, char** _argv) {
-    std::string lModule = "";
+    GString lModule = "";
     if(_argc > 1) lModule = _argv[1];
 
     if(lModule == "") {
