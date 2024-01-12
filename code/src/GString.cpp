@@ -1,6 +1,8 @@
 //===============================================
 #include "GString.h"
 //===============================================
+GString* GString::m_instance = 0;
+//===============================================
 GString::GString() {
     m_data = 0;
     create(0, 0);
@@ -53,6 +55,13 @@ GString::~GString() {
     clear();
 }
 //===============================================
+GString* GString::Instance() {
+    if(m_instance == 0) {
+        m_instance = new GString;
+    }
+    return m_instance;
+}
+//===============================================
 void GString::clear() {
     if(m_data) delete[] m_data;
     m_data = 0;
@@ -82,6 +91,31 @@ int GString::size() const {
 //===============================================
 bool GString::isEmpty() const {
     return (m_size == 0 || m_data == 0);
+}
+//===============================================
+GString GString::getFormat(const char* _format, ...) const {
+    va_list lArgs;
+    va_start(lArgs, _format);
+    int lSize = vsnprintf(0, 0, _format, lArgs);
+    char* lData = new char[lSize + 1];
+    vsnprintf(lData, lSize + 1, _format, lArgs);
+    va_end(lArgs);
+    GString lString(lData, lSize);
+    delete[] lData;
+    return lString;
+}
+//===============================================
+std::vector<GString> GString::split(const GString& _sep) const {
+    std::vector<GString> lMap;
+    char* lToken = strtok(m_data, _sep.c_str());
+
+    while(lToken) {
+        GString lValue = lToken;
+        lMap.push_back(lToken);
+        lToken = strtok(0, _sep.c_str());
+    }
+
+    return lMap;
 }
 //===============================================
 void GString::print() const {

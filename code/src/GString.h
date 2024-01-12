@@ -4,6 +4,9 @@
 //===============================================
 #include "GInclude.h"
 //===============================================
+#define GSTRING     GString::Instance()
+#define sformat     GSTRING->getFormat
+//===============================================
 class GString {
 public:
     GString();
@@ -17,12 +20,17 @@ public:
     GString(const GString& _data);
     ~GString();
 
+    static GString* Instance();
     void clear();
     void create(const char* _data, int _size);
     const char* c_str() const;
     char*& data();
     int size() const;
     bool isEmpty() const;
+
+    GString getFormat(const char* _format, ...) const;
+    std::vector<GString> split(const GString& _sep) const;
+
     void print() const;
 
     GString& operator=(bool _data);
@@ -103,6 +111,7 @@ public:
     friend std::ostream& operator<<(std::ostream& _os, const GString& _data);
 
 private:
+    static GString* m_instance;
     int m_size;
     char* m_data;
 };

@@ -11,9 +11,11 @@ GDEVS =
 
 GINCS =\
 	-I/usr/local/include \
+	-I/usr/include/libxml2 \
 
 GLIBS =\
     -L/usr/local/lib \
+    -lxml2 \
 	
 GOBJS =\
     $(patsubst $(GSRC)/%.cpp, $(GBUILD)/%.o, $(wildcard $(GSRC)/*.cpp)) \

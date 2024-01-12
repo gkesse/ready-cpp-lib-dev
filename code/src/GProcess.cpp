@@ -11,6 +11,18 @@ GProcess::~GProcess() {
 
 }
 //===============================================
+void GProcess::init() {
+    // libxml2
+    xmlInitParser();
+    xmlKeepBlanksDefault(0);
+}
+//===============================================
+void GProcess::clean() {
+    // libxml2
+    xmlCleanupParser();
+    xmlMemoryDump();
+}
+//===============================================
 void GProcess::run(int _argc, char** _argv) {
     GString lModule = "";
     if(_argc > 1) lModule = _argv[1];

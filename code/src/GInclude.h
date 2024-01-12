@@ -9,6 +9,11 @@
 // c++ system
 #include <iostream>
 #include <cstring>
+#include <vector>
+// libxml2
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+#include <libxml/xpath.h>
 //===============================================
 #endif
 //===============================================

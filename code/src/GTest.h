@@ -10,6 +10,9 @@ public:
     ~GTest();
     void run(int _argc, char** _argv);
     void runString(int _argc, char** _argv);
+    void runXml(int _argc, char** _argv);
+    void runCode(int _argc, char** _argv);
+    void runLogs(int _argc, char** _argv);
 };
 //===============================================
 #endif

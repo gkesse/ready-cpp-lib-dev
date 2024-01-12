@@ -1,5 +1,7 @@
 //===============================================
 #include "GTest.h"
+#include "GXml.h"
+#include "GLog.h"
 //===============================================
 GTest::GTest()
 : GObject() {
@@ -19,6 +21,15 @@ void GTest::run(int _argc, char** _argv) {
     }
     else if(lMethod == "string") {
         runString(_argc, _argv);
+    }
+    else if(lMethod == "xml") {
+        runXml(_argc, _argv);
+    }
+    else if(lMethod == "code") {
+        runCode(_argc, _argv);
+    }
+    else if(lMethod == "logs") {
+        runLogs(_argc, _argv);
     }
     else {
         printf("La méthode est inconnue.\n");
@@ -83,5 +94,79 @@ void GTest::runString(int _argc, char** _argv) {
     lData = "Bonjour tout le monde : ";
     lData += GString() + 2024 + " - " + 'P' + 3.14;
     lData.print();
+
+    GString lData8 = "Un_SEP_Deux_SEP_Trois";
+    std::vector<GString> lSplit = lData8.split("_SEP_");
+    for(std::vector<GString>::iterator it = lSplit.begin(); it != lSplit.end(); it++) {
+        it->print();
+    }
+
+    sformat("Liste: %s = %f", "Pi", 3.14).print();
+}
+//===============================================
+void GTest::runXml(int _argc, char** _argv) {
+    printf("%s...\n", __PRETTY_FUNCTION__);
+
+    GXml lXml;
+    lXml.toString().print();
+
+    lXml.createDoc();
+    lXml.toString().print();
+
+    GXml lObj = lXml.addObj("datas").addObj("data");
+    lXml.toString().print();
+
+    lObj.addData("code", "logs");
+    lObj.addData("type", "error");
+    lObj.addData("side", "server");
+    lObj.addData("msg", "Le module est inconnu.");
+    lXml.toString().print();
+    lObj.toNode().print();
+
+    lObj = lObj.addNode("map/data");
+    lObj.addData("code", "logs");
+    lObj.addData("type", "error");
+    lObj.addData("side", "server");
+    lObj.addData("msg", "Le module est inconnu.");
+
+    lObj = lXml.addNode("/rdv/datas");
+    lObj = lObj.addObj("data");
+    lObj.addData("code", "page");
+    lObj.addData("title", "admin");
+    lObj.addData("path", "/home/admin");
+
+    lXml.toNode().print();
+}
+//===============================================
+void GTest::runCode(int _argc, char** _argv) {
+    printf("%s...\n", __PRETTY_FUNCTION__);
+
+    GCode lDom;
+
+    lDom.createDoc();
+    lDom.createDatas();
+    lDom.createDatas();
+
+    lDom.createCode("logs");
+    lDom.createCode("logs");
+
+    lDom.addData("logs", "type", "log");
+    lDom.addData("logs", "type", "error");
+    lDom.addData("logs", "side", "server");
+    lDom.addData("logs", "msg", "Le module est obligatoire.");
+
+    lDom.toString().print();
+}
+//===============================================
+void GTest::runLogs(int _argc, char** _argv) {
+    printf("%s...\n", __PRETTY_FUNCTION__);
+
+    GLog lLog;
+    lLog.serialize().print();
+
+    lLog.addError("voici mon erreur.");
+    lLog.addLog("voici mon log.");
+    lLog.addData("voici ma donnée.");
+    lLog.serialize().print();
 }
 //===============================================
