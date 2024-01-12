@@ -17,6 +17,8 @@ public:
     GString(char* _data, int _size);
     GString(const char* _data);
     GString(const std::string& _data);
+    GString(const std::vector<char>& _data);
+    GString(const std::vector<uchar>& _data);
     GString(const GString& _data);
     ~GString();
 
@@ -27,6 +29,8 @@ public:
     char*& data();
     int size() const;
     bool isEmpty() const;
+    GString toBase64() const;
+    GString fromBase64() const;
 
     GString getFormat(const char* _format, ...) const;
     std::vector<GString> split(const GString& _sep) const;
@@ -39,6 +43,8 @@ public:
     GString& operator=(double _data);
     GString& operator=(const char* _data);
     GString& operator=(const std::string& _data);
+    GString& operator=(const std::vector<char>& _data);
+    GString& operator=(const std::vector<uchar>& _data);
     GString& operator=(const GString& _data);
 
     GString& operator+=(bool _data);
@@ -47,6 +53,8 @@ public:
     GString& operator+=(double _data);
     GString& operator+=(const char* _data);
     GString& operator+=(const std::string& _data);
+    GString& operator+=(const std::vector<char>& _data);
+    GString& operator+=(const std::vector<uchar>& _data);
     GString& operator+=(const GString& _data);
 
     bool operator==(bool _data) const;
@@ -55,6 +63,8 @@ public:
     bool operator==(double _data) const;
     bool operator==(const char* _data) const;
     bool operator==(const std::string& _data) const;
+    bool operator==(const std::vector<char>& _data) const;
+    bool operator==(const std::vector<uchar>& _data) const;
     bool operator==(const GString& _data) const;
 
     bool operator!=(bool _data) const;
@@ -63,6 +73,8 @@ public:
     bool operator!=(double _data) const;
     bool operator!=(const char* _data) const;
     bool operator!=(const std::string& _data) const;
+    bool operator!=(const std::vector<char>& _data) const;
+    bool operator!=(const std::vector<uchar>& _data) const;
     bool operator!=(const GString& _data) const;
 
     bool operator<(bool _data) const;
@@ -71,6 +83,8 @@ public:
     bool operator<(double _data) const;
     bool operator<(const char* _data) const;
     bool operator<(const std::string& _data) const;
+    bool operator<(const std::vector<char>& _data) const;
+    bool operator<(const std::vector<uchar>& _data) const;
     bool operator<(const GString& _data) const;
 
     bool operator<=(bool _data) const;
@@ -79,6 +93,8 @@ public:
     bool operator<=(double _data) const;
     bool operator<=(const char* _data) const;
     bool operator<=(const std::string& _data) const;
+    bool operator<=(const std::vector<char>& _data) const;
+    bool operator<=(const std::vector<uchar>& _data) const;
     bool operator<=(const GString& _data) const;
 
     bool operator>(bool _data) const;
@@ -87,6 +103,8 @@ public:
     bool operator>(double _data) const;
     bool operator>(const char* _data) const;
     bool operator>(const std::string& _data) const;
+    bool operator>(const std::vector<char>& _data) const;
+    bool operator>(const std::vector<uchar>& _data) const;
     bool operator>(const GString& _data) const;
 
     bool operator>=(bool _data) const;
@@ -95,6 +113,8 @@ public:
     bool operator>=(double _data) const;
     bool operator>=(const char* _data) const;
     bool operator>=(const std::string& _data) const;
+    bool operator>=(const std::vector<char>& _data) const;
+    bool operator>=(const std::vector<uchar>& _data) const;
     bool operator>=(const GString& _data) const;
 
     char& operator[](int _index);
@@ -106,6 +126,8 @@ public:
     friend GString operator+(const GString& _data1, double _data2);
     friend GString operator+(const GString& _data1, const char* _data2);
     friend GString operator+(const GString& _data1, const std::string& _data2);
+    friend GString operator+(const GString& _data1, const std::vector<char>& _data2);
+    friend GString operator+(const GString& _data1, const std::vector<uchar>& _data2);
     friend GString operator+(const GString& _data1, const GString& _data2);
 
     friend std::ostream& operator<<(std::ostream& _os, const GString& _data);

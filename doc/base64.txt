@@ -1,0 +1,52 @@
+#================================================
+### Base64
+#================================================
+
+Le format Base64, utilisé massivement dans les échanges de courrier électronique, permet ainsi de transmettre n'importe quel document binaire (application, vidéo, fichier audio, etc.) en pièce jointe d'un courrier électronique en les codant à l'aide de caractères classiques.
+
+#================================================
+### Installion sous Ubuntu
+#================================================
+
+> Objectif
+
+Cela suppose que vous êtes en cours de développement d'un projet C++, et vous avez besoin d'une bibliothèque C++ pour réaliser des encodages en base64.
+
+> Accéder au lien d'installation
+
+https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c/31322410#31322410
+
+> Aller dans un répertoire temporaire
+
+cd
+mkdir -p opts/tmp
+cd opts/tmp
+
+> Copier les sources dans des fichiers
+
+vim base64.h
+vim base64.cpp
+
+> Compiler les sources
+
+g++ -c base64.cpp -o base64.o
+ar rcs libbase64.a base64.o
+
+> Afficher l'arborescence des fichiers
+
+tree
+
+.
+├── base64.cpp
+├── base64.h
+├── base64.o
+└── libbase64.a
+
+> Copier les fichiers (*.h, *.a) dans le repertoire des librairies
+
+cp -p base64.h libs/include/base64
+cp -p libbase64.a libs/lib
+
+#================================================
+# Fin
+#================================================

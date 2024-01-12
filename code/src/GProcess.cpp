@@ -41,5 +41,6 @@ void GProcess::run(int _argc, char** _argv) {
 void GProcess::runTest(int _argc, char** _argv) {
     GTest lObj;
     lObj.run(_argc, _argv);
+    m_logs.addLogs(lObj.getLogs());
 }
 //===============================================

@@ -19,7 +19,7 @@ public:
     void addLog(const GString& _msg);
     void addData(const GString& _msg);
     void addLogs(const GLog& _obj);
-    void showErrors();
+    void showErrors() const;
     bool hasErrors() const;
     bool hasTechErrors() const;
     int size() const;

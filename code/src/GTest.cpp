@@ -168,5 +168,7 @@ void GTest::runLogs(int _argc, char** _argv) {
     lLog.addLog("voici mon log.");
     lLog.addData("voici ma donnée.");
     lLog.serialize().print();
+
+    m_logs.addLogs(lLog);
 }
 //===============================================

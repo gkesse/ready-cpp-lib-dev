@@ -25,6 +25,7 @@ int main(int _argc, char** _argv) {
     GProcess lProcess;
     lProcess.init();
     lProcess.run(_argc, _argv);
+    lProcess.getLogs().showErrors();
     lProcess.clean();
     return 0;
 }

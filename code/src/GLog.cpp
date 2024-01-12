@@ -77,7 +77,7 @@ void GLog::addData(const GString& _msg) {
     GLog* lObj = new GLog;
     lObj->m_type = "data";
     lObj->m_side = "server";
-    lObj->m_msg = _msg;
+    lObj->m_msg = _msg.toBase64();
     m_map.push_back(lObj);
 }
 //===============================================
@@ -88,7 +88,7 @@ void GLog::addLogs(const GLog& _obj) {
     }
 }
 //===============================================
-void GLog::showErrors() {
+void GLog::showErrors() const {
     if(!m_map.size()) return;
     printf("\n");
     for(int i = 0; i < (int)m_map.size(); i++) {
@@ -103,7 +103,7 @@ void GLog::showErrors() {
             printf("[INFOS] : %s\n", lObj->m_msg.c_str());
         }
         else if(lObj->m_type == "data") {
-            //printf("[DATAS] :\n%s\n", GBase64(lObj->m_msg).decodeData().c_str());
+            printf("[DATAS] : %s\n", lObj->m_msg.fromBase64().c_str());
         }
     }
     printf("\n");

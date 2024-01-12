@@ -7,15 +7,18 @@ GBUILD = build
 GBUILD_G = build_g
 GTARGET = $(GBIN)/rdv_cpp.exe
 #================================================
-GDEVS =
+GDEVS = ../libs
 
 GINCS =\
+	-I$(GDEVS)/include \
+	-I$(GDEVS)/include/base64 \
 	-I/usr/local/include \
 	-I/usr/include/libxml2 \
 
 GLIBS =\
+	-L$(GDEVS)/lib \
     -L/usr/local/lib \
-    -lxml2 \
+    -lxml2 -lbase64 \
 	
 GOBJS =\
     $(patsubst $(GSRC)/%.cpp, $(GBUILD)/%.o, $(wildcard $(GSRC)/*.cpp)) \
