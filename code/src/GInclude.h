@@ -17,7 +17,7 @@
 // base64
 #include <base64/base64.h>
 // json-c
-#include <json-c/json.h>
+#include <json.h>
 // typedef
 typedef unsigned char uchar;
 typedef unsigned int uint;

@@ -28,13 +28,13 @@ void GProcess::run(int _argc, char** _argv) {
     if(_argc > 1) lModule = _argv[1];
 
     if(lModule == "") {
-        printf("Le module est obligatoire.\n");
+        m_logs.addError("Le module est obligatoire.");
     }
     else if(lModule == "test") {
         runTest(_argc, _argv);
     }
     else {
-        printf("Le module est inconnu.\n");
+        m_logs.addError("Le module est inconnu.");
     }
 }
 //===============================================

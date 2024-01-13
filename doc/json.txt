@@ -1,0 +1,17 @@
+#================================================
+### Json
+#================================================
+
+JSON (JavaScript Object Notation) est un format de fichier textuel conçu pour l’échange de données. Il représente des données structurées basées sur un sous-ensemble du langage de programmation JavaScript. De ce fait, un programme JavaScript peut convertir des données JSON en objets JavaScript natifs sans analyser ou sérialiser les données. JSON est populaire en raison de son style autodescriptif, facile à comprendre, léger et compact. Il est compatible avec de nombreux langages de programmation, environnements et bibliothèques.
+
+#================================================
+### Installion sous Ubuntu
+#================================================
+
+> Installer Json
+
+sudo apt install libjson-c-dev -y
+
+#================================================
+# Fin
+#================================================

@@ -11,14 +11,15 @@ GDEVS = ../libs
 
 GINCS =\
 	-I$(GDEVS)/include \
-	-I$(GDEVS)/include/base64 \
+	-I/usr/include \
 	-I/usr/local/include \
 	-I/usr/include/libxml2 \
+	-I/usr/include/json-c \
 
 GLIBS =\
 	-L$(GDEVS)/lib \
     -L/usr/local/lib \
-    -lxml2 -lbase64 \
+    -lxml2 -ljson-c -lbase64 \
 	
 GOBJS =\
     $(patsubst $(GSRC)/%.cpp, $(GBUILD)/%.o, $(wildcard $(GSRC)/*.cpp)) \

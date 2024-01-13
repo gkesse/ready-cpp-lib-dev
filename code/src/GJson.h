@@ -8,17 +8,26 @@
 class GJson {
 public:
     GJson();
-    GJson(const GJson& _xml);
+    GJson(struct json_object* _node);
+    GJson(const GJson& _json);
     virtual ~GJson();
     void clear();
-    bool create();
+    bool createObj();
+    bool createArr();
+    bool loadXml(const GString& _data);
+    GJson addObj();
+    GJson addObj(const GString& _key);
+    GJson addArr(const GString& _key);
+    void addData(const GString& _value);
+    void addData(const GString& _key, const GString& _value);
+    GString toString() const;
+    GString toNode() const;
+
+    GJson& operator=(const GJson& _json);
 
 private:
-    json_object* m_current;
-    std::stack<json_object*> m_map;
-    json_object* m_parent;
-    json_object* m_child;
-    bool m_isFormat;
+    struct json_object* m_dom;
+    struct json_object* m_node;
 };
 //===============================================
 #endif

@@ -1,0 +1,78 @@
+#================================================
+### Base64
+#================================================
+
+Base64 est un système d'encodage utilisé
+pour transmettre n'importe quel document binaire:
+application, image, vidéo, audio, etc. 
+sur le réseau internet.
+
+#------------------------------------------------
+### Installion sous Ubuntu
+#------------------------------------------------
+
+> Accéder au lien d'installation
+
+https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c/31322410#31322410
+
+> Aller dans un répertoire temporaire
+
+cd
+mkdir -p opts/tmp
+cd opts/tmp
+
+> Copier les sources dans des fichiers
+
+vim base64.h
+vim base64.cpp
+
+> Compiler les sources
+
+g++ -c base64.cpp -o base64.o
+ar rcs libbase64.a base64.o
+
+> Afficher l'arborescence des fichiers
+
+tree
+
+.
+├── base64.cpp
+├── base64.h
+├── base64.o
+└── libbase64.a
+
+> Copier les fichiers (*.h, *.a) dans le repertoire des librairies
+
+cp -p base64.h libs/include/base64
+cp -p libbase64.a libs/lib
+
+#================================================
+### Json
+#================================================
+
+Json est un format de données utilisé pour sérialiser
+les objets avant de les transmettre sur le réseau internet.
+
+#------------------------------------------------
+### Installion sous Ubuntu
+#------------------------------------------------
+
+> Installer Json
+
+sudo apt install libjson-c-dev -y
+
+> Inclure Json dans un projet C/C++
+
+#include <json.h>
+
+> Définir Json dans un fichier Makefile
+
+CFLAGS += -I/usr/include/json-c
+
+> Linker Json dans un fichier Makefile
+
+LIBS += -L/usr/lib -ljson-c
+
+#================================================
+# Fin
+#================================================

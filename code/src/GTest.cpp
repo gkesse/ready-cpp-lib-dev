@@ -2,6 +2,7 @@
 #include "GTest.h"
 #include "GXml.h"
 #include "GLog.h"
+#include "GJson.h"
 //===============================================
 GTest::GTest()
 : GObject() {
@@ -17,7 +18,7 @@ void GTest::run(int _argc, char** _argv) {
     if(_argc > 2) lMethod = _argv[2];
 
     if(lMethod == "") {
-        printf("La méthode est obligatoire.\n");
+        m_logs.addError("La méthode est obligatoire.");
     }
     else if(lMethod == "string") {
         runString(_argc, _argv);
@@ -31,8 +32,11 @@ void GTest::run(int _argc, char** _argv) {
     else if(lMethod == "logs") {
         runLogs(_argc, _argv);
     }
+    else if(lMethod == "json") {
+        runJson(_argc, _argv);
+    }
     else {
-        printf("La méthode est inconnue.\n");
+        m_logs.addError("La méthode est inconnue.");
     }
 }
 //===============================================
@@ -170,5 +174,64 @@ void GTest::runLogs(int _argc, char** _argv) {
     lLog.serialize().print();
 
     m_logs.addLogs(lLog);
+}
+//===============================================
+void GTest::runJson(int _argc, char** _argv) {
+    printf("%s...\n", __PRETTY_FUNCTION__);
+
+    GJson lDom, lNode, lNode2, lDom2;
+    lDom.toString().print();
+
+    lDom.createObj();
+    lDom.toString().print();
+
+    lDom.createArr();
+    lDom.toString().print();
+
+    lDom.createObj();
+    lDom.addData("type", "error");
+    lDom.addData("side", "server");
+    lDom.addData("msg", "Le module est inconnu.");
+    lDom.toString().print();
+
+    lDom.createArr();
+    lDom.addData("type");
+    lDom.addData("side");
+    lDom.addData("msg");
+    lDom.toString().print();
+
+    lDom.createObj();
+    lNode = lDom.addObj("map");
+    lNode.addData("type", "error");
+    lNode.addData("side", "server");
+    lNode.addData("msg", "Le module est inconnu.");
+    lDom.toString().print();
+
+    lDom.createObj();
+    lNode = lDom.addArr("map");
+    lNode2 = lNode.addObj();
+    lNode2.addData("type", "error");
+    lNode2.addData("side", "server");
+    lNode2.addData("msg", "Le module est inconnu.");
+    lNode2 = lNode.addObj();
+    lNode2.addData("type", "error");
+    lNode2.addData("side", "server");
+    lNode2.addData("msg", "Le module est inconnu (2).");
+    lNode2.toNode().print();
+    lDom.toString().print();
+
+    lDom.createArr();
+    lNode = lDom.addObj();
+    lNode.addData("type", "error");
+    lNode.addData("side", "server");
+    lNode.addData("msg", "Le module est inconnu.");
+    lNode = lDom.addObj();
+    lNode.addData("type", "error");
+    lNode.addData("side", "server");
+    lNode.addData("msg", "Le module est inconnu.");
+    lDom.toString().print();
+
+    lDom2.loadXml(lDom.toString());
+    lDom.toString().print();
 }
 //===============================================
