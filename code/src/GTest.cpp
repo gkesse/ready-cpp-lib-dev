@@ -3,6 +3,7 @@
 #include "GXml.h"
 #include "GLog.h"
 #include "GJson.h"
+#include "GCsv.h"
 //===============================================
 GTest::GTest()
 : GObject() {
@@ -34,6 +35,9 @@ void GTest::run(int _argc, char** _argv) {
     }
     else if(lMethod == "json") {
         runJson(_argc, _argv);
+    }
+    else if(lMethod == "csv") {
+        runCsv(_argc, _argv);
     }
     else {
         m_logs.addError("La méthode est inconnue.");
@@ -247,5 +251,18 @@ void GTest::runJson(int _argc, char** _argv) {
     GJson lJson;
     lJson.loadJson(lCode.toJson());
     lJson.toCode().print();
+}
+//===============================================
+void GTest::runCsv(int _argc, char** _argv) {
+    printf("%s...\n", __PRETTY_FUNCTION__);
+
+    GCsv lCsv, lNode;
+    lCsv.create();
+    lNode = lCsv.addRow();
+    lNode.addCol("un").addCol("deux").addCol("trois");
+    lNode = lCsv.addRow();
+    lNode = lNode.addCol("un").addCol("deux").addCol("trois");
+    lNode.addRow();
+    lCsv.toString().print();
 }
 //===============================================

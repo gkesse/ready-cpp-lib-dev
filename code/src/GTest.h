@@ -14,6 +14,7 @@ public:
     void runCode(int _argc, char** _argv);
     void runLogs(int _argc, char** _argv);
     void runJson(int _argc, char** _argv);
+    void runCsv(int _argc, char** _argv);
 };
 //===============================================
 #endif
