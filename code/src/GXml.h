@@ -16,14 +16,13 @@ public:
     bool loadXml(const GString& _data);
     bool loadNode(const GString& _data);
     void setValue(const GString& _value);
-    bool isEmpty() const;
+    GXml addObj(const GString& _name);
+    GXml addNode(const GString& _path, const GString& _value = "");
+    void addData(const GString& _name, const GString& _value);
     bool existNode(const GString& _path) const;
     int countNode(const GString& _path) const;
     GXml getNode(const GString& _path) const;
     GString getValue() const;
-    GXml addObj(const GString& _name);
-    GXml addNode(const GString& _path, const GString& _value = "");
-    void addData(const GString& _name, const GString& _value);
     GString toString() const;
     GString toNode() const;
 

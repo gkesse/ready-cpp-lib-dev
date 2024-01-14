@@ -74,8 +74,43 @@ void GXml::setValue(const GString& _value) {
     xmlNodeSetContent(m_node, BAD_CAST(_value.c_str()));
 }
 //===============================================
-bool GXml::isEmpty() const {
-    return (m_node == 0);
+GXml GXml::addObj(const GString& _name) {
+    xmlNodePtr lNode = xmlNewNode(NULL, BAD_CAST(_name.c_str()));
+    xmlAddChild(m_node, lNode);
+    return GXml(m_doc2, m_node2, lNode);
+}
+//===============================================
+GXml GXml::addNode(const GString& _path, const GString& _value) {
+    if(_path.isEmpty()) return GXml(m_doc2, m_node2, 0);
+
+    GString lPath;
+    GXml lNode = *this;
+
+    if(_path[0] == '/') lPath += "/";
+    std::vector<GString> lMap = _path.split("/");
+
+    for(int i = 0; i < (int)lMap.size(); i++) {
+        GString lPathI = lMap[i];
+        if(i != 0) lPath += "/";
+        lPath += lPathI;
+        if(!existNode(lPath)) {
+            lNode = lNode.addObj(lPathI);
+        }
+        else {
+            lNode = getNode(lPath);
+        }
+    }
+
+    if(!_value.isEmpty()) {
+        xmlNodeSetContent(lNode.m_node, BAD_CAST(_value.c_str()));
+    }
+    return lNode ;
+}
+//===============================================
+void GXml::addData(const GString& _name, const GString& _value) {
+    xmlNodePtr lNode = xmlNewNode(NULL, BAD_CAST(_name.c_str()));
+    xmlNodeSetContent(lNode, BAD_CAST(_value.c_str()));
+    xmlAddChild(m_node, lNode);
 }
 //===============================================
 bool GXml::existNode(const GString& _path) const {
@@ -121,45 +156,6 @@ GXml GXml::getNode(const GString& _path) const {
 GString GXml::getValue() const {
     GString lValue = (char*)xmlNodeGetContent(m_node);
     return lValue;
-}
-//===============================================
-GXml GXml::addObj(const GString& _name) {
-    xmlNodePtr lNode = xmlNewNode(NULL, BAD_CAST(_name.c_str()));
-    xmlAddChild(m_node, lNode);
-    return GXml(m_doc2, m_node2, lNode);
-}
-//===============================================
-GXml GXml::addNode(const GString& _path, const GString& _value) {
-    if(_path.isEmpty()) return GXml(m_doc2, m_node2, 0);
-
-    GString lPath;
-    GXml lNode = *this;
-
-    if(_path[0] == '/') lPath += "/";
-    std::vector<GString> lMap = _path.split("/");
-
-    for(int i = 0; i < (int)lMap.size(); i++) {
-        GString lPathI = lMap[i];
-        if(i != 0) lPath += "/";
-        lPath += lPathI;
-        if(!existNode(lPath)) {
-            lNode = lNode.addObj(lPathI);
-        }
-        else {
-            lNode = getNode(lPath);
-        }
-    }
-
-    if(!_value.isEmpty()) {
-        xmlNodeSetContent(lNode.m_node, BAD_CAST(_value.c_str()));
-    }
-    return lNode ;
-}
-//===============================================
-void GXml::addData(const GString& _name, const GString& _value) {
-    xmlNodePtr lNode = xmlNewNode(NULL, BAD_CAST(_name.c_str()));
-    xmlNodeSetContent(lNode, BAD_CAST(_value.c_str()));
-    xmlAddChild(m_node, lNode);
 }
 //===============================================
 GString GXml::toString() const {

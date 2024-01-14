@@ -19,12 +19,12 @@ public:
     void addData(const GString& _code, const std::vector<GObject*>& _map);
     void addData(const GString& _code, const std::vector<GLog*>& _map);
     GString getData(const GString& _code, const GString& _name) const;
-    void getData(const GString& _code, std::vector<GObject*>& _map, GObject* _obj);
-    void getData(const GString& _code, std::vector<GLog*>& _map, GLog* _obj);
+    void getData(const GString& _code, std::vector<GObject*>& _map, GObject* _obj) const;
+    void getData(const GString& _code, std::vector<GLog*>& _map, GLog* _obj) const;
     void loadData(const GString& _data);
     GString toDatas(const GString& _data) const;
     GString toCode(const GString& _data) const;
-    bool hasDatas() const;
+    GString toJson() const;
 };
 //===============================================
 #endif

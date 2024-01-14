@@ -231,7 +231,21 @@ void GTest::runJson(int _argc, char** _argv) {
     lNode.addData("msg", "Le module est inconnu.");
     lDom.toString().print();
 
-    lDom2.loadXml(lDom.toString());
+    lDom2.loadJson(lDom.toString());
     lDom.toString().print();
+
+    GLog lLog;
+    lLog.addError("voici mon erreur.");
+    lLog.addLog("voici mon log.");
+    lLog.addData("voici ma donnée.");
+    lLog.serialize().print();
+
+    GCode lCode;
+    lCode.loadXml(lLog.serialize());
+    lCode.toJson().print();
+
+    GJson lJson;
+    lJson.loadJson(lCode.toJson());
+    lJson.toCode().print();
 }
 //===============================================
