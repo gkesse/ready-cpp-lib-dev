@@ -28,7 +28,6 @@ const char* GException::what() const throw() {
 }
 //===============================================
 void GException::throwError(const GString& _msg) {
-    stacktrace();
     throw GException(_msg);
 }
 //===============================================

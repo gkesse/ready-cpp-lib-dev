@@ -33,7 +33,7 @@ void GCsv::clear() {
     }
 }
 //===============================================
-void GCsv::create() {
+void GCsv::createCsv() {
     clear();
     m_root = new GCsv;
     m_root->m_type = Type::CSV_TYPE_ROOT;
@@ -42,46 +42,108 @@ void GCsv::create() {
 //===============================================
 GCsv GCsv::addRow() {
     if(!m_node) return GCsv();
-    if(m_node->m_type == Type::CSV_TYPE_COL) eThrow("Le type est invalide");
+    if(m_node->m_type == Type::CSV_TYPE_COL) eThrow("Impossible d'ajouter un élément ROW à partir d'un élément COL.");
     GCsv* lNode = new GCsv;
     lNode->m_type = Type::CSV_TYPE_ROW;
-    GCsv* lNext = m_node;
+    GCsv* lNode2 = m_node;
     bool isRow = false;
-    if(!lNext->m_next) {
-        lNext->m_next = lNode;
+    if(!lNode2->m_next) {
+        lNode2->m_next = lNode;
     }
     else {
-        if(lNext->m_type == Type::CSV_TYPE_ROOT) {
-            lNext = lNext->m_next;
+        if(lNode2->m_type == Type::CSV_TYPE_ROOT) {
+            lNode2 = lNode2->m_next;
         }
-        while(1) {
-            if(!lNext) break;
-            if(!lNext->m_next) break;
-            if(lNext->m_next->m_type == Type::CSV_TYPE_ROW) {
-                GCsv* lNext2 = lNext->m_next;
-                lNext->m_next = lNode;
+        while(lNode2) {
+            if(!lNode2->m_next) break;
+            if(lNode2->m_next->m_type == Type::CSV_TYPE_ROW) {
+                GCsv* lNext2 = lNode2->m_next;
+                lNode2->m_next = lNode;
                 lNode->m_next = lNext2;
                 isRow = true;
                 break;
             }
-            lNext = lNext->m_next;
+            lNode2 = lNode2->m_next;
         }
-        if(!isRow) lNext->m_next = lNode;
+        if(!isRow) lNode2->m_next = lNode;
     }
+    return GCsv(lNode);
+}
+//===============================================
+GCsv GCsv::appendRow() {
+    if(!m_node) return GCsv();
+    if(m_node->m_type != Type::CSV_TYPE_ROOT) eThrow("Impossible d'ajouter un élément ROW à partir d'un élément non ROOT.");
+    GCsv* lNode = new GCsv;
+    lNode->m_type = Type::CSV_TYPE_ROW;
+    GCsv* lNode2 = m_node;
+    while(lNode2->m_next) {
+        lNode2 = lNode2->m_next;
+    }
+    lNode2->m_next = lNode;
     return GCsv(lNode);
 }
 //===============================================
 GCsv GCsv::addCol(const GString& _value) {
     if(!m_node) return GCsv();
+    if(m_node->m_type == Type::CSV_TYPE_ROOT) eThrow("Impossible d'ajouter un élément COL à partir d'un élément ROOT.");
     GCsv* lNode = new GCsv;
     lNode->m_type = Type::CSV_TYPE_COL;
     lNode->m_value = _value;
-    m_node->m_next = lNode;
+    GCsv* lNode2 = m_node;
+    bool isCol = false;
+    if(!lNode2->m_next) {
+        lNode2->m_next = lNode;
+    }
+    else {
+        while(lNode2) {
+            if(!lNode2->m_next) break;
+            if(lNode2->m_next->m_type == Type::CSV_TYPE_ROW ||
+               lNode2->m_next->m_type == Type::CSV_TYPE_COL) {
+                GCsv* lNext2 = lNode2->m_next;
+                lNode2->m_next = lNode;
+                lNode->m_next = lNext2;
+                isCol = true;
+                break;
+            }
+            lNode2 = lNode2->m_next;
+        }
+        if(!isCol) lNode2->m_next = lNode;
+    }
     return GCsv(lNode);
 }
 //===============================================
-int GCsv::size() const {
-    return 0;
+GCsv GCsv::appendCol(const GString& _value) {
+    if(!m_node) return GCsv();
+    if(m_node->m_type != Type::CSV_TYPE_ROW) eThrow("Impossible d'ajouter un élément COL à partir d'un élément non ROW.");
+    GCsv* lNode = new GCsv;
+    lNode->m_type = Type::CSV_TYPE_COL;
+    lNode->m_value = _value;
+    GCsv* lNode2 = m_node;
+    while(lNode2->m_next) {
+        if(lNode2->m_next->m_type == Type::CSV_TYPE_ROW) break;
+        lNode2 = lNode2->m_next;
+    }
+    if(!lNode2->m_next) {
+        lNode2->m_next = lNode;
+    }
+    else {
+        GCsv* lNode3 = lNode2->m_next;
+        lNode2->m_next = lNode;
+        lNode->m_next = lNode3;
+    }
+    return GCsv(lNode);
+}
+//===============================================
+int GCsv::countRows() const {
+    if(!m_node) return 0;
+    if(m_node->m_type != Type::CSV_TYPE_ROOT) eThrow("Impossible de compter les lignes à partir d'un élément non ROOT.");
+    GCsv* lNode = m_node;
+    int lCount = 0;
+    while(lNode) {
+        if(lNode->m_type == Type::CSV_TYPE_ROW) lCount++;
+        lNode = lNode->m_next;
+    }
+    return lCount;
 }
 //===============================================
 GString GCsv::toString() const {

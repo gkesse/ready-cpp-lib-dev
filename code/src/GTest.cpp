@@ -257,12 +257,16 @@ void GTest::runCsv(int _argc, char** _argv) {
     printf("%s...\n", __PRETTY_FUNCTION__);
 
     GCsv lCsv, lNode;
-    lCsv.create();
-    lNode = lCsv.addRow();
-    lNode.addCol("un").addCol("deux").addCol("trois");
-    lNode = lCsv.addRow();
-    lNode = lNode.addCol("un").addCol("deux").addCol("trois");
-    lNode.addRow();
+    lCsv.createCsv();
+    lNode = lCsv.appendRow();
+    lNode.appendCol("A11"); lNode.appendCol("A12"); lNode.appendCol("A13"); lNode.appendCol("A14");
+    lNode = lCsv.appendRow();
+    lNode.appendCol("A21"); lNode.appendCol("A22"); lNode.appendCol("A23"); lNode.appendCol("A24");
+    lNode = lCsv.appendRow();
+    lNode.appendCol("A31"); lNode.appendCol("A32"); lNode.appendCol("A33"); lNode.appendCol("A34");
+    lNode = lCsv.appendRow();
+    lNode.appendCol("A41"); lNode.appendCol("A42"); lNode.appendCol("A43"); lNode.appendCol("A44");
+    GString(lCsv.countRows()).print();
     lCsv.toString().print();
 }
 //===============================================

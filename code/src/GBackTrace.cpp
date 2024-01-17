@@ -18,7 +18,32 @@ GBackTrace* GBackTrace::Instance() {
     return m_instance;
 }
 //===============================================
-void GBackTrace::printBackStack() {
+void GBackTrace::init() {
+    // Arrêt anormal du programme, tel qu'un appel à l'abandon.
+    signal(SIGABRT, onSignal);
+    // Opération arithmétique erronée, telle qu'une division par zéro
+    // ou une opération entraînant un débordement.
+    signal(SIGFPE, onSignal);
+    // Réception d'un signal d'attention interactif.
+    signal(SIGINT, onSignal);
+    // Une demande de résiliation envoyée au programme.
+    signal(SIGTERM, onSignal);
+}
+//===============================================
+size_t GBackTrace::convertToVMA(size_t addr) {
+    Dl_info info;
+    link_map* link_map;
+    dladdr1((void*)addr,&info,(void**)&link_map, RTLD_DL_LINKMAP);
+    return addr-link_map->l_addr;
+}
+//===============================================
+void GBackTrace::onSignal(int _signo) {
+    if(_signo == SIGABRT) {
+        GBACKTRACE->print();
+    }
+}
+//===============================================
+void GBackTrace::print() {
     void* callstack[64];
     std::string buffer;
 
@@ -51,12 +76,5 @@ void GBackTrace::printBackStack() {
     }
 
     fprintf(stderr, "%s\n", buffer.c_str());
-}
-//===============================================
-size_t GBackTrace::convertToVMA(size_t addr) {
-    Dl_info info;
-    link_map* link_map;
-    dladdr1((void*)addr,&info,(void**)&link_map, RTLD_DL_LINKMAP);
-    return addr-link_map->l_addr;
 }
 //===============================================

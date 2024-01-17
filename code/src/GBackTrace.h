@@ -5,15 +5,16 @@
 #include "GInclude.h"
 //===============================================
 #define GBACKTRACE GBackTrace::Instance()
-#define stacktrace GBACKTRACE->printBackStack
 //===============================================
 class GBackTrace {
 public:
     GBackTrace();
     ~GBackTrace();
     static GBackTrace* Instance();
+    void init();
     size_t convertToVMA(size_t addr);
-    void printBackStack();
+    static void onSignal(int _signo);
+    void print();
 
 private:
     static GBackTrace* m_instance;

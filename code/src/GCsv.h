@@ -20,10 +20,12 @@ public:
     GCsv(const GCsv& _csv);
     virtual ~GCsv();
     void clear();
-    void create();
+    void createCsv();
     GCsv addRow();
+    GCsv appendRow();
     GCsv addCol(const GString& _value);
-    int size() const;
+    GCsv appendCol(const GString& _value);
+    int countRows() const;
     GString toString() const;
 
     GCsv& operator=(const GCsv& _csv);

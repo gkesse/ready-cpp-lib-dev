@@ -47,6 +47,15 @@ cp -p base64.h libs/include/base64
 cp -p libbase64.a libs/lib
 
 #================================================
+### Git
+#================================================
+
+Git est un système de gestion de versions décentralisé utilisé
+pour gérer les différentes d'un projet dans une architecture
+où les utilisateurs peuvent se synchroniser entre eux sans
+forcement passer par un serveur maître.
+
+#================================================
 ### Json
 #================================================
 
