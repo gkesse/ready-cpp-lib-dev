@@ -256,7 +256,7 @@ void GTest::runJson(int _argc, char** _argv) {
 void GTest::runCsv(int _argc, char** _argv) {
     printf("%s...\n", __PRETTY_FUNCTION__);
 
-    GCsv lCsv, lNode;
+    GCsv lCsv, lCsv2, lNode;
     lCsv.createCsv();
     lNode = lCsv.appendRow();
     lNode.appendCol("A11"); lNode.appendCol("A12"); lNode.appendCol("A13"); lNode.appendCol("A14");
@@ -266,7 +266,31 @@ void GTest::runCsv(int _argc, char** _argv) {
     lNode.appendCol("A31"); lNode.appendCol("A32"); lNode.appendCol("A33"); lNode.appendCol("A34");
     lNode = lCsv.appendRow();
     lNode.appendCol("A41"); lNode.appendCol("A42"); lNode.appendCol("A43"); lNode.appendCol("A44");
-    GString(lCsv.countRows()).print();
+    lNode = lCsv.appendRow();
+    lNode.appendCol("A51"); lNode.appendCol("A52"); lNode.appendCol("A53"); lNode.appendCol("A54");
     lCsv.toString().print();
+    GString(lCsv.countRows()).print();
+    GString(lCsv.countCols()).print();
+    GString(lCsv.size()).print();
+
+    lCsv2.loadCsv(lCsv.toString());
+    lCsv2.toString().print();
+    GString(lCsv2.countRows()).print();
+    GString(lCsv2.countCols()).print();
+    GString(lCsv2.size()).print();
+
+    lCsv2.getCol(2, 1).setValue("M32");
+    lNode = lCsv2.getRow(2);
+    lNode = lNode.addRow();
+    lNode.addCol("B01").addCol("B02").addCol("B03").addCol("B04");
+    lNode = lNode.addRow();
+    lNode.addCol("C01").addCol("C02").addCol("C03").addCol("C04");
+    lCsv2.toString().print();
+    GString(lCsv2.countRows()).print();
+    GString(lCsv2.countCols()).print();
+    GString(lCsv2.size()).print();
+
+    lCsv2.getRow(2).toRow().print();
+    lCsv2.getCol(2, 1).toCol().print();
 }
 //===============================================

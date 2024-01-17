@@ -11,6 +11,7 @@
 #include <csignal>
 #include <iostream>
 #include <vector>
+#include <sstream>
 // libxml2
 #include <libxml/parser.h>
 #include <libxml/tree.h>
