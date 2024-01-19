@@ -15,6 +15,7 @@ public:
     void runLogs(int _argc, char** _argv);
     void runJson(int _argc, char** _argv);
     void runCsv(int _argc, char** _argv);
+    void runTree(int _argc, char** _argv);
 };
 //===============================================
 #endif

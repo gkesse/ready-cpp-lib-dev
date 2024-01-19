@@ -40,7 +40,6 @@ public:
     GCsv& operator=(const GCsv& _csv);
 
 private:
-    std::vector<GCsv*> m_map;
     GCsv* m_root;
     GCsv* m_node;
     GCsv* m_next;

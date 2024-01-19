@@ -17,10 +17,7 @@ GCsv::GCsv(GCsv* _node) {
 }
 //===============================================
 GCsv::GCsv(const GCsv& _csv) {
-    m_root = 0;
-    m_node = _csv.m_node;
-    m_next = _csv.m_next;
-    m_type = _csv.m_type;
+    *this = _csv;
 }
 //===============================================
 GCsv::~GCsv() {
@@ -29,13 +26,12 @@ GCsv::~GCsv() {
 //===============================================
 void GCsv::clear() {
     if(m_root) {
-        GCsv* lNode = m_root->m_next;
+        GCsv* lNode = m_root;
         while(lNode) {
             GCsv* lPrev = lNode;
             lNode = lNode->m_next;
             delete lPrev;
         }
-        delete m_root;
     }
 }
 //===============================================
@@ -49,10 +45,8 @@ void GCsv::createCsv() {
 void GCsv::loadCsv(const GString& _csv) {
     if(_csv.isEmpty()) return;
     createCsv();
-    std::string input = "abc,def,ghi";
     std::istringstream lStream(_csv.c_str());
     std::string lToken, lToken2;
-
     while(std::getline(lStream, lToken, '\n')) {
         std::istringstream lStream2(lToken);
         GCsv lNode = appendRow();

@@ -29,6 +29,10 @@ public:
     char*& data();
     int size() const;
     bool isEmpty() const;
+    int indexOf(const GString& _sep, int _pos = 0) const;
+    int count(const GString& _sep) const;
+    GString substr(int _pos, int _size) const;
+    GString extract(const GString& _sep, int _index = 0) const;
     GString toBase64() const;
     GString fromBase64() const;
 

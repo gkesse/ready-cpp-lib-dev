@@ -4,6 +4,7 @@
 #include "GLog.h"
 #include "GJson.h"
 #include "GCsv.h"
+#include "GTree.h"
 //===============================================
 GTest::GTest()
 : GObject() {
@@ -38,6 +39,9 @@ void GTest::run(int _argc, char** _argv) {
     }
     else if(lMethod == "csv") {
         runCsv(_argc, _argv);
+    }
+    else if(lMethod == "tree") {
+        runTree(_argc, _argv);
     }
     else {
         m_logs.addError("La méthode est inconnue.");
@@ -292,5 +296,32 @@ void GTest::runCsv(int _argc, char** _argv) {
 
     lCsv2.getRow(2).toRow().print();
     lCsv2.getCol(2, 1).toCol().print();
+}
+//===============================================
+void GTest::runTree(int _argc, char** _argv) {
+    printf("%s...\n", __PRETTY_FUNCTION__);
+
+    GTree lTree, lTree2, lNode, lNode2;
+    lTree.createTree();
+    lNode = lTree.appendChild("A1");
+    lNode.appendChild("B1");
+    lNode.appendChild("B2");
+    lNode2 = lNode.appendChild("B3");
+    lNode2.appendChild("C1");
+    lNode2.appendChild("C2");
+    lNode2.appendChild("C3");
+    lNode2.appendChild("C4");
+    lNode2.appendChild("C5");
+    lNode.appendChild("B4");
+    lNode.appendChild("B5");
+    lTree.appendChild("A2");
+    lTree.appendChild("A3");
+    lTree.appendChild("A4");
+    lTree.appendChild("A5");
+    lTree.toString().print();
+    lTree.toPrint().print();
+
+    lTree2.loadTree(lTree.toString());
+    lTree2.toPrint().print();
 }
 //===============================================

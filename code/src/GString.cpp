@@ -103,6 +103,51 @@ bool GString::isEmpty() const {
     return (m_size == 0 || m_data == 0);
 }
 //===============================================
+int GString::indexOf(const GString& _sep, int _pos) const {
+    if(isEmpty()) return -1;
+    std::string lData(m_data, m_size);
+    int lPos = lData.find(_sep.c_str(), _pos);
+    return lPos;
+}
+//===============================================
+int GString::count(const GString& _sep) const {
+    if(isEmpty()) return 0;
+    int lCount = 0;
+    int lPos = 0;
+    while(1) {
+        int lPos2 = indexOf(_sep, lPos);
+        if(lPos2 == -1) break;
+        lCount++;
+        lPos = lPos2 + _sep.size();
+    }
+    return lCount;
+}
+//===============================================
+GString GString::substr(int _pos, int _size) const {
+    if(isEmpty()) return "";
+    std::string lData(m_data, m_size);
+    return lData.substr(_pos, _size);
+}
+//===============================================
+GString GString::extract(const GString& _sep, int _index) const {
+    int lPos = 0;
+    int lCount = 0;
+    while(1) {
+        int lPos2 = indexOf(_sep, lPos);
+        if(lPos2 == -1) {
+            int lSize = size() - lPos;
+            return substr(lPos, lSize);
+        }
+        if(lCount == _index) {
+            int lSize = lPos2 - lPos;
+            return substr(lPos, lSize);
+        }
+        lPos = lPos2 + _sep.size();
+        lCount++;
+    }
+    return "";
+}
+//===============================================
 GString GString::toBase64() const {
     return Base64::encode((uchar*)m_data, m_size);
 }
