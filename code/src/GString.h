@@ -31,10 +31,20 @@ public:
     bool isEmpty() const;
     int indexOf(const GString& _sep, int _pos = 0) const;
     int count(const GString& _sep) const;
+    bool startsWith(const GString& _data) const;
+    bool endsWith(const GString& _data) const;
+    bool toBool() const;
+    char toChar() const;
+    int toInt() const;
+    double toDouble() const;
     GString substr(int _pos, int _size) const;
     GString extract(const GString& _sep, int _index = 0) const;
+    GString extract(const GString& _sep1, const GString& _sep2, int _pos = 0) const;
     GString toBase64() const;
     GString fromBase64() const;
+    GString trim() const;
+    GString ltrim() const;
+    GString rtrim() const;
 
     GString getFormat(const char* _format, ...) const;
     std::vector<GString> split(const GString& _sep) const;

@@ -27,7 +27,15 @@ const char* GException::what() const throw() {
     return m_msg.c_str();
 }
 //===============================================
-void GException::throwError(const GString& _msg) {
-    throw GException(_msg);
+void GException::throwError(const char* _format, ...) {
+    va_list lArgs;
+    va_start(lArgs, _format);
+    int lSize = vsnprintf(0, 0, _format, lArgs);
+    char* lData = new char[lSize + 1];
+    vsnprintf(lData, lSize + 1, _format, lArgs);
+    va_end(lArgs);
+    GString lMsg(lData, lSize);
+    delete[] lData;
+    throw GException(lMsg);
 }
 //===============================================

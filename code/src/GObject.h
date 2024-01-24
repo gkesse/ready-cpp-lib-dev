@@ -6,6 +6,7 @@
 #include "GString.h"
 #include "GLog.h"
 #include "GCode.h"
+#include "GException.h"
 //===============================================
 #define GOBJECT     GObject::Instance()
 #define spath       GOBJECT->getPath

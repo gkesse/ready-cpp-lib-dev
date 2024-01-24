@@ -97,5 +97,14 @@ CFLAGS += -I/usr/include/json-c
 LIBS += -L/usr/lib -ljson-c
 
 #================================================
+### ipapi
+#================================================
+
+ipapi une api utilisé pour déterminer la localisation
+d'une adresse ip.
+
+https://ipapi.co/8.8.8.8/country
+
+#================================================
 # Fin
 #================================================

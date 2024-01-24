@@ -15,7 +15,7 @@ public:
     ~GException();
     static GException* Instance();
     const char* what() const throw();
-    static void throwError(const GString& _msg);
+    static void throwError(const char* _msg, ...);
 
 private:
     static GException* m_instance;

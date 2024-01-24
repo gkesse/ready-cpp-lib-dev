@@ -114,6 +114,13 @@ void GTest::runString(int _argc, char** _argv) {
     }
 
     sformat("Liste: %s = %f", "Pi", 3.14).print();
+
+    GString(GString("Bonjour tout le monde").startsWith("Bonjour")).print();
+    GString(GString("Bonjour tout le monde").startsWith("monde")).print();
+    GString(GString("Bonjour tout le monde").endsWith("Bonjour")).print();
+    GString(GString("Bonjour tout le monde").endsWith("monde")).print();
+
+    GString("Bonjour Content-Length: 1234\r\n").extract("Content-Length:", "\r\n").print();
 }
 //===============================================
 void GTest::runXml(int _argc, char** _argv) {
