@@ -6,6 +6,7 @@
 #include "GString.h"
 #include "GLog.h"
 #include "GCode.h"
+#include "GDebug.h"
 #include "GException.h"
 //===============================================
 #define GOBJECT     GObject::Instance()
@@ -20,8 +21,7 @@ public:
     virtual void clearMap();
     virtual const GLog& getLogs() const;
     virtual const GLog& getDataLogs() const;
-    virtual GString getEnv(const GString& _env, const GString& _defaultValue = "") const;
-    virtual GString getPath(const GString& _path) const;
+    virtual GString getEnv(const GString& _env) const;
     bool isTestEnv() const;
     void print() const;
     virtual GString serialize(const GString& _code = "object") const;

@@ -106,5 +106,54 @@ d'une adresse ip.
 https://ipapi.co/8.8.8.8/country
 
 #================================================
+### crontab
+#================================================
+
+but:
+- planifier des tâches
+
+commande:
+- /usr/bin/crontab
+
+liste des utilisateurs autorisés:
+- /etc/crond.allow
+
+liste des utilisateurs non autorisés:
+- /etc/crond.deny
+
+gestionnaire du service:
+- /etc/rc.d/init.d/crond
+
+répertoire de lecture des tâches:
+- /var/spool/cron
+- /etc/crontab
+
+fichier logs:
+- /var/log/cron
+ 
+afficher le fichier:
+- crontab -l
+
+effacer le fichier:
+- crontab -r
+
+examiner le fichier:
+- crontab -l
+
+effacer le fichier:
+- crontab -r
+
+### representation d'une ligne de tache:
+
+a1 a2 a3 a4 a5 a6
+
+a1: minutes (0-59)
+a2: heures (0-23)
+a3: jour du mois (1-31)
+a4: mois de l'année (1-12)
+a5: jour de la semaine (0-6, 0=dimanche)
+a6: commande à exécuter
+
+#================================================
 # Fin
 #================================================

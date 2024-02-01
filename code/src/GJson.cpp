@@ -1,6 +1,7 @@
 //===============================================
 #include "GJson.h"
 #include "GCode.h"
+#include "GDebug.h"
 //===============================================
 GJson::GJson() {
     m_dom = 0;
@@ -20,10 +21,7 @@ GJson::GJson(const GString& _name, const GString& _value, struct json_object* _n
 }
 //===============================================
 GJson::GJson(const GJson& _json) {
-    m_dom = 0;
-    m_node = _json.m_node;
-    m_name = _json.m_name;
-    m_value = _json.m_value;
+    *this = _json;
 }
 //===============================================
 GJson::~GJson() {
@@ -39,7 +37,10 @@ void GJson::clear() {
 bool GJson::createObj() {
     clear();
     m_dom = json_object_new_object();
-    if(!m_dom) return false;
+    if(!m_dom) {
+        slog(eGERR, "Erreur lors de la création de l'objet JSON.");
+        return false;
+    }
     m_node = m_dom;
     return true;
 }
@@ -47,14 +48,20 @@ bool GJson::createObj() {
 bool GJson::createArr() {
     clear();
     m_dom = json_object_new_array();
-    if(!m_dom) return false;
+    if(!m_dom) {
+        slog(eGERR, "Erreur lors de la création de l'objet JSON.");
+        return false;
+    }
     m_node = m_dom;
     return true;
 }
 //===============================================
 bool GJson::loadJson(const GString& _data) {
     m_dom = json_tokener_parse(_data.c_str());
-    if(!m_dom) return false;
+    if(!m_dom) {
+        slog(eGERR, "Erreur lors du chargement du document JSON.");
+        return false;
+    }
     m_node = m_dom;
     return true;
 }
@@ -155,7 +162,7 @@ GString GJson::toNode() const {
 }
 //===============================================
 GJson& GJson::operator=(const GJson& _json) {
-    clear();
+    m_dom = 0;
     m_node = _json.m_node;
     m_name = _json.m_name;
     m_value = _json.m_value;

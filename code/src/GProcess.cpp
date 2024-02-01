@@ -40,7 +40,7 @@ void GProcess::onExit() {
 }
 //===============================================
 void GProcess::runExit() {
-    sformat("Fin du programme...").print();
+    slog(eGINF, "Fin du programme...");
 }
 //===============================================
 void GProcess::run(int _argc, char** _argv) {
@@ -48,7 +48,8 @@ void GProcess::run(int _argc, char** _argv) {
     if(_argc > 1) lModule = _argv[1];
 
     if(lModule == "") {
-        m_logs.addError("Le module est obligatoire.");
+        slog(eGERR, "Erreur, on ne peut exécuter un process associé à aucun module.");
+        m_logs.addError("Un problème a été rencontré.");
     }
     else if(lModule == "test") {
         runTest(_argc, _argv);
@@ -57,7 +58,9 @@ void GProcess::run(int _argc, char** _argv) {
         runServer(_argc, _argv);
     }
     else {
-        m_logs.addError("Le module est inconnu.");
+        slog(eGERR, "Erreur, on ne peut exécuter un process associé à un module inconnu."
+                    "|module=%s", lModule.c_str());
+        m_logs.addError("Un problème a été rencontré.");
     }
 }
 //===============================================

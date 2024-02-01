@@ -9,7 +9,7 @@ class GLog {
 public:
     GLog();
     ~GLog();
-    GString serialize(const GString& _code = "logs");
+    GString serialize(const GString& _code = "logs") const;
     void deserialize(const GString& _data, const GString& _code = "logs");
     GLog* clone();
     void clearMap();
@@ -24,7 +24,7 @@ public:
     bool hasTechErrors() const;
     int size() const;
     bool isEmpty() const;
-    GString toJson();
+    GString toJson() const;
 
 private:
     GString m_type;

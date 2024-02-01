@@ -103,6 +103,25 @@ bool GString::isEmpty() const {
     return (m_size == 0 || m_data == 0);
 }
 //===============================================
+bool GString::createPath(mode_t _mode) const {
+    if(isEmpty()) return false;
+    int lCount = count("/") + 1;
+    GString lPath;
+    bool isPath = false;
+    if(m_data[0] == '/') lPath = "/";
+    for(int i = 0; i < lCount; i++) {
+        GString lPathI = extract("/", i);
+        if(lPathI.isEmpty()) continue;
+        if(isPath) lPath += "/";
+        lPath += lPathI;
+        isPath = true;
+        struct stat lStat;
+        if(!stat(lPath.c_str(), &lStat) && (lStat.st_mode & S_IFDIR)) continue;
+        if(mkdir(lPath.c_str(), _mode) == -1) return false;
+    }
+    return true;
+}
+//===============================================
 int GString::indexOf(const GString& _sep, int _pos) const {
     if(isEmpty()) return -1;
     std::string lData(m_data, m_size);
@@ -248,6 +267,22 @@ GString GString::getFormat(const char* _format, ...) const {
     GString lString(lData, lSize);
     delete[] lData;
     return lString;
+}
+//===============================================
+GString GString::getFilepath() const {
+    if(isEmpty()) return "";
+    std::string lPath(m_data, m_size);
+    size_t lFound = lPath.find_last_of("/\\");
+    if(lFound == std::string::npos) return "";
+    return lPath.substr(0, lFound);
+}
+//===============================================
+GString GString::getFilename() const {
+    if(isEmpty()) return "";
+    std::string lPath(m_data, m_size);
+    size_t lFound = lPath.find_last_of("/\\");
+    if(lFound == std::string::npos) return "";
+    return lPath.substr(lFound  +1);
 }
 //===============================================
 std::vector<GString> GString::split(const GString& _sep) const {

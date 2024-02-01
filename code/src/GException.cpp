@@ -1,6 +1,6 @@
 //===============================================
 #include "GException.h"
-#include "GBackTrace.h"
+#include "GDebug.h"
 //===============================================
 GException* GException::m_instance = 0;
 //===============================================
@@ -31,11 +31,12 @@ void GException::throwError(const char* _format, ...) {
     va_list lArgs;
     va_start(lArgs, _format);
     int lSize = vsnprintf(0, 0, _format, lArgs);
-    char* lData = new char[lSize + 1];
-    vsnprintf(lData, lSize + 1, _format, lArgs);
+    char* lBuffer = new char[lSize + 1];
+    vsnprintf(lBuffer, lSize + 1, _format, lArgs);
     va_end(lArgs);
-    GString lMsg(lData, lSize);
-    delete[] lData;
+    GString lMsg(lBuffer, lSize);
+    delete[] lBuffer;
+    slog(eGERR, lMsg.c_str());
     throw GException(lMsg);
 }
 //===============================================

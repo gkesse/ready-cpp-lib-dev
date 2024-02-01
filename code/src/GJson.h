@@ -28,7 +28,6 @@ public:
     GString toString() const;
     GString toNode() const;
     GString toCode() const;
-
     GJson& operator=(const GJson& _json);
 
 private:

@@ -1,5 +1,6 @@
 //===============================================
 #include "GXml.h"
+#include "GDebug.h"
 //===============================================
 GXml::GXml() {
     m_doc = 0;
@@ -16,10 +17,7 @@ GXml::GXml(xmlDocPtr _doc2, xmlNodePtr _node2, xmlNodePtr _node) {
 }
 //===============================================
 GXml::GXml(const GXml& _xml) {
-    m_doc = 0;
-    m_node = _xml.m_node;
-    m_doc2 = _xml.m_doc2;
-    m_node2 = _xml.m_node2;
+    *this = _xml;
 }
 //===============================================
 GXml::~GXml() {
@@ -36,9 +34,16 @@ void GXml::clear() {
 bool GXml::createDoc() {
     clear();
     m_doc = xmlNewDoc(BAD_CAST("1.0"));
-    if(!m_doc) return false;
+    if(!m_doc) {
+        slog(eGERR, "Erreur lors de la création du document XML.");
+        return false;
+    }
     m_node = xmlNewNode(NULL, BAD_CAST("rdv"));
-    if(!m_node) return false;
+    if(!m_node) {
+        slog(eGERR, "Erreur lors de la création du noeud racine."
+                    "|doc=%p", m_doc);
+        return false;
+    }
     xmlDocSetRootElement(m_doc, m_node);
     m_doc2 = m_doc;
     m_node2 = m_node;
@@ -48,20 +53,33 @@ bool GXml::createDoc() {
 bool GXml::loadXml(const GString& _data) {
     clear();
     m_doc = xmlParseDoc(BAD_CAST(_data.c_str()));
-    if(!m_doc) return false;
+    if(!m_doc) {
+        slog(eGERR, "Erreur lors du chargement du document XML.");
+        return false;
+    }
     m_node = xmlDocGetRootElement(m_doc);
-    if(!m_node) return false;
+    if(!m_node) {
+        slog(eGERR, "Erreur lors du chargement du noeud racine."
+                    "|doc=%p", m_doc);
+        return false;
+    }
     m_doc2 = m_doc;
     m_node2 = m_node;
     return true;
 }
 //===============================================
 bool GXml::loadNode(const GString& _data) {
+    if(!m_node) return false;
     if(_data.isEmpty()) return false;
     xmlNodePtr lNodes;
     xmlParseInNodeContext(m_node, _data.c_str(), _data.size(), 0, &lNodes);
     xmlNodePtr lNode = lNodes->children;
-    if(!lNode) return false;
+    if(!lNode) {
+        slog(eGERR, "Erreur lors du chargement du noeud XML."
+                    "|doc=%p"
+                    "|node=%s", m_doc, (char*)m_node->name);
+        return false;
+    }
     while(lNode) {
         xmlAddChild(m_node, xmlCopyNode(lNode, 1));
         lNode = lNode->next;
@@ -71,16 +89,19 @@ bool GXml::loadNode(const GString& _data) {
 }
 //===============================================
 void GXml::setValue(const GString& _value) {
+    if(!m_node) return;
     xmlNodeSetContent(m_node, BAD_CAST(_value.c_str()));
 }
 //===============================================
 GXml GXml::addObj(const GString& _name) {
+    if(!m_node) return GXml(m_doc2, m_node2, 0);
     xmlNodePtr lNode = xmlNewNode(NULL, BAD_CAST(_name.c_str()));
     xmlAddChild(m_node, lNode);
     return GXml(m_doc2, m_node2, lNode);
 }
 //===============================================
 GXml GXml::addNode(const GString& _path, const GString& _value) {
+    if(!m_node) return GXml(m_doc2, m_node2, 0);
     if(_path.isEmpty()) return GXml(m_doc2, m_node2, 0);
 
     GString lPath;
@@ -108,12 +129,14 @@ GXml GXml::addNode(const GString& _path, const GString& _value) {
 }
 //===============================================
 void GXml::addData(const GString& _name, const GString& _value) {
+    if(!m_node) return;
     xmlNodePtr lNode = xmlNewNode(NULL, BAD_CAST(_name.c_str()));
     xmlNodeSetContent(lNode, BAD_CAST(_value.c_str()));
     xmlAddChild(m_node, lNode);
 }
 //===============================================
 bool GXml::existNode(const GString& _path) const {
+    if(!m_node) return false;
     return (countNode(_path) != 0);
 }
 //===============================================
@@ -154,6 +177,7 @@ GXml GXml::getNode(const GString& _path) const {
 }
 //===============================================
 GString GXml::getValue() const {
+    if(!m_node) return "";
     GString lValue = (char*)xmlNodeGetContent(m_node);
     return lValue;
 }
@@ -179,7 +203,7 @@ GString GXml::toNode() const {
 }
 //===============================================
 GXml& GXml::operator=(const GXml& _xml) {
-    clear();
+    m_doc = 0;
     m_node = _xml.m_node;
     m_doc2 = _xml.m_doc2;
     m_node2 = _xml.m_node2;

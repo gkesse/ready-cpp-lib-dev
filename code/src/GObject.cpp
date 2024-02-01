@@ -37,16 +37,10 @@ const GLog& GObject::getDataLogs() const {
     return m_dataLogs;
 }
 //===============================================
-GString GObject::getEnv(const GString& _env, const GString& _defaultValue) const {
+GString GObject::getEnv(const GString& _env) const {
     char* lEnv = getenv(_env.c_str());
-    if(lEnv == 0) return _defaultValue;
+    if(lEnv == 0) return "";
     return lEnv;
-}
-//===============================================
-GString GObject::getPath(const GString& _path) const {
-    GString lPath = "/home/gkesse/.readydev";
-    lPath = sformat("%s%s", lPath.c_str(), _path.c_str());
-    return lPath;
 }
 //===============================================
 bool GObject::isTestEnv() const {

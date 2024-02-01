@@ -6,6 +6,7 @@
 //===============================================
 #define GSTRING     GString::Instance()
 #define sformat     GSTRING->getFormat
+#define GFORMAT(...)    GSTRINGI->getFormat(__VA_ARGS__)
 //===============================================
 class GString {
 public:
@@ -29,6 +30,7 @@ public:
     char*& data();
     int size() const;
     bool isEmpty() const;
+    bool createPath(mode_t _mode) const;
     int indexOf(const GString& _sep, int _pos = 0) const;
     int count(const GString& _sep) const;
     bool startsWith(const GString& _data) const;
@@ -45,10 +47,10 @@ public:
     GString trim() const;
     GString ltrim() const;
     GString rtrim() const;
-
     GString getFormat(const char* _format, ...) const;
+    GString getFilepath() const;
+    GString getFilename() const;
     std::vector<GString> split(const GString& _sep) const;
-
     void print() const;
 
     GString& operator=(bool _data);

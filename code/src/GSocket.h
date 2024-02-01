@@ -4,7 +4,7 @@
 //===============================================
 #include "GObject.h"
 //===============================================
-class GSocket {
+class GSocket : GObject {
 public:
     GSocket();
     ~GSocket();
@@ -23,6 +23,7 @@ private:
     int m_socket;
     GString m_addressIP;
     int m_port;
+    pid_t m_pid;
 };
 //===============================================
 #endif

@@ -4,12 +4,12 @@
 GBackTrace* GBackTrace::m_instance = 0;
 //===============================================
 #define DEFINE_SIGNAL(x, y) {x, #x, y}
-#define DEFINE_SIGNAL_LAST {-1, "Unkonwn", "Unkonwn"}
+#define DEFINE_SIGNAL_LAST {-1, "Inconnu", "Inconnu"}
 //===============================================
 GBackTrace::GSignal SIGNAL_MAP[] = {
         DEFINE_SIGNAL(SIGABRT, "Arrêt anormal du programme."),
-        DEFINE_SIGNAL(SIGFPE, "Opération arithmétique erronée."),
-        DEFINE_SIGNAL(SIGINT, "Réception d'un signal d'attention interactif."),
+        DEFINE_SIGNAL(SIGFPE,  "Opération arithmétique erronée."),
+        DEFINE_SIGNAL(SIGINT,  "Réception d'un signal d'attention interactif."),
         DEFINE_SIGNAL(SIGTERM, "Une demande de résiliation envoyée au programme."),
         DEFINE_SIGNAL_LAST
 };
@@ -59,10 +59,10 @@ GBackTrace::GSignal GBackTrace::getSignal(int _signo) {
 //===============================================
 void GBackTrace::onSignal(int _signo) {
     GBackTrace::GSignal lSignal = GBACKTRACE->getSignal(_signo);
-    sformat("Interruption du programme par le signal."
-            "|signo=%d"
-            "|signal=%s"
-            "|description=%s", _signo, lSignal.m_name, lSignal.m_desc).print();
+    slog(eGWAR, "Erreur, le programme a été interrompu par le signal."
+                "|signo=%d"
+                "|signal=%s"
+                "|description=%s", _signo, lSignal.m_name, lSignal.m_desc);
     GBACKTRACE->print();
     exit(0);
 }

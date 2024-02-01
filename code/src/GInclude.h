@@ -10,6 +10,8 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
 // c++ system
@@ -22,6 +24,7 @@
 #include <sstream>
 #include <memory>
 #include <algorithm>
+#include <fstream>
 // libxml2
 #include <libxml/parser.h>
 #include <libxml/tree.h>

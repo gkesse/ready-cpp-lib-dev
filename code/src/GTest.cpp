@@ -5,6 +5,7 @@
 #include "GJson.h"
 #include "GCsv.h"
 #include "GTree.h"
+#include "GDebug.h"
 //===============================================
 GTest::GTest()
 : GObject() {
@@ -42,6 +43,9 @@ void GTest::run(int _argc, char** _argv) {
     }
     else if(lMethod == "tree") {
         runTree(_argc, _argv);
+    }
+    else if(lMethod == "debug") {
+        runDebug(_argc, _argv);
     }
     else {
         m_logs.addError("La méthode est inconnue.");
@@ -330,5 +334,11 @@ void GTest::runTree(int _argc, char** _argv) {
 
     lTree2.loadTree(lTree.toString());
     lTree2.toPrint().print();
+}
+//===============================================
+void GTest::runDebug(int _argc, char** _argv) {
+    printf("%s...\n", __PRETTY_FUNCTION__);
+    GDebug lDebug;
+    slog(eGINF, "Bonjour tout le monde");
 }
 //===============================================

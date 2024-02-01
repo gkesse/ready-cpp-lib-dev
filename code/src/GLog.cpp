@@ -10,7 +10,7 @@ GLog::~GLog() {
     clearMap();
 }
 //===============================================
-GString GLog::serialize(const GString& _code) {
+GString GLog::serialize(const GString& _code) const {
     GCode lDom;
     lDom.createDoc();
     lDom.addData(_code, "type", m_type);
@@ -134,9 +134,9 @@ bool GLog::isEmpty() const {
     return (size() == 0);
 }
 //===============================================
-GString GLog::toJson() {
+GString GLog::toJson() const {
     GCode lDom;
     lDom.loadXml(serialize());
-    return "lDom.toJson()";
+    return lDom.toJson();
 }
 //===============================================

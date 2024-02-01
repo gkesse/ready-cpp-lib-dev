@@ -25,10 +25,18 @@ bool GRequest::analyze() {
     if(m_data.startsWith("GET")) {
         m_type = Type::REQ_TYPE_HTTP_GET;
         m_http.setData(m_data);
-        if(!m_http.analyze()) return false;
+        if(!m_http.analyze()) {
+            slog(eGERR, "Erreur lors de l'analyse de la requête GET."
+                        "|type=%d"
+                        "|data=%s", m_type, m_data.c_str());
+            return false;
+        }
         m_total = m_http.getTotal();
     }
     else {
+        slog(eGERR, "Erreur, on ne peut pas analyser une requête inconnue."
+                    "|type=%d"
+                    "|data=%s", m_type, m_data.c_str());
         m_type = Type::REQ_TYPE_UNKNOWN;
         m_total = m_data.size();
         return false;
@@ -71,8 +79,8 @@ bool GRequest::GHttp::analyze() {
     int lContentLenght = m_data.extract("Content-Length:", CRLF).trim().toInt();
     GString lHeader = m_data.extract(CRLFCRLF);
     if(lHeader.isEmpty()) {
-        sformat("Impossible de continuer, le HEADER de la requête HTTP est NUL."
-                "|data=%s", m_data.c_str()).print();
+        slog(eGERR, "Erreur, l'entête de la requête HTTP est nulle."
+                    "|data=%s", m_data.c_str());
         return false;
     }
     m_total = lHeader.size() + CRLFCRLF.size() + lContentLenght;
