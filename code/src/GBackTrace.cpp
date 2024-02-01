@@ -59,7 +59,7 @@ GBackTrace::GSignal GBackTrace::getSignal(int _signo) {
 //===============================================
 void GBackTrace::onSignal(int _signo) {
     GBackTrace::GSignal lSignal = GBACKTRACE->getSignal(_signo);
-    slog(eGWAR, "Erreur, le programme a été interrompu par le signal."
+    slog(eGWAR, "Le programme a été interrompu par le signal."
                 "|signo=%d"
                 "|signal=%s"
                 "|description=%s", _signo, lSignal.m_name, lSignal.m_desc);
