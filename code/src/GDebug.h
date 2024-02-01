@@ -5,10 +5,12 @@
 #include "GInclude.h"
 #include "GString.h"
 //===============================================
-#define eGOFF   0, "INCONNU", __FILE__, __LINE__, __PRETTY_FUNCTION__
-#define eGINF   1, "INFO", __FILE__, __LINE__, __PRETTY_FUNCTION__
-#define eGWAR   2, "WARNING", __FILE__, __LINE__, __PRETTY_FUNCTION__
-#define eGERR   3, "ERROR", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGOFF   0, "OFF", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGSTA   1, "START", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGEND   2, "END", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGINF   3, "INFO", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGWAR   4, "WARNING", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGERR   5, "ERROR", __FILE__, __LINE__, __PRETTY_FUNCTION__
 //===============================================
 #define GDEBUG  GDebug::Instance()
 #define slog    GDEBUG->writeData

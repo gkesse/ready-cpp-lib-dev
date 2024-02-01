@@ -133,7 +133,7 @@ void GSocket::runServer() {
 void GSocket::runThread() {
     if(m_socket == -1) return;
     m_pid = gettid();
-    slog(eGINF, "Début du traitement de la requête du client."
+    slog(eGSTA, "Début du traitement de la requête du client."
                 "|adresse_ip=%s"
                 "|port=%d"
                 "|process=%d", m_addressIP.c_str(), m_port, m_pid);
@@ -148,7 +148,7 @@ void GSocket::runThread() {
                     "|data=%s", m_addressIP.c_str(), m_port, m_pid, lRequest.c_str());
     }
 
-    slog(eGINF, "Fin du traitement de la requête du client."
+    slog(eGEND, "Fin du traitement de la requête du client."
                 "|adresse_ip=%s"
                 "|port=%d"
                 "|process=%d", m_addressIP.c_str(), m_port, m_pid);
