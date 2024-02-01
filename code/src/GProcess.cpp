@@ -40,7 +40,7 @@ void GProcess::onExit() {
 }
 //===============================================
 void GProcess::runExit() {
-    slog(eGINF, "Fin du programme...");
+    slog(eGEXT, "Fin du programme.");
 }
 //===============================================
 void GProcess::run(int _argc, char** _argv) {

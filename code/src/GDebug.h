@@ -6,11 +6,13 @@
 #include "GString.h"
 //===============================================
 #define eGOFF   0, "OFF", __FILE__, __LINE__, __PRETTY_FUNCTION__
-#define eGSTA   1, "START", __FILE__, __LINE__, __PRETTY_FUNCTION__
-#define eGEND   2, "END", __FILE__, __LINE__, __PRETTY_FUNCTION__
-#define eGINF   3, "INFO", __FILE__, __LINE__, __PRETTY_FUNCTION__
-#define eGWAR   4, "WARNING", __FILE__, __LINE__, __PRETTY_FUNCTION__
-#define eGERR   5, "ERROR", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGSRV   1, "SERVER", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGEXT   2, "EXIT", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGSTA   3, "START", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGEND   4, "END", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGINF   5, "INFO", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGWAR   6, "WARNING", __FILE__, __LINE__, __PRETTY_FUNCTION__
+#define eGERR   7, "ERROR", __FILE__, __LINE__, __PRETTY_FUNCTION__
 //===============================================
 #define GDEBUG  GDebug::Instance()
 #define slog    GDEBUG->writeData

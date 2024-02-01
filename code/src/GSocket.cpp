@@ -86,7 +86,7 @@ void GSocket::runServer() {
     struct sockaddr_in lAddressOut;
     socklen_t lSize = sizeof(lAddressOut);
 
-    slog(eGINF, "Démarrage du serveur..."
+    slog(eGSRV, "Démarrage du serveur."
                 "|hostname=%s"
                 "|port=%d"
                 "|backlog=%d", lHostname.c_str(), lPort, lBacklog);
