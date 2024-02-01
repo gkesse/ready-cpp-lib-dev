@@ -163,7 +163,7 @@ GString GSocket::readData() const {
     bool isData = false;
     while(1) {
         int lBytes = recv(m_socket, lBuffer, SOCKET_BUFFER_SIZE, 0);
-        if(lBytes <= 0) {
+        if(lBytes == -1) {
             slog(eGERR, "Erreur lors de la lecture des données sur le socket."
                         "|adresse_ip=%s"
                         "|port=%d"
@@ -175,7 +175,7 @@ GString GSocket::readData() const {
         }
         lSize += lBytes;
         if(lSize >= SOCKET_BUFFER_MAX) {
-            slog(eGERR, "Impossible de continuer, le nombre maximal de données à lire sur le socket a été atteint."
+            slog(eGERR, "Erreur le nombre maximal de données à lire sur le socket est atteint."
                         "|adresse_ip=%s"
                         "|port=%d"
                         "|process=%d"
@@ -192,8 +192,17 @@ GString GSocket::readData() const {
         }
         int lRemaing = 0;
         int isRemaing = ioctl(m_socket, FIONREAD, &lRemaing);
-        if(isRemaing == -1) break;
-        if((lRemaing <= 0) && (lSize >= lReq.getTotal())) break;
+        if(isRemaing == -1) {
+            slog(eGERR, "Erreur lors de la lecture des données sur le socket."
+                        "|adresse_ip=%s"
+                        "|port=%d"
+                        "|process=%d"
+                        "|errno=%d"
+                        "|errmsg=%s"
+                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, errno, strerror(errno), lData.c_str());
+            return "";
+        }
+        if((lRemaing == 0) && (lSize >= lReq.getTotal())) break;
     }
     return lData;
 }
