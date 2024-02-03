@@ -2,7 +2,6 @@
 #ifndef _GJson_
 #define _GJson_
 //===============================================
-#include "GInclude.h"
 #include "GString.h"
 //===============================================
 class GJson {

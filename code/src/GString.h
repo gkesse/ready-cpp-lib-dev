@@ -33,6 +33,7 @@ public:
     bool createPath(mode_t _mode) const;
     int indexOf(const GString& _sep, int _pos = 0) const;
     int count(const GString& _sep) const;
+    int countSep(const GString& _sep) const;
     bool startsWith(const GString& _data) const;
     bool endsWith(const GString& _data) const;
     bool toBool() const;
@@ -42,6 +43,7 @@ public:
     GString substr(int _pos, int _size) const;
     GString extract(const GString& _sep, int _index = 0) const;
     GString extract(const GString& _sep1, const GString& _sep2, int _pos = 0) const;
+    GString extractSep(const GString& _sep, int _index = 0) const;
     GString toBase64() const;
     GString fromBase64() const;
     GString trim() const;
@@ -50,7 +52,6 @@ public:
     GString getFormat(const char* _format, ...) const;
     GString getFilepath() const;
     GString getFilename() const;
-    std::vector<GString> split(const GString& _sep) const;
     void print() const;
 
     GString& operator=(bool _data);

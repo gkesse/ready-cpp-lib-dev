@@ -111,10 +111,10 @@ void GTest::runString(int _argc, char** _argv) {
     lData += GString() + 2024 + " - " + 'P' + 3.14;
     lData.print();
 
-    GString lData8 = "Un_SEP_Deux_SEP_Trois";
-    std::vector<GString> lSplit = lData8.split("_SEP_");
-    for(std::vector<GString>::iterator it = lSplit.begin(); it != lSplit.end(); it++) {
-        it->print();
+    GString lData8 = "Un/Deux\\Trois\\Quatre";
+    int lCount = lData8.countSep("/\\");
+    for(int i = 0; i < lCount; i++) {
+        lData8.extractSep("/\\", i).print();
     }
 
     sformat("Liste: %s = %f", "Pi", 3.14).print();

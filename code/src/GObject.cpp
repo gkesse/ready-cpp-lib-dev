@@ -1,9 +1,12 @@
 //===============================================
 #include "GObject.h"
+#include "GSocket.h"
 //===============================================
 GObject* GObject::m_instance = 0;
 //===============================================
-GObject::GObject() {
+GObject::GObject()
+: m_port(-1)
+, m_pid(-1) {
     m_resp.createDoc();
     m_resp.createDatas();
 }
@@ -26,27 +29,22 @@ void GObject::clearMap() {
     }
     m_map.clear();
     m_logs.clearMap();
-    m_dataLogs.clearMap();
+}
+//===============================================
+void GObject::setObject(const GObject& _obj) {
+    m_addressIP = _obj.m_addressIP;
+    m_port = _obj.m_port;
+    m_pid = _obj.m_pid;
+}
+//===============================================
+void GObject::setSocket(const GSocket& _socket) {
+    m_addressIP = _socket.getAddressIP();
+    m_port = _socket.getPort();
+    m_pid = _socket.getPid();
 }
 //===============================================
 const GLog& GObject::getLogs() const {
     return m_logs;
-}
-//===============================================
-const GLog& GObject::getDataLogs() const {
-    return m_dataLogs;
-}
-//===============================================
-GString GObject::getEnv(const GString& _env) const {
-    char* lEnv = getenv(_env.c_str());
-    if(lEnv == 0) return "";
-    return lEnv;
-}
-//===============================================
-bool GObject::isTestEnv() const {
-    GString lEnv = getEnv("GPROJECT_ENV");
-    if(lEnv == "TEST") return true;
-    return false;
 }
 //===============================================
 void GObject::print() const {

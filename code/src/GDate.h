@@ -2,7 +2,6 @@
 #ifndef _GDate_
 #define _GDate_
 //===============================================
-#include "GInclude.h"
 #include "GString.h"
 //===============================================
 #define DATE_FORMAT_LOG "%d/%m/%Y %H:%M:%S"

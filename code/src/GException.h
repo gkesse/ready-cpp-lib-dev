@@ -2,7 +2,6 @@
 #ifndef _GException_
 #define _GException_
 //===============================================
-#include "GInclude.h"
 #include "GString.h"
 //===============================================
 #define GEXCEPTION GException::Instance()

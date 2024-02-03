@@ -2,7 +2,6 @@
 #ifndef _GDebug_
 #define _GDebug_
 //===============================================
-#include "GInclude.h"
 #include "GString.h"
 //===============================================
 #define eGOFF   0, "OFF", __FILE__, __LINE__, __PRETTY_FUNCTION__

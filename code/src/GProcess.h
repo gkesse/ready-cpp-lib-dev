@@ -6,8 +6,6 @@
 //===============================================
 #define GPROCESS GProcess::Instance()
 //===============================================
-class GSocket;
-//===============================================
 class GProcess : public GObject {
 public:
     GProcess();

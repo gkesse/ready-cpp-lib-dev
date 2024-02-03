@@ -2,7 +2,6 @@
 #ifndef _GLog_
 #define _GLog_
 //===============================================
-#include "GInclude.h"
 #include "GString.h"
 //===============================================
 class GLog {

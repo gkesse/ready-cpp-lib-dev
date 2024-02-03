@@ -12,6 +12,8 @@
 #define GOBJECT     GObject::Instance()
 #define spath       GOBJECT->getPath
 //===============================================
+class GSocket;
+//===============================================
 class GObject {
 public:
     GObject();
@@ -19,11 +21,10 @@ public:
     static GObject* Instance();
     virtual GObject* clone() const;
     virtual void clearMap();
+    virtual void setObject(const GObject& _obj);
+    virtual void setSocket(const GSocket& _socket);
     virtual const GLog& getLogs() const;
-    virtual const GLog& getDataLogs() const;
-    virtual GString getEnv(const GString& _env) const;
-    bool isTestEnv() const;
-    void print() const;
+    virtual void print() const;
     virtual GString serialize(const GString& _code = "object") const;
     virtual void deserialize(const GString& _data, const GString& _code = "object");
 
@@ -32,8 +33,10 @@ private:
 
 protected:
     GLog m_logs;
-    GLog m_dataLogs;
     GCode m_resp;
+    GString m_addressIP;
+    int m_port;
+    pid_t m_pid;
     std::vector<GObject*> m_map;
 };
 //===============================================

@@ -1,31 +1,27 @@
 //===============================================
-#ifndef _GRequest_
-#define _GRequest_
+#ifndef _GRequestHttp_
+#define _GRequestHttp_
 //===============================================
 #include "GObject.h"
-#include "GRequestHttp.h"
 //===============================================
-class GRequest : public GObject {
+class GRequestHttp : public GObject {
 public:
-    enum class Type {
-        REQ_TYPE_UNKNOWN
-        , REQ_TYPE_HTTP_GET
-    };
-
-public:
-    GRequest();
-    ~GRequest();
+    GRequestHttp();
+    ~GRequestHttp();
     void setData(const GString& _data);
-    void setRequest(const GRequest& _request);
+    void setRequest(const GRequestHttp& _request);
+    int getTotal() const;
     bool analyzeHeader();
     bool analyzeRequest();
-    int getTotal() const;
-    const GRequestHttp& getHttp() const;
+    const GString& getMethod() const;
+    const GString& getUri() const;
+    const GString& getVersion() const;
 
-protected:
-    GRequestHttp m_http;
+private:
     GString m_data;
-    Type m_type;
+    GString m_method;
+    GString m_uri;
+    GString m_version;
     int m_total;
 };
 //===============================================

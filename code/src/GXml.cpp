@@ -108,10 +108,10 @@ GXml GXml::addNode(const GString& _path, const GString& _value) {
     GXml lNode = *this;
 
     if(_path[0] == '/') lPath += "/";
-    std::vector<GString> lMap = _path.split("/");
+    int lCount = _path.countSep("/");
 
-    for(int i = 0; i < (int)lMap.size(); i++) {
-        GString lPathI = lMap[i];
+    for(int i = 0; i < lCount; i++) {
+        GString lPathI = _path.extractSep("/", i);
         if(i != 0) lPath += "/";
         lPath += lPathI;
         if(!existNode(lPath)) {

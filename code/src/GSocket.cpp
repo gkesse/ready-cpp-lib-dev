@@ -1,16 +1,16 @@
 //===============================================
 #include "GSocket.h"
 #include "GRequest.h"
+#include "GDispatcher.h"
+#include "GResponseHttp.h"
 //===============================================
 #define SOCKET_HOSTNAME "0.0.0.0"
 #define SOCKET_PORT     9050
 #define SOCKET_BACKLOG  5
 //===============================================
 GSocket::GSocket()
-: GObject()
-, m_socket(-1)
-, m_server(0)
-, m_port(0)
+: m_socket(-1)
+, m_port(-1)
 , m_pid(-1) {
 
 }
@@ -32,7 +32,6 @@ void GSocket::runServer() {
                     "|backlog=%d"
                     "|errno=%d"
                     "|errmsg=%s", lHostname.c_str(), lPort, lBacklog, errno, strerror(errno));
-        m_logs.addError("Un problème a été rencontré.");
         return;
     }
 
@@ -42,9 +41,9 @@ void GSocket::runServer() {
     lAddressIn.sin_addr.s_addr = inet_addr(lHostname.c_str());
     lAddressIn.sin_port = htons(lPort);
 
-    int lOptVal = 1;
-    int isSockopt = setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &lOptVal, sizeof(int));
-    if(isSockopt == -1) {
+    int lReuseAddr = 1;
+    int isReuseAddr = setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &lReuseAddr, sizeof(int));
+    if(isReuseAddr == -1) {
         close(m_socket);
         slog(eGERR, "Erreur lors de l'initialisation de l'option SO_REUSEADDR sur le socket."
                     "|hostname=%s"
@@ -52,10 +51,8 @@ void GSocket::runServer() {
                     "|backlog=%d"
                     "|errno=%d"
                     "|errmsg=%s", lHostname.c_str(), lPort, lBacklog, errno, strerror(errno));
-        m_logs.addError("Un problème a été rencontré.");
         return;
     }
-
 
     int isBind = bind(m_socket, (struct sockaddr*)&lAddressIn, sizeof(lAddressIn));
     if(isBind == -1) {
@@ -66,7 +63,6 @@ void GSocket::runServer() {
                     "|backlog=%d"
                     "|errno=%d"
                     "|errmsg=%s", lHostname.c_str(), lPort, lBacklog, errno, strerror(errno));
-        m_logs.addError("Un problème a été rencontré.");
         return;
     }
 
@@ -79,7 +75,6 @@ void GSocket::runServer() {
                     "|backlog=%d"
                     "|errno=%d"
                     "|errmsg=%s", lHostname.c_str(), lPort, lBacklog, errno, strerror(errno));
-        m_logs.addError("Un problème a été rencontré.");
         return;
     }
 
@@ -93,7 +88,6 @@ void GSocket::runServer() {
 
     while(1) {
         GSocket* lClient = new GSocket;
-        lClient->m_server = this;
 
         lClient->m_socket = accept(m_socket, (struct sockaddr*)&lAddressOut, &lSize);
         if(lClient->m_socket == -1) {
@@ -146,6 +140,20 @@ void GSocket::runThread() {
                     "|port=%d"
                     "|process=%d"
                     "|data=%s", m_addressIP.c_str(), m_port, m_pid, lRequest.c_str());
+
+        GRequest lReq;
+        lReq.setSocket(*this);
+        lReq.setData(lRequest);
+
+        if(lReq.analyzeRequest()) {
+            GDispatcher lDispatcher;
+            lDispatcher.setObject(lReq);
+            lDispatcher.setRequest(lReq);
+            lDispatcher.run();
+        }
+
+        GResponseHttp lResponseHttp;
+        sendData(lResponseHttp.toError());
     }
 
     slog(eGEND, "Fin du traitement de la requête du client."
@@ -153,6 +161,34 @@ void GSocket::runThread() {
                 "|port=%d"
                 "|process=%d", m_addressIP.c_str(), m_port, m_pid);
     close(m_socket);
+}
+//===============================================
+bool GSocket::sendData(const GString& _data) {
+    slog(eGEND, "Réponse envoyée au client."
+                "|adresse_ip=%s"
+                "|port=%d"
+                "|process=%d"
+                "|data=%s", m_addressIP.c_str(), m_port, m_pid, _data.c_str());
+
+    int lIndex = 0;
+    const char* lBuffer = _data.c_str();
+    int lSize = _data.size();
+    while(1) {
+        int lBytes = send(m_socket, &lBuffer[lIndex], lSize - lIndex, 0);
+        if(lBytes == -1) {
+            slog(eGERR, "Erreur lors de l'envoi des données sur le socket."
+                        "|adresse_ip=%s"
+                        "|port=%d"
+                        "|process=%d"
+                        "|errno=%d"
+                        "|errmsg=%s"
+                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, errno, strerror(errno), _data.c_str());
+            return false;
+        }
+        lIndex += lBytes;
+        if(lIndex >= lSize) break;
+    }
+    return true;
 }
 //===============================================
 GString GSocket::readData() const {
@@ -187,7 +223,7 @@ GString GSocket::readData() const {
         lData += GString(lBuffer, lBytes);
         if(!isData) {
             lReq.setData(lData);
-            if(!lReq.analyze()) return "";
+            if(!lReq.analyzeHeader()) return "";
             isData = true;
         }
         int lRemaing = 0;
@@ -205,6 +241,18 @@ GString GSocket::readData() const {
         if((lRemaing == 0) && (lSize >= lReq.getTotal())) break;
     }
     return lData;
+}
+//===============================================
+const GString& GSocket::getAddressIP() const {
+    return m_addressIP;
+}
+//===============================================
+int GSocket::getPort() const {
+    return m_port;
+}
+//===============================================
+pid_t GSocket::getPid() const {
+    return m_pid;
 }
 //===============================================
 void* GSocket::onThread(void* _params) {

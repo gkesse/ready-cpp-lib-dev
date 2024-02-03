@@ -2,7 +2,6 @@
 #ifndef _GCsv_
 #define _GCsv_
 //===============================================
-#include "GInclude.h"
 #include "GString.h"
 //===============================================
 class GCsv {

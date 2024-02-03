@@ -142,6 +142,19 @@ int GString::count(const GString& _sep) const {
     return lCount;
 }
 //===============================================
+int GString::countSep(const GString& _sep) const {
+    GString lData = *this;
+    char* lToken = strtok(lData.m_data , _sep.c_str());
+    int lCount = 0;
+
+    while(lToken) {
+        lCount++;
+        lToken = strtok(0, _sep.c_str());
+    }
+
+    return lCount;
+}
+//===============================================
 bool GString::startsWith(const GString& _data) const {
     if(isEmpty()) return false;
     if(size() < _data.size()) return false;
@@ -227,6 +240,20 @@ GString GString::extract(const GString& _sep1, const GString& _sep2, int _pos) c
     return substr(lPos, lSize);
 }
 //===============================================
+GString GString::extractSep(const GString& _sep, int _index) const {
+    GString lData = *this;
+    char* lToken = strtok(lData.m_data , _sep.c_str());
+    int lCount = 0;
+
+    while(lToken) {
+        if(lCount == _index) return lToken;
+        lToken = strtok(0, _sep.c_str());
+        lCount++;
+    }
+
+    return "";
+}
+//===============================================
 GString GString::toBase64() const {
     return Base64::encode((uchar*)m_data, m_size);
 }
@@ -283,19 +310,6 @@ GString GString::getFilename() const {
     size_t lFound = lPath.find_last_of("/\\");
     if(lFound == std::string::npos) return "";
     return lPath.substr(lFound  +1);
-}
-//===============================================
-std::vector<GString> GString::split(const GString& _sep) const {
-    std::vector<GString> lMap;
-    char* lToken = strtok(m_data, _sep.c_str());
-
-    while(lToken) {
-        GString lValue = lToken;
-        lMap.push_back(lToken);
-        lToken = strtok(0, _sep.c_str());
-    }
-
-    return lMap;
 }
 //===============================================
 void GString::print() const {

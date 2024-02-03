@@ -2,7 +2,6 @@
 #ifndef _GTree_
 #define _GTree_
 //===============================================
-#include "GInclude.h"
 #include "GString.h"
 //===============================================
 class GTree {

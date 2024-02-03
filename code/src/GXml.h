@@ -2,7 +2,6 @@
 #ifndef _GXml_
 #define _GXml_
 //===============================================
-#include "GInclude.h"
 #include "GString.h"
 //===============================================
 class GXml {
