@@ -2,21 +2,16 @@
 #ifndef _GDispatcherGet_
 #define _GDispatcherGet_
 //===============================================
-#include "GDispatcher.h"
+#include "GDispatcherHttp.h"
 //===============================================
-class GDispatcherGet : public GDispatcher {
+class GDispatcherGet : public GDispatcherHttp {
 public:
     GDispatcherGet();
     ~GDispatcherGet();
-    void setDispatcher(const GDispatcher& _dispatcher);
     void run();
     void runHelloWorld();
+    void runHome();
     void runUnknown();
-
-private:
-    GString m_method;
-    GString m_uri;
-    GString m_version;
 };
 //===============================================
 #endif

@@ -1,20 +1,15 @@
 //===============================================
 #include "GDispatcherGet.h"
 #include "GResponseHttp.h"
+#include "GPage.h"
 //===============================================
 GDispatcherGet::GDispatcherGet()
-: GDispatcher() {
+: GDispatcherHttp() {
 
 }
 //===============================================
 GDispatcherGet::~GDispatcherGet() {
 
-}
-//===============================================
-void GDispatcherGet::setDispatcher(const GDispatcher& _dispatcher) {
-    m_method = _dispatcher.getHttp().getMethod();
-    m_uri = _dispatcher.getHttp().getUri();
-    m_version = _dispatcher.getHttp().getVersion();
 }
 //===============================================
 void GDispatcherGet::run() {
@@ -27,31 +22,35 @@ void GDispatcherGet::run() {
     if(m_uri == "/hello/world") {
         runHelloWorld();
     }
+    else if(m_uri == "/home") {
+        runHome();
+    }
     else {
         runUnknown();
     }
 }
 //===============================================
 void GDispatcherGet::runHelloWorld() {
-    GString lContent;
-    lContent += sformat("Bonjour tout le monde.");
-
-    GResponseHttp lResponse;
-    lResponse.setContent(lContent);
-    lResponse.create();
-
-    m_response += lResponse;
+    GPage lPage;
+    lPage.setObject(*this);
+    lPage.setDispatcher(*this);
+    lPage.createHelloWrold();
+    m_response += lPage;
+}
+//===============================================
+void GDispatcherGet::runHome() {
+    GPage lPage;
+    lPage.setObject(*this);
+    lPage.setDispatcher(*this);
+    lPage.createHome();
+    m_response += lPage;
 }
 //===============================================
 void GDispatcherGet::runUnknown() {
-    GString lContent;
-    lContent += sformat("Page non trouvée.");
-
-    GResponseHttp lResponse;
-    lResponse.setStatus(GResponseHttp::eGStatus::NotFound);
-    lResponse.setContent(lContent);
-    lResponse.create();
-
-    m_response += lResponse;
+    GPage lPage;
+    lPage.setObject(*this);
+    lPage.setDispatcher(*this);
+    lPage.createUnknown();
+    m_response += lPage;
 }
 //===============================================

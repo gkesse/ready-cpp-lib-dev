@@ -86,7 +86,7 @@ public:
     ~GResponseHttp();
     void setStatus(const eGStatus& _status);
     void setContentType(const GString& _contentType);
-    void setContent(const GString& _data);
+    void setContent(const GString& _content);
     void create();
     GString toReason(const eGStatus& _status) const;
 
@@ -95,6 +95,10 @@ private:
     GString m_content;
     GString m_contentType;
     GString m_connection;
+
+    GString m_method;
+    GString m_uri;
+    GString m_version;
 };
 //===============================================
 #endif
