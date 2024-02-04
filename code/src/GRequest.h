@@ -16,7 +16,7 @@ public:
     GRequest();
     ~GRequest();
     void setData(const GString& _data);
-    void setRequest(const GRequest& _request);
+    virtual void setRequest(const GRequest& _request);
     bool analyzeHeader();
     bool analyzeRequest();
     int getTotal() const;

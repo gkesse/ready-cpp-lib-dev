@@ -2,7 +2,7 @@
 #include "GSocket.h"
 #include "GRequest.h"
 #include "GDispatcher.h"
-#include "GResponseHttp.h"
+#include "GResponse.h"
 //===============================================
 #define SOCKET_HOSTNAME "0.0.0.0"
 #define SOCKET_PORT     9050
@@ -133,6 +133,7 @@ void GSocket::runThread() {
                 "|process=%d", m_addressIP.c_str(), m_port, m_pid);
 
     GString lRequest = readData();
+    GResponse lResp;
 
     if(!lRequest.isEmpty()) {
         slog(eGINF, "Requête reçu du client."
@@ -150,12 +151,11 @@ void GSocket::runThread() {
             lDispatcher.setObject(lReq);
             lDispatcher.setRequest(lReq);
             lDispatcher.run();
+            lResp.addResp(lDispatcher.getResp());
         }
-
-        GResponseHttp lResponseHttp;
-        sendData(lResponseHttp.toError());
     }
 
+    sendData(lResp.toResponse());
     slog(eGEND, "Fin du traitement de la requête du client."
                 "|adresse_ip=%s"
                 "|port=%d"

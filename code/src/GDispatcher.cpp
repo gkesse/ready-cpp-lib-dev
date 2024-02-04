@@ -12,6 +12,10 @@ GDispatcher::~GDispatcher() {
 
 }
 //===============================================
+const GResponse& GDispatcher::getResp() const {
+    return m_response;
+}
+//===============================================
 void GDispatcher::run() {
     if(m_type == Type::REQ_TYPE_HTTP_GET) {
         runGet();
@@ -23,5 +27,6 @@ void GDispatcher::runGet() {
     lObj.setObject(*this);
     lObj.setDispatcher(*this);
     lObj.run();
+    m_response.addResp(lObj.getResp());
 }
 //===============================================

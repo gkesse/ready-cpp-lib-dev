@@ -10,6 +10,8 @@ public:
     ~GDispatcherGet();
     void setDispatcher(const GDispatcher& _dispatcher);
     void run();
+    void runHelloWorld();
+    void runUnknown();
 
 private:
     GString m_method;

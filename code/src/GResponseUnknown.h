@@ -1,20 +1,14 @@
 //===============================================
-#ifndef _GDispatcher_
-#define _GDispatcher_
+#ifndef _GResponseUnknown_
+#define _GResponseUnknown_
 //===============================================
-#include "GRequest.h"
 #include "GResponse.h"
 //===============================================
-class GDispatcher : public GRequest {
+class GResponseUnknown : public GResponse {
 public:
-    GDispatcher();
-    ~GDispatcher();
-    const GResponse& getResp() const;
-    void run();
-    void runGet();
-
-protected:
-    GResponse m_response;
+    GResponseUnknown();
+    ~GResponseUnknown();
+    void create();
 };
 //===============================================
 #endif

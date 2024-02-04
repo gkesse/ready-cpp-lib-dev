@@ -1,6 +1,6 @@
 //===============================================
 #include "GDispatcherGet.h"
-#include "GRequest.h"
+#include "GResponseHttp.h"
 //===============================================
 GDispatcherGet::GDispatcherGet()
 : GDispatcher() {
@@ -23,5 +23,35 @@ void GDispatcherGet::run() {
                 "|port=%d"
                 "|process=%d"
                 "|uri=%s", m_addressIP.c_str(), m_port, m_pid, m_uri.c_str());
+
+    if(m_uri == "/hello/world") {
+        runHelloWorld();
+    }
+    else {
+        runUnknown();
+    }
+}
+//===============================================
+void GDispatcherGet::runHelloWorld() {
+    GString lContent;
+    lContent += sformat("Bonjour tout le monde.");
+
+    GResponseHttp lResponse;
+    lResponse.setContent(lContent);
+    lResponse.create();
+
+    m_response += lResponse;
+}
+//===============================================
+void GDispatcherGet::runUnknown() {
+    GString lContent;
+    lContent += sformat("Page non trouvée.");
+
+    GResponseHttp lResponse;
+    lResponse.setStatus(GResponseHttp::eGStatus::NotFound);
+    lResponse.setContent(lContent);
+    lResponse.create();
+
+    m_response += lResponse;
 }
 //===============================================
