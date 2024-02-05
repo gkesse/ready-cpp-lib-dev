@@ -28,20 +28,20 @@ void GHome::create() {
     init();
 
     GString lContent;
-    lContent += sformat("<!DOCTYPE html>");
-    lContent += sformat("<html lang='fr'>");
-    lContent += sformat("<head>");
+    lContent += sformat("<!DOCTYPE html>\n");
+    lContent += sformat("<html lang='fr'>\n");
+    lContent += sformat("<head>\n");
     //
-    lContent += sformat("<title>ReadyPad</title>");
-    lContent += sformat("<meta name='viewport' content='width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0, user-scalable=no'/>");
-    lContent += sformat("<meta charset='UTF-8'/>");
-    lContent += sformat("<link rel='shortcut icon' type='image/png' href='%s'/>", m_logo.c_str());
+    lContent += sformat("<title>ReadyPad</title>\n");
+    lContent += sformat("<meta name='viewport' content='width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0, user-scalable=no'/>\n");
+    lContent += sformat("<meta charset='UTF-8'/>\n");
+    lContent += sformat("<link rel='shortcut icon' type='image/png' href='%s'/>\n", m_logo.c_str());
     //
-    lContent += sformat("</head>");
-    lContent += sformat("<body>");
-    lContent += sformat("<h1>Bonjour Tout le Monde.</h1>");
-    lContent += sformat("</body>");
-    lContent += sformat("</html>");
+    lContent += sformat("</head>\n");
+    lContent += sformat("<body>\n");
+    lContent += sformat("<h1>Bonjour Tout le Monde.</h1>\n");
+    lContent += sformat("</body>\n");
+    lContent += sformat("</html>\n");
 
     GResponseHttp lResponse;
     lResponse.setContent(lContent);
