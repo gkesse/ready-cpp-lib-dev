@@ -2,9 +2,9 @@
 #ifndef _GSocket_
 #define _GSocket_
 //===============================================
-#include "GString.h"
+#include "GObject.h"
 //===============================================
-class GSocket {
+class GSocket : public GObject {
 public:
     GSocket();
     ~GSocket();

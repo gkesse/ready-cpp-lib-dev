@@ -21,7 +21,8 @@ void GTest::run(int _argc, char** _argv) {
     if(_argc > 2) lMethod = _argv[2];
 
     if(lMethod == "") {
-        m_logs.addError("La méthode est obligatoire.");
+        slog(eGERR, "La méthode est obligatoire."
+                    "|module=test");
     }
     else if(lMethod == "string") {
         runString(_argc, _argv);
@@ -48,7 +49,9 @@ void GTest::run(int _argc, char** _argv) {
         runDebug(_argc, _argv);
     }
     else {
-        m_logs.addError("La méthode est inconnue.");
+        slog(eGERR, "La méthode est inconnue."
+                    "|module=test"
+                    "|method=%s", lMethod.c_str());
     }
 }
 //===============================================

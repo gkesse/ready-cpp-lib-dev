@@ -48,8 +48,7 @@ void GProcess::run(int _argc, char** _argv) {
     if(_argc > 1) lModule = _argv[1];
 
     if(lModule == "") {
-        slog(eGERR, "Erreur, on ne peut exécuter un process associé à aucun module.");
-        m_logs.addError("Un problème a été rencontré.");
+        slog(eGERR, "Le module est obligatoire.");
     }
     else if(lModule == "test") {
         runTest(_argc, _argv);
@@ -58,9 +57,8 @@ void GProcess::run(int _argc, char** _argv) {
         runServer(_argc, _argv);
     }
     else {
-        slog(eGERR, "Erreur, on ne peut exécuter un process associé à un module inconnu."
+        slog(eGERR, "Le module est inconnu."
                     "|module=%s", lModule.c_str());
-        m_logs.addError("Un problème a été rencontré.");
     }
 }
 //===============================================
@@ -71,7 +69,8 @@ void GProcess::runTest(int _argc, char** _argv) {
 }
 //===============================================
 void GProcess::runServer(int _argc, char** _argv) {
-    GSocket lServer;
-    lServer.runServer();
+    GSocket lObj;
+    lObj.runServer();
+    m_logs.addLogs(lObj.getLogs());
 }
 //===============================================

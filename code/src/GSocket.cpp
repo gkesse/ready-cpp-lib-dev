@@ -9,7 +9,8 @@
 #define SOCKET_BACKLOG  5
 //===============================================
 GSocket::GSocket()
-: m_socket(-1)
+: GObject()
+, m_socket(-1)
 , m_port(-1)
 , m_pid(-1) {
 

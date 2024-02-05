@@ -7,8 +7,7 @@ GObject* GObject::m_instance = 0;
 GObject::GObject()
 : m_port(-1)
 , m_pid(-1) {
-    m_resp.createDoc();
-    m_resp.createDatas();
+
 }
 //===============================================
 GObject::~GObject() {
@@ -18,6 +17,7 @@ GObject::~GObject() {
 GObject* GObject::Instance() {
     if(m_instance == 0) {
         m_instance = new GObject;
+        m_instance->init();
     }
     return m_instance;
 }
@@ -29,6 +29,18 @@ void GObject::clearMap() {
     }
     m_map.clear();
     m_logs.clearMap();
+}
+//===============================================
+void GObject::init() {
+    m_dataPath = getEnv("GPROJECT_DATA");
+
+    if(m_dataPath.isEmpty()) {
+        slog(eGERR, "Le chemin des données n'a pas été configuré.");
+    }
+    else {
+        slog(eGINF, "Le chemin des données a été bien configuré."
+                    "|data_path=%s", m_dataPath.c_str());
+    }
 }
 //===============================================
 void GObject::setObject(const GObject& _obj) {
@@ -45,6 +57,16 @@ void GObject::setSocket(const GSocket& _socket) {
 //===============================================
 const GLog& GObject::getLogs() const {
     return m_logs;
+}
+//===============================================
+GString GObject::getEnv(const GString& _env) const {
+    char* lEnv = getenv(_env.c_str());
+    if(lEnv == 0) return "";
+    return lEnv;
+}
+//===============================================
+GString GObject::getPath(const GString& _path) const {
+    return sformat("%s%s", m_dataPath.c_str(), _path.c_str());
 }
 //===============================================
 void GObject::print() const {
