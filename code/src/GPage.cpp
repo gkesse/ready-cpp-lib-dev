@@ -1,6 +1,7 @@
 //===============================================
 #include "GPage.h"
 #include "GDispatcherHttp.h"
+#include "GHome.h"
 //===============================================
 GPage::GPage()
 : GResponseHttp() {
@@ -9,6 +10,12 @@ GPage::GPage()
 //===============================================
 GPage::~GPage() {
 
+}
+//===============================================
+void GPage::setPage(const GPage& _page) {
+    m_method = _page.m_method;
+    m_uri = _page.m_uri;
+    m_version = _page.m_version;
 }
 //===============================================
 void GPage::setDispatcher(const GDispatcherHttp& _dispatcher) {
@@ -41,27 +48,11 @@ void GPage::createHome() {
                 "|process=%d"
                 "|uri=%s", m_addressIP.c_str(), m_port, m_pid, m_uri.c_str());
 
-    GString lContent;
-    lContent += sformat("<!DOCTYPE html>");
-    lContent += sformat("<html lang='fr'>");
-    lContent += sformat("<head>");
-    //
-    lContent += sformat("<title>ReadyPad</title>");
-    lContent += sformat("<meta name='viewport' content='width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0, user-scalable=no'/>");
-    lContent += sformat("<meta charset='UTF-8'/>");
-    lContent += sformat("<link rel='shortcut icon' type='image/png' href='/data/img/defaults/readydev.png'/>");
-    //
-    lContent += sformat("</head>");
-    lContent += sformat("<body>");
-    lContent += sformat("<h1>Bonjour Tout le Monde.</h1>");
-    lContent += sformat("</body>");
-    lContent += sformat("</html>");
-
-    GResponseHttp lResponse;
-    lResponse.setContent(lContent);
-    lResponse.create();
-
-    m_response += lResponse.toResponse();
+    GHome lPage;
+    lPage.setObject(*this);
+    lPage.setPage(*this);
+    lPage.create();
+    m_response += lPage.toResponse();
 }
 //===============================================
 void GPage::createUnknown() {

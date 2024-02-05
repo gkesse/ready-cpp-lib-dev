@@ -10,6 +10,7 @@ class GPage : public GResponseHttp {
 public:
     GPage();
     ~GPage();
+    void setPage(const GPage& _page);
     void setDispatcher(const GDispatcherHttp& _dispatcher);
     void createHelloWrold();
     void createHome();
