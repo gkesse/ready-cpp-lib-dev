@@ -2,6 +2,7 @@
 #ifndef _GObject_
 #define _GObject_
 //===============================================
+#include "GCode.h"
 #include "GLog.h"
 #include "GDebug.h"
 #include "GException.h"
