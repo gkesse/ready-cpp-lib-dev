@@ -25,12 +25,12 @@ GDebug* GDebug::Instance() {
 bool GDebug::init() {
     m_isTestEnv = isTestEnv();
     m_enviro = (m_isTestEnv ? "test" : "prod");
-    m_dataPath = getDataPath();
+    m_logRoot = getLogRoot();
     return true;
 }
 //===============================================
 bool GDebug::isTestEnv() const {
-    char* lEnv = getenv("GPROJECT_ENV");
+    char* lEnv = getenv("GENV_TYPE");
     if(lEnv == 0) return false;
     GString lData = lEnv;
     return (lData == "TEST");
@@ -77,17 +77,17 @@ GString GDebug::getDate(const GString& _format) const {
     return lBuffer;
 }
 //===============================================
-GString GDebug::getDataPath() const {
-    char* lEnv = getenv("GPROJECT_DATA");
+GString GDebug::getLogRoot() const {
+    char* lEnv = getenv("GLOG_ROOT");
     if(lEnv == 0) return "";
     return lEnv;
 }
 //===============================================
 GString GDebug::getLogFile() const {
-    if(m_dataPath.isEmpty()) return "";
+    if(m_logRoot.isEmpty()) return "";
     const char* lFilename = LOG_FILENAME;
     GString lDate = getDate("%Y/%m/%d");
-    GString lPath = sformat("%s/logs/%s/%s/%s", m_dataPath.c_str(), lDate.c_str(), m_enviro.c_str(), lFilename);
+    GString lPath = sformat("%s/logs/%s/%s/%s", m_logRoot.c_str(), lDate.c_str(), m_enviro.c_str(), lFilename);
     return lPath;
 }
 //===============================================

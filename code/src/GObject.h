@@ -8,7 +8,7 @@
 #include "GException.h"
 //===============================================
 #define GOBJECT     GObject::Instance()
-#define spath       GOBJECT->getPath
+#define sres        GOBJECT->getResource
 //===============================================
 class GSocket;
 //===============================================
@@ -24,14 +24,14 @@ public:
     virtual void setSocket(const GSocket& _socket);
     virtual const GLog& getLogs() const;
     virtual GString getEnv(const GString& _env) const;
-    virtual GString getPath(const GString& _path) const;
+    virtual GString getResource(const GString& _path) const;
     virtual void print() const;
     virtual GString serialize(const GString& _code = "object") const;
     virtual void deserialize(const GString& _data, const GString& _code = "object");
 
 private:
     static GObject* m_instance;
-    GString m_dataPath;
+    GString m_webRoot;
 
 protected:
     GLog m_logs;

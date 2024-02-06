@@ -1,20 +1,20 @@
 //===============================================
-#include "GHome.h"
+#include "GHomeUi.h"
 //===============================================
-GHome::GHome()
+GHomeUi::GHomeUi()
 : GPage() {
 
 }
 //===============================================
-GHome::~GHome() {
+GHomeUi::~GHomeUi() {
 
 }
 //===============================================
-void GHome::init() {
+void GHomeUi::init() {
 
 }
 //===============================================
-void GHome::create() {
+void GHomeUi::create() {
     slog(eGINF, "Création de la page Home."
                 "|adresse_ip=%s"
                 "|port=%d"

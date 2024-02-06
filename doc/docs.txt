@@ -1,9 +1,10 @@
-#================================================
+###==============================================
 ### Ubuntu
-#================================================
+###==============================================
 
 Ubuntu est un système d'exploitation Linux open source
-utilisé pour le développement de serveur d'application.
+utilisé dans un contexte de développement d'application
+serveur.
 
 #------------------------------------------------
 ### Mise à jour du système
@@ -12,13 +13,13 @@ utilisé pour le développement de serveur d'application.
 sudo apt update
 sudo apt upgrade -y
 
-#================================================
+###==============================================
 ### Base64
-#================================================
+###==============================================
 
-Base64 est un système d'encodage utilisé
-pour transmettre n'importe quel document binaire:
-application, image, vidéo, audio, etc. 
+Base64 est un système d'encodage utilisé dans un
+contexte où l'on veut transmettre des documents
+binaires (application, image, vidéo, audio, etc.) 
 sur le réseau internet.
 
 #------------------------------------------------
@@ -60,21 +61,24 @@ tree
 cp -p base64.h libs/include/base64
 cp -p libbase64.a libs/lib
 
-#================================================
+###==============================================
 ### Git
-#================================================
+###==============================================
 
-Git est un système de gestion de versions décentralisé utilisé
-pour gérer les différentes d'un projet dans une architecture
-où les utilisateurs peuvent se synchroniser entre eux sans
-forcement passer par un serveur maître.
+Git est un système de gestion de versions décentralisé
+utilisé dans un contexte où l'on veut travailler de
+manière collaborative et suivre efficacement les
+différentes version d'un projet. L'architecture de Git
+permet aux utilisateurs de pouvoir se synchroniser 
+entre eux sans forcement passer par un serveur maître.
 
-#================================================
+###==============================================
 ### Json
-#================================================
+###==============================================
 
-Json est un format de données utilisé pour sérialiser
-les objets avant de les transmettre sur le réseau internet.
+Json est un format de données utilisé dans un contexte
+où l'on veut sérialiser des objets pour mieux les 
+transmettre sur le réseau internet.
 
 #------------------------------------------------
 ### Installion sous Ubuntu
@@ -96,18 +100,18 @@ CFLAGS += -I/usr/include/json-c
 
 LIBS += -L/usr/lib -ljson-c
 
-#================================================
+###==============================================
 ### ipapi
-#================================================
+###==============================================
 
-ipapi une api utilisé pour déterminer la localisation
-d'une adresse ip.
+ipapi une api utilisé dans un contexte où l'on cherche
+à déterminer la localisation d'une adresse ip.
 
 https://ipapi.co/8.8.8.8/country
 
-#================================================
+###==============================================
 ### crontab
-#================================================
+###==============================================
 
 but:
 - planifier des tâches
@@ -154,6 +158,6 @@ a4: mois de l'année (1-12)
 a5: jour de la semaine (0-6, 0=dimanche)
 a6: commande à exécuter
 
-#================================================
-# Fin
-#================================================
+###==============================================
+### Fin
+###==============================================

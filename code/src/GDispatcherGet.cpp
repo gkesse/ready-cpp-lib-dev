@@ -42,7 +42,7 @@ void GDispatcherGet::run() {
 }
 //===============================================
 bool GDispatcherGet::loadResource() {
-    GString lPath = spath(m_uri);
+    GString lPath = sres(m_uri);
     struct stat lStat;
     // la ressource existe ?
     if(!stat(lPath.c_str(), &lStat)) {

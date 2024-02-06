@@ -6,10 +6,10 @@
 //===============================================
 class GDispatcherHttp;
 //===============================================
-class GHome : public GPage {
+class GHomeUi : public GPage {
 public:
-    GHome();
-    ~GHome();
+    GHomeUi();
+    ~GHomeUi();
     void init();
     void create();
 };

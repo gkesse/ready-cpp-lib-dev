@@ -32,14 +32,14 @@ void GObject::clearMap() {
 }
 //===============================================
 void GObject::init() {
-    m_dataPath = getEnv("GPROJECT_DATA");
+    m_webRoot = getEnv("GWEB_ROOT");
 
-    if(m_dataPath.isEmpty()) {
-        slog(eGERR, "Le chemin des données n'a pas été configuré.");
+    if(m_webRoot.isEmpty()) {
+        slog(eGERR, "La racine du serveur web n'a pas été configurée.");
     }
     else {
-        slog(eGINF, "Le chemin des données a été bien configuré."
-                    "|data_path=%s", m_dataPath.c_str());
+        slog(eGERR, "La racine du serveur web a été bien configurée."
+                    "|webroot=%s", m_webRoot.c_str());
     }
 }
 //===============================================
@@ -65,8 +65,8 @@ GString GObject::getEnv(const GString& _env) const {
     return lEnv;
 }
 //===============================================
-GString GObject::getPath(const GString& _path) const {
-    return sformat("%s%s", m_dataPath.c_str(), _path.c_str());
+GString GObject::getResource(const GString& _path) const {
+    return sformat("%s%s", m_webRoot.c_str(), _path.c_str());
 }
 //===============================================
 void GObject::print() const {

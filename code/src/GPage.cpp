@@ -1,7 +1,7 @@
 //===============================================
 #include "GPage.h"
 #include "GDispatcherHttp.h"
-#include "GHome.h"
+#include "GHomeUi.h"
 //===============================================
 GPage::GPage()
 : GResponseHttp() {
@@ -48,7 +48,7 @@ void GPage::createHome() {
                 "|process=%d"
                 "|uri=%s", m_addressIP.c_str(), m_port, m_pid, m_uri.c_str());
 
-    GHome lPage;
+    GHomeUi lPage;
     lPage.setObject(*this);
     lPage.setPage(*this);
     lPage.create();

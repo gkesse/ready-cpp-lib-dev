@@ -26,14 +26,14 @@ public:
     bool writeFile(const GString& _data);
     bool writeData(int _level, const char* _name, const char* _file, int _line, const char* _func, const char* _format, ...);
     GString getDate(const GString& _format = "%d/%m/%Y %H:%M:%S") const;
-    GString getDataPath() const;
+    GString getLogRoot() const;
     GString getLogFile() const;
 
 private:
     static GDebug* m_instance;
     bool m_isTestEnv;
     GString m_enviro;
-    GString m_dataPath;
+    GString m_logRoot;
 };
 //===============================================
 #endif
