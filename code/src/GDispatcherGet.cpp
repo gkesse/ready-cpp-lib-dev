@@ -25,7 +25,7 @@ void GDispatcherGet::run() {
         if(m_uri == "/hello/world") {
             runHelloWorld();
         }
-        else if(m_uri.startsWith("/carpool")) {
+        else if(isPage("/carpool")) {
             runCarpool();
         }
         else {
@@ -79,6 +79,13 @@ bool GDispatcherGet::loadResource() {
         }
     }
     return false;
+}
+//===============================================
+bool GDispatcherGet::isPage(const GString& _page) {
+    if(!m_uri.startsWith(_page)) return false;
+    m_pageId = m_uri.substr(_page.size());
+    if(m_pageId.back() == '/') m_pageId.pop();
+    return true;
 }
 //===============================================
 void GDispatcherGet::runHelloWorld() {

@@ -133,6 +133,13 @@ char GString::back() const {
     return lData.back();
 }
 //===============================================
+void GString::pop() {
+    if(isEmpty()) return;
+    std::string lData(m_data, m_size);
+    lData.pop_back();
+    *this = lData;
+}
+//===============================================
 int GString::indexOf(const GString& _sep, int _pos) const {
     if(isEmpty()) return -1;
     std::string lData(m_data, m_size);

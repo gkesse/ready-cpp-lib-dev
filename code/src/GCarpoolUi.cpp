@@ -44,7 +44,7 @@ void GCarpoolUi::create() {
     lContent += sformat("<a href='/carpool'>Covoiturage du quotidien</a>\n");
     lContent += sformat("<a href='/carpool'>Rechercher</a>\n");
     lContent += sformat("<a href='/carpool'>Publier un trajet</a>\n");
-    lContent += sformat("<a href='/carpool'>Profil</a>\n");
+    lContent += sformat("<a href='/carpool/connexion'>Connexion</a>\n");
     lContent += sformat("</div>\n");
     //
     lContent += sformat("<script src='/js/scripts.js'></script>\n");

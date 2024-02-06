@@ -33,6 +33,7 @@ public:
     bool createPath(mode_t _mode) const;
     char first() const;
     char back() const;
+    void pop();
     int indexOf(const GString& _sep, int _pos = 0) const;
     int count(const GString& _sep) const;
     int countSep(const GString& _sep) const;
@@ -44,7 +45,7 @@ public:
     double toDouble() const;
     GString toUpper() const;
     GString toLower() const;
-    GString substr(int _pos, int _size) const;
+    GString substr(int _pos, int _size = -1) const;
     GString extract(const GString& _sep, int _index = 0) const;
     GString extract(const GString& _sep1, const GString& _sep2, int _pos = 0) const;
     GString extractSep(const GString& _sep, int _index = 0) const;
