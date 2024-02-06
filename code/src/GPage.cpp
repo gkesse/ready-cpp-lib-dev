@@ -35,9 +35,9 @@ void GPage::createHelloWrold() {
     lContent += sformat("Bonjour tout le monde.");
 
     GResponseHttp lResponse;
+    lResponse.setObject(*this);
     lResponse.setContent(lContent);
     lResponse.create();
-
     m_response += lResponse.toResponse();
 }
 //===============================================
@@ -63,9 +63,9 @@ void GPage::createUnknown() {
                 "|uri=%s", m_addressIP.c_str(), m_port, m_pid, m_uri.c_str());
 
     GResponseHttp lResponse;
+    lResponse.setObject(*this);
     lResponse.setStatus(GResponseHttp::eGStatus::NotFound);
     lResponse.create();
-
     m_response += lResponse.toResponse();
 }
 //===============================================

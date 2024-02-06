@@ -9,6 +9,7 @@ public:
     GDispatcherGet();
     ~GDispatcherGet();
     void run();
+    bool loadResource();
     void runHelloWorld();
     void runHome();
     void runUnknown();

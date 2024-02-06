@@ -31,6 +31,8 @@ public:
     int size() const;
     bool isEmpty() const;
     bool createPath(mode_t _mode) const;
+    char first() const;
+    char back() const;
     int indexOf(const GString& _sep, int _pos = 0) const;
     int count(const GString& _sep) const;
     int countSep(const GString& _sep) const;
@@ -40,6 +42,8 @@ public:
     char toChar() const;
     int toInt() const;
     double toDouble() const;
+    GString toUpper() const;
+    GString toLower() const;
     GString substr(int _pos, int _size) const;
     GString extract(const GString& _sep, int _index = 0) const;
     GString extract(const GString& _sep1, const GString& _sep2, int _pos = 0) const;
@@ -52,6 +56,9 @@ public:
     GString getFormat(const char* _format, ...) const;
     GString getFilepath() const;
     GString getFilename() const;
+    GString getBasename() const;
+    GString getExtension() const;
+    GString getMimeType() const;
     void print() const;
 
     GString& operator=(bool _data);

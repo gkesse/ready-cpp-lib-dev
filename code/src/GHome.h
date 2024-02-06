@@ -12,9 +12,6 @@ public:
     ~GHome();
     void init();
     void create();
-
-private:
-    GString m_logo;
 };
 //===============================================
 #endif

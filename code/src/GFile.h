@@ -4,7 +4,7 @@
 //===============================================
 #include "GObject.h"
 //===============================================
-class GFile {
+class GFile : public GObject {
 public:
     enum class Mode {
         FILE_MODE_UNKNOWN
@@ -25,7 +25,6 @@ public:
     bool existFile() const;
     bool writeData(const GString& _data);
     GString readData() const;
-    GString readBin() const;
     GFile& operator=(const GFile& _file);
 
 private:

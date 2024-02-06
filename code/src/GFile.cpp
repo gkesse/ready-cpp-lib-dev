@@ -1,7 +1,8 @@
 //===============================================
 #include "GFile.h"
 //===============================================
-GFile::GFile() {
+GFile::GFile()
+: GObject() {
     m_mode = Mode::FILE_MODE_UNKNOWN;
 }
 //===============================================
@@ -37,10 +38,13 @@ bool GFile::writeData(const GString& _data) {
     if(m_mode == Mode::FILE_MODE_WRITE_TEXT) {
         std::ofstream lFile(m_fullname.c_str());
         if(!lFile) {
-            slog(eGERR, "Erreur lors de l'ouverture du fichier."
+            slog(eGERR, "L'ouverture du fichier a échoué."
+                        "|adresse_ip=%s"
+                        "|port=%d"
+                        "|process=%d"
                         "|filename=%s"
                         "|mode=%d"
-                        "|data=%s", m_fullname.c_str(), m_mode, _data.c_str());
+                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode, _data.c_str());
             return false;
         }
         lFile << _data.c_str();
@@ -48,10 +52,13 @@ bool GFile::writeData(const GString& _data) {
     else if(m_mode == Mode::FILE_MODE_APPEND_TEXT) {
         std::ofstream lFile(m_fullname.c_str(), std::ios::out | std::ios::app);
         if(!lFile) {
-            slog(eGERR, "Erreur lors de l'ouverture du fichier."
+            slog(eGERR, "L'ouverture du fichier a échoué."
+                        "|adresse_ip=%s"
+                        "|port=%d"
+                        "|process=%d"
                         "|filename=%s"
                         "|mode=%d"
-                        "|data=%s", m_fullname.c_str(), m_mode, _data.c_str());
+                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode, _data.c_str());
             return false;
         }
         lFile << _data.c_str();
@@ -59,19 +66,25 @@ bool GFile::writeData(const GString& _data) {
     else if(m_mode == Mode::FILE_MODE_WRITE_BIN) {
         std::ofstream lFile(m_fullname.c_str(), std::ios::out | std::ios::binary);
         if(!lFile) {
-            slog(eGERR, "Erreur lors de l'ouverture du fichier."
+            slog(eGERR, "L'ouverture du fichier a échoué."
+                        "|adresse_ip=%s"
+                        "|port=%d"
+                        "|process=%d"
                         "|filename=%s"
                         "|mode=%d"
-                        "|data=%s", m_fullname.c_str(), m_mode, _data.c_str());
+                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode, _data.c_str());
             return false;
         }
         lFile.write(_data.c_str(), _data.size());
     }
     else {
-        slog(eGERR, "Erreur, on ne peut pas écrire dans un fichier avec un mode inconnu."
+        slog(eGERR, "Le mode d'ouverture du fichier est inconnu."
+                    "|adresse_ip=%s"
+                    "|port=%d"
+                    "|process=%d"
                     "|filename=%s"
                     "|mode=%d"
-                    "|data=%s", m_fullname.c_str(), m_mode, _data.c_str());
+                    "|data=%s", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode, _data.c_str());
         return false;
     }
     return true;
@@ -82,9 +95,12 @@ GString GFile::readData() const {
     if(m_mode == Mode::FILE_MODE_READ_TEXT) {
         std::ifstream lFile(m_fullname.c_str());
         if(!lFile) {
-            slog(eGERR, "Erreur lors de l'ouverture du fichier."
+            slog(eGERR, "L'ouverture du fichier a échoué."
+                        "|adresse_ip=%s"
+                        "|port=%d"
+                        "|process=%d"
                         "|filename=%s"
-                        "|mode=%d", m_fullname.c_str(), m_mode);
+                        "|mode=%d", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode);
             return "";
         }
         std::stringstream lBuffer;
@@ -94,13 +110,24 @@ GString GFile::readData() const {
     else if(m_mode == Mode::FILE_MODE_READ_BIN) {
         std::ifstream lFile(m_fullname.c_str(), std::ios::in | std::ios::binary);
         if(!lFile) {
-            slog(eGERR, "Erreur lors de l'ouverture du fichier."
+            slog(eGERR, "L'ouverture du fichier a échoué."
+                        "|adresse_ip=%s"
+                        "|port=%d"
+                        "|process=%d"
                         "|filename=%s"
-                        "|mode=%d", m_fullname.c_str(), m_mode);
+                        "|mode=%d", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode);
             return "";
         }
         std::vector<char> lData = std::vector<char>(std::istreambuf_iterator<char>(lFile), std::istreambuf_iterator<char>());
         return lData;
+    }
+    else {
+        slog(eGERR, "Le mode d'ouverture du fichier est inconnu."
+                    "|adresse_ip=%s"
+                    "|port=%d"
+                    "|process=%d"
+                    "|filename=%s"
+                    "|mode=%d", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode);
     }
     return "";
 }

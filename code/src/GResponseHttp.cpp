@@ -1,8 +1,8 @@
 //===============================================
 #include "GResponseHttp.h"
 //===============================================
-#define GDEFINE_STATUS(x, y) {true, x, y}
-#define GDEFINE_STATUS_LAST {false, GResponseHttp::eGStatus::BadRequest, "Unknown"}
+#define GDEFINE_STATUS(x, y)    {true, x, y}
+#define GDEFINE_STATUS_LAST     {false, GResponseHttp::eGStatus::BadRequest, "Unknown"}
 //===============================================
 GResponseHttp::sGStatus HTTP_STATUS_MAP[] {
     GDEFINE_STATUS(GResponseHttp::eGStatus::Continue, "Continue")
@@ -106,6 +106,13 @@ GString GResponseHttp::toReason(const eGStatus& _status) const {
         if(!lStatus.flag) break;
         if(lStatus.code == _status) break;
     }
+    if(!lStatus.flag) {
+        slog(eGERR, "Le status recherché n'a pas été trouvé."
+                    "|adresse_ip=%s"
+                    "|port=%d"
+                    "|process=%d"
+                    "|status=%d", m_addressIP.c_str(), m_port, m_pid, _status);
+    }
     return lStatus.name;
 }
 //===============================================
@@ -115,6 +122,6 @@ void GResponseHttp::create() {
     m_response += sformat("Content-Length: %d\r\n", m_content.size());
     m_response += sformat("Connection: %s\r\n", m_connection.c_str());
     m_response += sformat("\r\n");
-    m_response += sformat("%s", m_content.c_str());
+    m_response += m_content;
 }
 //===============================================

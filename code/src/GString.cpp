@@ -122,6 +122,17 @@ bool GString::createPath(mode_t _mode) const {
     return true;
 }
 //===============================================
+char GString::first() const {
+    if(isEmpty()) return 0;
+    return m_data[0];
+}
+//===============================================
+char GString::back() const {
+    if(isEmpty()) return 0;
+    std::string lData(m_data, m_size);
+    return lData.back();
+}
+//===============================================
 int GString::indexOf(const GString& _sep, int _pos) const {
     if(isEmpty()) return -1;
     std::string lData(m_data, m_size);
@@ -198,6 +209,18 @@ double GString::toDouble() const {
     catch(const std::exception& e) {
         lData = 0;
     }
+    return lData;
+}
+//===============================================
+GString GString::toUpper() const {
+    std::string lData(m_data, m_size);
+    std::transform(lData.begin(), lData.end(), lData.begin(), ::toupper);
+    return lData;
+}
+//===============================================
+GString GString::toLower() const {
+    std::string lData(m_data, m_size);
+    std::transform(lData.begin(), lData.end(), lData.begin(), ::tolower);
     return lData;
 }
 //===============================================
@@ -300,7 +323,7 @@ GString GString::getFilepath() const {
     if(isEmpty()) return "";
     std::string lPath(m_data, m_size);
     size_t lFound = lPath.find_last_of("/\\");
-    if(lFound == std::string::npos) return "";
+    if(lFound == std::string::npos) return *this;
     return lPath.substr(0, lFound);
 }
 //===============================================
@@ -308,8 +331,26 @@ GString GString::getFilename() const {
     if(isEmpty()) return "";
     std::string lPath(m_data, m_size);
     size_t lFound = lPath.find_last_of("/\\");
+    if(lFound == std::string::npos) return *this;
+    return lPath.substr(lFound + 1);
+}
+//===============================================
+GString GString::getBasename() const {
+    if(isEmpty()) return "";
+    GString lFilename = getFilename();
+    std::string lPath(lFilename.m_data, lFilename.m_size);
+    size_t lFound = lPath.find_last_of(".");
+    if(lFound == std::string::npos) return *this;
+    return lPath.substr(0, lFound);
+}
+//===============================================
+GString GString::getExtension() const {
+    if(isEmpty()) return "";
+    GString lFilename = getFilename();
+    std::string lPath(lFilename.m_data, lFilename.m_size);
+    size_t lFound = lPath.find_last_of(".");
     if(lFound == std::string::npos) return "";
-    return lPath.substr(lFound  +1);
+    return lPath.substr(lFound + 1);
 }
 //===============================================
 void GString::print() const {

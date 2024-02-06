@@ -11,11 +11,7 @@ GHome::~GHome() {
 }
 //===============================================
 void GHome::init() {
-    m_logo = spath("/data/img/logo.png");
 
-    if(m_logo.isEmpty()) {
-        slog(eGERR, "Le chemin du logo n'a pas été configuré.");
-    }
 }
 //===============================================
 void GHome::create() {
@@ -35,7 +31,7 @@ void GHome::create() {
     lContent += sformat("<title>ReadyPad</title>\n");
     lContent += sformat("<meta name='viewport' content='width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0, user-scalable=no'/>\n");
     lContent += sformat("<meta charset='UTF-8'/>\n");
-    lContent += sformat("<link rel='shortcut icon' type='image/png' href='%s'/>\n", m_logo.c_str());
+    lContent += sformat("<link rel='shortcut icon' type='image/png' href='/data/img/logo.png'/>\n");
     //
     lContent += sformat("</head>\n");
     lContent += sformat("<body>\n");
@@ -44,6 +40,7 @@ void GHome::create() {
     lContent += sformat("</html>\n");
 
     GResponseHttp lResponse;
+    lResponse.setObject(*this);
     lResponse.setContent(lContent);
     lResponse.create();
 
