@@ -28,7 +28,7 @@ bool GRequest::analyzeHeader() {
         m_type = Type::REQ_TYPE_HTTP_GET;
         m_http.setData(m_data);
         if(!m_http.analyzeHeader()) {
-            slog(eGERR, "Erreur lors de l'analyse de la requête GET."
+            slog(eGERR, "L'analyse de la requête GET a échoué."
                         "|adresse_ip=%s"
                         "|port=%d"
                         "|process=%d"
@@ -39,7 +39,7 @@ bool GRequest::analyzeHeader() {
         m_total = m_http.getTotal();
     }
     else {
-        slog(eGERR, "Erreur, on ne peut pas analyser une requête inconnue."
+        slog(eGERR, "La méthode de la requête est inconnue."
                     "|adresse_ip=%s"
                     "|port=%d"
                     "|process=%d"
@@ -59,7 +59,7 @@ bool GRequest::analyzeRequest() {
         m_http.setObject(*this);
         m_http.setData(m_data);
         if(!m_http.analyzeRequest()) {
-            slog(eGERR, "Erreur lors de l'analyse de la requête HTTP."
+            slog(eGERR, "L'analyse de la requête HTTP a échoué."
                         "|adresse_ip=%s"
                         "|port=%d"
                         "|process=%d"

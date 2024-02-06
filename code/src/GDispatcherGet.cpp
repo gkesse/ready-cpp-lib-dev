@@ -25,15 +25,15 @@ void GDispatcherGet::run() {
         if(m_uri == "/hello/world") {
             runHelloWorld();
         }
-        else if(m_uri == "/home") {
-            runHome();
+        else if(m_uri.startsWith("/carpool")) {
+            runCarpool();
         }
         else {
             runUnknown();
         }
     }
     else {
-        slog(eGINF, "Traitement de la requête HTTP GET."
+        slog(eGINF, "La ressource a bien été chargée."
                     "|adresse_ip=%s"
                     "|port=%d"
                     "|process=%d"
@@ -89,11 +89,11 @@ void GDispatcherGet::runHelloWorld() {
     m_response += lPage;
 }
 //===============================================
-void GDispatcherGet::runHome() {
+void GDispatcherGet::runCarpool() {
     GPage lPage;
     lPage.setObject(*this);
     lPage.setDispatcher(*this);
-    lPage.createHome();
+    lPage.createCarpool();
     m_response += lPage;
 }
 //===============================================

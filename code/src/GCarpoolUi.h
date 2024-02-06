@@ -1,15 +1,13 @@
 //===============================================
-#ifndef _GHome_
-#define _GHome_
+#ifndef _GCarpoolUi_
+#define _GCarpoolUi_
 //===============================================
 #include "GPage.h"
 //===============================================
-class GDispatcherHttp;
-//===============================================
-class GHomeUi : public GPage {
+class GCarpoolUi : public GPage {
 public:
-    GHomeUi();
-    ~GHomeUi();
+    GCarpoolUi();
+    ~GCarpoolUi();
     void init();
     void create();
 };

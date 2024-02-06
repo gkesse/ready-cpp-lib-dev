@@ -27,7 +27,7 @@ void GSocket::runServer() {
 
     m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if(m_socket == -1) {
-        slog(eGERR, "Erreur lors de la création du socket."
+        slog(eGERR, "La création du socket a échoué."
                     "|hostname=%s"
                     "|port=%d"
                     "|backlog=%d"
@@ -46,7 +46,7 @@ void GSocket::runServer() {
     int isReuseAddr = setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &lReuseAddr, sizeof(int));
     if(isReuseAddr == -1) {
         close(m_socket);
-        slog(eGERR, "Erreur lors de l'initialisation de l'option SO_REUSEADDR sur le socket."
+        slog(eGERR, "L'initialisation de l'option SO_REUSEADDR sur le socket a échoué."
                     "|hostname=%s"
                     "|port=%d"
                     "|backlog=%d"
@@ -58,7 +58,7 @@ void GSocket::runServer() {
     int isBind = bind(m_socket, (struct sockaddr*)&lAddressIn, sizeof(lAddressIn));
     if(isBind == -1) {
         close(m_socket);
-        slog(eGERR, "Erreur lors de la liaison du socket à son adresse."
+        slog(eGERR, "La liaison du socket à son adresse a échoué."
                     "|hostname=%s"
                     "|port=%d"
                     "|backlog=%d"
@@ -70,7 +70,7 @@ void GSocket::runServer() {
     int isListen = listen(m_socket, lBacklog);
     if(isListen == -1) {
         close(m_socket);
-        slog(eGERR, "Erreur lors de l'initialisation du nombre de connexions simultanées."
+        slog(eGERR, "L'initialisation du nombre de connexions simultanées a échoué."
                     "|hostname=%s"
                     "|port=%d"
                     "|backlog=%d"
@@ -92,7 +92,7 @@ void GSocket::runServer() {
 
         lClient->m_socket = accept(m_socket, (struct sockaddr*)&lAddressOut, &lSize);
         if(lClient->m_socket == -1) {
-            slog(eGERR, "Erreur lors de l'acceptation d'une connexion client."
+            slog(eGERR, "L'acceptation de la connexion du client a échoué."
                         "|hostname=%s"
                         "|port=%d"
                         "|backlog=%d"
@@ -112,7 +112,7 @@ void GSocket::runServer() {
         int isThread = pthread_create(&lThread, 0, onThread, lClient);
         if(isThread == -1) {
             close(lClient->m_socket);
-            slog(eGERR, "Erreur lors de la création du thread client."
+            slog(eGERR, "La création du thread du client a échoué."
                     "|hostname=%s"
                     "|port=%d"
                     "|backlog=%d"
@@ -177,7 +177,7 @@ bool GSocket::sendData(const GString& _data) {
     while(1) {
         int lBytes = send(m_socket, &lBuffer[lIndex], lSize - lIndex, 0);
         if(lBytes == -1) {
-            slog(eGERR, "Erreur lors de l'envoi des données sur le socket."
+            slog(eGERR, "L'envoi des données sur le socket a échoué."
                         "|adresse_ip=%s"
                         "|port=%d"
                         "|process=%d"
@@ -201,7 +201,7 @@ GString GSocket::readData() const {
     while(1) {
         int lBytes = recv(m_socket, lBuffer, SOCKET_BUFFER_SIZE, 0);
         if(lBytes == -1) {
-            slog(eGERR, "Erreur lors de la lecture des données sur le socket."
+            slog(eGERR, "La lecture des données sur le socket a échoué."
                         "|adresse_ip=%s"
                         "|port=%d"
                         "|process=%d"
@@ -212,7 +212,7 @@ GString GSocket::readData() const {
         }
         lSize += lBytes;
         if(lSize >= SOCKET_BUFFER_MAX) {
-            slog(eGERR, "Erreur le nombre maximal de données à lire sur le socket est atteint."
+            slog(eGERR, "Le nombre maximal de données à lire sur le socket est atteint."
                         "|adresse_ip=%s"
                         "|port=%d"
                         "|process=%d"
@@ -230,7 +230,7 @@ GString GSocket::readData() const {
         int lRemaing = 0;
         int isRemaing = ioctl(m_socket, FIONREAD, &lRemaing);
         if(isRemaing == -1) {
-            slog(eGERR, "Erreur lors de la lecture des données sur le socket."
+            slog(eGERR, "La lecture des données sur le socket a échoué."
                         "|adresse_ip=%s"
                         "|port=%d"
                         "|process=%d"

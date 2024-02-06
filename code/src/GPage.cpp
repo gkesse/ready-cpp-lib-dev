@@ -1,7 +1,7 @@
 //===============================================
 #include "GPage.h"
 #include "GDispatcherHttp.h"
-#include "GHomeUi.h"
+#include "GCarpoolUi.h"
 //===============================================
 GPage::GPage()
 : GResponseHttp() {
@@ -25,7 +25,7 @@ void GPage::setDispatcher(const GDispatcherHttp& _dispatcher) {
 }
 //===============================================
 void GPage::createHelloWrold() {
-    slog(eGINF, "Création de la page Hello World."
+    slog(eGINF, "Création de la page hello world."
                 "|adresse_ip=%s"
                 "|port=%d"
                 "|process=%d"
@@ -41,22 +41,8 @@ void GPage::createHelloWrold() {
     m_response += lResponse.toResponse();
 }
 //===============================================
-void GPage::createHome() {
-    slog(eGINF, "Création de la page Home."
-                "|adresse_ip=%s"
-                "|port=%d"
-                "|process=%d"
-                "|uri=%s", m_addressIP.c_str(), m_port, m_pid, m_uri.c_str());
-
-    GHomeUi lPage;
-    lPage.setObject(*this);
-    lPage.setPage(*this);
-    lPage.create();
-    m_response += lPage.toResponse();
-}
-//===============================================
 void GPage::createUnknown() {
-    slog(eGINF, "Création de la page Not Found."
+    slog(eGINF, "Création de la page not found."
                 "|adresse_ip=%s"
                 "|port=%d"
                 "|process=%d"
@@ -67,5 +53,19 @@ void GPage::createUnknown() {
     lResponse.setStatus(GResponseHttp::eGStatus::NotFound);
     lResponse.create();
     m_response += lResponse.toResponse();
+}
+//===============================================
+void GPage::createCarpool() {
+    slog(eGINF, "Création de la page carpool."
+                "|adresse_ip=%s"
+                "|port=%d"
+                "|process=%d"
+                "|uri=%s", m_addressIP.c_str(), m_port, m_pid, m_uri.c_str());
+
+    GCarpoolUi lPage;
+    lPage.setObject(*this);
+    lPage.setPage(*this);
+    lPage.create();
+    m_response += lPage.toResponse();
 }
 //===============================================

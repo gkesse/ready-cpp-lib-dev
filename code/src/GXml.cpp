@@ -35,12 +35,12 @@ bool GXml::createDoc() {
     clear();
     m_doc = xmlNewDoc(BAD_CAST("1.0"));
     if(!m_doc) {
-        slog(eGERR, "Erreur lors de la création du document XML.");
+        slog(eGERR, "La création du document XML a échoué.");
         return false;
     }
     m_node = xmlNewNode(NULL, BAD_CAST("rdv"));
     if(!m_node) {
-        slog(eGERR, "Erreur lors de la création du noeud racine."
+        slog(eGERR, "La création du noeud racine a échoué."
                     "|doc=%p", m_doc);
         return false;
     }
@@ -54,12 +54,12 @@ bool GXml::loadXml(const GString& _data) {
     clear();
     m_doc = xmlParseDoc(BAD_CAST(_data.c_str()));
     if(!m_doc) {
-        slog(eGERR, "Erreur lors du chargement du document XML.");
+        slog(eGERR, "Le chargement du document XML a échoué.");
         return false;
     }
     m_node = xmlDocGetRootElement(m_doc);
     if(!m_node) {
-        slog(eGERR, "Erreur lors du chargement du noeud racine."
+        slog(eGERR, "Le chargement du noeud racine a échoué."
                     "|doc=%p", m_doc);
         return false;
     }
@@ -75,7 +75,7 @@ bool GXml::loadNode(const GString& _data) {
     xmlParseInNodeContext(m_node, _data.c_str(), _data.size(), 0, &lNodes);
     xmlNodePtr lNode = lNodes->children;
     if(!lNode) {
-        slog(eGERR, "Erreur lors du chargement du noeud XML."
+        slog(eGERR, "Le chargement du noeud XML a échoué."
                     "|doc=%p"
                     "|node=%s", m_doc, (char*)m_node->name);
         return false;

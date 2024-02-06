@@ -38,7 +38,7 @@ bool GJson::createObj() {
     clear();
     m_dom = json_object_new_object();
     if(!m_dom) {
-        slog(eGERR, "Erreur lors de la création de l'objet JSON.");
+        slog(eGERR, "La création de l'objet JSON a échoué.");
         return false;
     }
     m_node = m_dom;
@@ -49,7 +49,7 @@ bool GJson::createArr() {
     clear();
     m_dom = json_object_new_array();
     if(!m_dom) {
-        slog(eGERR, "Erreur lors de la création de l'objet JSON.");
+        slog(eGERR, "La création de l'objet JSON a échoué.");
         return false;
     }
     m_node = m_dom;
@@ -59,7 +59,7 @@ bool GJson::createArr() {
 bool GJson::loadJson(const GString& _data) {
     m_dom = json_tokener_parse(_data.c_str());
     if(!m_dom) {
-        slog(eGERR, "Erreur lors du chargement du document JSON.");
+        slog(eGERR, "Le chargement du document JSON a échoué.");
         return false;
     }
     m_node = m_dom;

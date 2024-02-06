@@ -13,8 +13,8 @@ public:
     void setPage(const GPage& _page);
     void setDispatcher(const GDispatcherHttp& _dispatcher);
     void createHelloWrold();
-    void createHome();
     void createUnknown();
+    void createCarpool();
 
 protected:
     GString m_method;

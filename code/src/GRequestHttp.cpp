@@ -32,7 +32,7 @@ bool GRequestHttp::analyzeHeader() {
     int lContentLenght = m_data.extract("Content-Length:", CRLF).trim().toInt();
     GString lHeader = m_data.extract(CRLFCRLF);
     if(lHeader.isEmpty()) {
-        slog(eGERR, "Erreur lors de la lecture l'entête de la requête HTTP."
+        slog(eGERR, "La lecture l'entête de la requête HTTP a échoué."
                     "|adresse_ip=%s"
                     "|port=%d"
                     "|process=%d"
