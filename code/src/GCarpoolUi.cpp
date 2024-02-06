@@ -35,16 +35,17 @@ void GCarpoolUi::create() {
     lContent += sformat("<link rel='stylesheet' href='/css/styles.css'/>\n");
     //
     lContent += sformat("</head>\n");
-    lContent += sformat("<body class='Body1'>\n");
-    //
-    lContent += sformat("<form action='/home/admin' method='post'>\n");
+    lContent += sformat("<body>\n");
     //
     lContent += sformat("<div>\n");
-    lContent += sformat("<label for='email'>Email :</label>\n");
-    lContent += sformat("<input type='email' id='email' name='email'/>\n");
+    lContent += sformat("<a href='/carpool'>ReadyCar</a>\n");
+    lContent += sformat("<a href='/carpool'>Covoiturage</a>\n");
+    lContent += sformat("<a href='/carpool'>Bus</a>\n");
+    lContent += sformat("<a href='/carpool'>Covoiturage du quotidien</a>\n");
+    lContent += sformat("<a href='/carpool'>Rechercher</a>\n");
+    lContent += sformat("<a href='/carpool'>Publier un trajet</a>\n");
+    lContent += sformat("<a href='/carpool'>Profil</a>\n");
     lContent += sformat("</div>\n");
-    //
-    lContent += sformat("<h1>Carpool</h1>\n");
     //
     lContent += sformat("<script src='/js/scripts.js'></script>\n");
     //
