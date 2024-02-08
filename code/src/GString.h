@@ -49,6 +49,7 @@ public:
     GString extract(const GString& _sep, int _index = 0) const;
     GString extract(const GString& _sep1, const GString& _sep2, int _pos = 0) const;
     GString extractSep(const GString& _sep, int _index = 0) const;
+    GString extractEnd(const GString& _sep, int _index = 0) const;
     GString toBase64() const;
     GString fromBase64() const;
     GString trim() const;

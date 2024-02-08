@@ -3,7 +3,7 @@
 #include "GResponseUnknown.h"
 //===============================================
 GResponse::GResponse()
-: GObject() {
+: GRequest() {
 
 }
 //===============================================

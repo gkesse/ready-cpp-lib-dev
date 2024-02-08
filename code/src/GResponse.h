@@ -2,9 +2,9 @@
 #ifndef _GResponse_
 #define _GResponse_
 //===============================================
-#include "GObject.h"
+#include "GRequest.h"
 //===============================================
-class GResponse : public GObject {
+class GResponse : public GRequest {
 public:
     GResponse();
     ~GResponse();

@@ -17,7 +17,6 @@ protected:
     GString m_method;
     GString m_uri;
     GString m_version;
-    Type m_type;
 };
 //===============================================
 #endif

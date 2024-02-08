@@ -16,12 +16,14 @@ void GPage::setPage(const GPage& _page) {
     m_method = _page.m_method;
     m_uri = _page.m_uri;
     m_version = _page.m_version;
+    m_type = _page.m_type;
 }
 //===============================================
 void GPage::setDispatcher(const GDispatcherHttp& _dispatcher) {
     m_method = _dispatcher.getMethod();
     m_uri = _dispatcher.getUri();
     m_version = _dispatcher.getVersion();
+    m_type = _dispatcher.getType();
 }
 //===============================================
 void GPage::createHelloWrold() {

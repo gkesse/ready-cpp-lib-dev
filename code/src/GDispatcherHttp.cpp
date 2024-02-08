@@ -3,8 +3,7 @@
 #include "GRequestHttp.h"
 //===============================================
 GDispatcherHttp::GDispatcherHttp()
-: GDispatcher()
-, m_type(Type::REQ_TYPE_UNKNOWN) {
+: GDispatcher() {
 
 }
 //===============================================
@@ -16,7 +15,7 @@ void GDispatcherHttp::setDispatcher(const GDispatcher& _dispatcher) {
     m_method = _dispatcher.getHttp().getMethod();
     m_uri = _dispatcher.getHttp().getUri();
     m_version = _dispatcher.getHttp().getVersion();
-    m_type = _dispatcher.m_type;
+    m_type = _dispatcher.getType();
 }
 //===============================================
 const GString& GDispatcherHttp::getMethod() const {

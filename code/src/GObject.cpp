@@ -38,7 +38,7 @@ void GObject::init() {
         slog(eGERR, "La racine du serveur web n'a pas été configurée.");
     }
     else {
-        slog(eGERR, "La racine du serveur web a été bien configurée."
+        slog(eGINF, "La racine du serveur web a été bien configurée."
                     "|webroot=%s", m_webRoot.c_str());
     }
 }

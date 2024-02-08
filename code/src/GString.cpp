@@ -284,6 +284,25 @@ GString GString::extractSep(const GString& _sep, int _index) const {
     return "";
 }
 //===============================================
+GString GString::extractEnd(const GString& _sep, int _index) const {
+    int lPos = 0;
+    int lCount = 0;
+    while(1) {
+        int lPos2 = indexOf(_sep, lPos);
+        if(lPos2 == -1) {
+            int lSize = size() - lPos;
+            return substr(lPos, lSize);
+        }
+        if(lCount == _index) {
+            lPos = lPos2 + _sep.size();
+            return substr(lPos);
+        }
+        lPos = lPos2 + _sep.size();
+        lCount++;
+    }
+    return "";
+}
+//===============================================
 GString GString::toBase64() const {
     return Base64::encode((uchar*)m_data, m_size);
 }

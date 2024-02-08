@@ -123,6 +123,9 @@ void GCarpoolUi::createInscription() {
 }
 //===============================================
 void GCarpoolUi::createInscriptionEmail() {
+    if(m_type == Type::REQ_TYPE_HTTP_POST) {
+        m_content += sformat("<div>Tira Tira</div>\n");
+    }
     // address
     m_content += sformat("<div>\n");
     m_content += sformat("<a href='/carpool'>Home</a>\n");

@@ -58,14 +58,6 @@ bool GRequestHttp::analyzeGet() {
     m_uri = lMethod.extract(SPACE, 1);
     m_version = lMethod.extract(SPACE, 2);
 
-    slog(eGINF, "Méthode de la requête HTTP."
-                "|adresse_ip=%s"
-                "|port=%d"
-                "|process=%d"
-                "|method=%s"
-                "|uri=%s"
-                "|version=%s", m_addressIP.c_str(), m_port, m_pid, m_method.c_str(), m_uri.c_str(), m_version.c_str());
-
     // Host: 192.168.1.8:9050
     GString lHost = m_data.extract("Host:", CRLF).trim();
     // Connection: keep-alive
@@ -82,6 +74,15 @@ bool GRequestHttp::analyzeGet() {
     GString lAcceptEncoding = m_data.extract("Accept-Encoding:", CRLF).trim();
     // Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6,zh;q=0.5
     GString lAcceptLanguage = m_data.extract("Accept-Language:", CRLF).trim();
+
+    slog(eGINF, "Méthode de la requête HTTP."
+                "|adresse_ip=%s"
+                "|port=%d"
+                "|process=%d"
+                "|method=%s"
+                "|uri=%s"
+                "|version=%s", m_addressIP.c_str(), m_port, m_pid, m_method.c_str(), m_uri.c_str(), m_version.c_str());
+
     return true;
 }
 //===============================================
@@ -99,14 +100,6 @@ bool GRequestHttp::analyzePost() {
     m_method = lMethod.extract(SPACE, 0);
     m_uri = lMethod.extract(SPACE, 1);
     m_version = lMethod.extract(SPACE, 2);
-
-    slog(eGINF, "Méthode de la requête HTTP."
-                "|adresse_ip=%s"
-                "|port=%d"
-                "|process=%d"
-                "|method=%s"
-                "|uri=%s"
-                "|version=%s", m_addressIP.c_str(), m_port, m_pid, m_method.c_str(), m_uri.c_str(), m_version.c_str());
 
     // Host: 192.168.1.8:9050
     GString lHost = m_data.extract("Host:", CRLF).trim();
@@ -130,6 +123,18 @@ bool GRequestHttp::analyzePost() {
     GString lAcceptEncoding = m_data.extract("Accept-Encoding:", CRLF).trim();
     // Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6,zh;q=0.5
     GString lAcceptLanguage = m_data.extract("Accept-Language:", CRLF).trim();
+    // request
+    m_request = m_data.extractEnd(CRLFCRLF);
+
+    slog(eGINF, "Méthode de la requête HTTP POST."
+                "|adresse_ip=%s"
+                "|port=%d"
+                "|process=%d"
+                "|method=%s"
+                "|uri=%s"
+                "|version=%s"
+                "|request=%s", m_addressIP.c_str(), m_port, m_pid, m_method.c_str(), m_uri.c_str(), m_version.c_str(), m_request.c_str());
+
     return true;
 }
 //===============================================

@@ -128,6 +128,7 @@ void GTest::runString(int _argc, char** _argv) {
     GString(GString("Bonjour tout le monde").endsWith("monde")).print();
 
     GString("Bonjour Content-Length: 1234\r\n").extract("Content-Length:", "\r\n").print();
+    GString("Un:-:Deux:-:Trois:-:Quatre").extractEnd(":-:", 1).print();
 }
 //===============================================
 void GTest::runXml(int _argc, char** _argv) {
