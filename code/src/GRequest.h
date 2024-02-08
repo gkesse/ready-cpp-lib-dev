@@ -21,6 +21,7 @@ public:
     bool analyzeHeader();
     bool analyzeRequest();
     int getTotal() const;
+    const Type& getType() const;
     const GRequestHttp& getHttp() const;
 
 protected:

@@ -120,6 +120,10 @@ int GRequest::getTotal() const {
     return m_total;
 }
 //===============================================
+const GRequest::Type& GRequest::getType() const {
+    return m_type;
+}
+//===============================================
 const GRequestHttp& GRequest::getHttp() const {
     return m_http;
 }
