@@ -1,20 +1,20 @@
 //===============================================
-#include "GDispatcherGet.h"
+#include "GDispatcherHttpGet.h"
 #include "GResponseHttp.h"
 #include "GPage.h"
 #include "GFile.h"
 #include "GMimeType.h"
 //===============================================
-GDispatcherGet::GDispatcherGet()
+GDispatcherHttpGet::GDispatcherHttpGet()
 : GDispatcherHttp() {
 
 }
 //===============================================
-GDispatcherGet::~GDispatcherGet() {
+GDispatcherHttpGet::~GDispatcherHttpGet() {
 
 }
 //===============================================
-void GDispatcherGet::run() {
+void GDispatcherHttpGet::run() {
     slog(eGINF, "Traitement de la requête HTTP GET."
                 "|adresse_ip=%s"
                 "|port=%d"
@@ -25,7 +25,7 @@ void GDispatcherGet::run() {
         if(m_uri == "/hello/world") {
             runHelloWorld();
         }
-        else if(isPage("/carpool")) {
+        else if(m_uri.startsWith("/carpool")) {
             runCarpool();
         }
         else {
@@ -41,7 +41,7 @@ void GDispatcherGet::run() {
     }
 }
 //===============================================
-bool GDispatcherGet::loadResource() {
+bool GDispatcherHttpGet::loadResource() {
     GString lPath = sres(m_uri);
     struct stat lStat;
     // la ressource existe ?
@@ -81,14 +81,7 @@ bool GDispatcherGet::loadResource() {
     return false;
 }
 //===============================================
-bool GDispatcherGet::isPage(const GString& _page) {
-    if(!m_uri.startsWith(_page)) return false;
-    m_pageId = m_uri.substr(_page.size());
-    if(m_pageId.back() == '/') m_pageId.pop();
-    return true;
-}
-//===============================================
-void GDispatcherGet::runHelloWorld() {
+void GDispatcherHttpGet::runHelloWorld() {
     GPage lPage;
     lPage.setObject(*this);
     lPage.setDispatcher(*this);
@@ -96,7 +89,7 @@ void GDispatcherGet::runHelloWorld() {
     m_response += lPage;
 }
 //===============================================
-void GDispatcherGet::runCarpool() {
+void GDispatcherHttpGet::runCarpool() {
     GPage lPage;
     lPage.setObject(*this);
     lPage.setDispatcher(*this);
@@ -104,7 +97,7 @@ void GDispatcherGet::runCarpool() {
     m_response += lPage;
 }
 //===============================================
-void GDispatcherGet::runUnknown() {
+void GDispatcherHttpGet::runUnknown() {
     GPage lPage;
     lPage.setObject(*this);
     lPage.setDispatcher(*this);

@@ -12,7 +12,8 @@ public:
     void setRequest(const GRequestHttp& _request);
     int getTotal() const;
     bool analyzeHeader();
-    bool analyzeRequest();
+    bool analyzeGet();
+    bool analyzePost();
     const GString& getMethod() const;
     const GString& getUri() const;
     const GString& getVersion() const;

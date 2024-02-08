@@ -1,22 +1,18 @@
 //===============================================
-#ifndef _GDispatcherGet_
-#define _GDispatcherGet_
+#ifndef _GDispatcherHttpGet_
+#define _GDispatcherHttpGet_
 //===============================================
 #include "GDispatcherHttp.h"
 //===============================================
-class GDispatcherGet : public GDispatcherHttp {
+class GDispatcherHttpGet : public GDispatcherHttp {
 public:
-    GDispatcherGet();
-    ~GDispatcherGet();
+    GDispatcherHttpGet();
+    ~GDispatcherHttpGet();
     void run();
     bool loadResource();
-    bool isPage(const GString& _page);
     void runHelloWorld();
     void runCarpool();
     void runUnknown();
-
-private:
-    GString m_pageId;
 };
 //===============================================
 #endif

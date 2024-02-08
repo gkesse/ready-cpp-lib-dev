@@ -10,6 +10,7 @@ public:
     enum class Type {
         REQ_TYPE_UNKNOWN
         , REQ_TYPE_HTTP_GET
+        , REQ_TYPE_HTTP_POST
     };
 
 public:

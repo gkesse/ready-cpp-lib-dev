@@ -141,7 +141,8 @@ void GSocket::runThread() {
                     "|adresse_ip=%s"
                     "|port=%d"
                     "|process=%d"
-                    "|data=%s", m_addressIP.c_str(), m_port, m_pid, lRequest.c_str());
+                    "|size=%d"
+                    "|data=%s", m_addressIP.c_str(), m_port, m_pid, lRequest.size(), lRequest.c_str());
 
         GRequest lReq;
         lReq.setSocket(*this);
@@ -169,7 +170,8 @@ bool GSocket::sendData(const GString& _data) {
                 "|adresse_ip=%s"
                 "|port=%d"
                 "|process=%d"
-                "|data=%s", m_addressIP.c_str(), m_port, m_pid, _data.c_str());
+                "|size=%d"
+                "|data=%s", m_addressIP.c_str(), m_port, m_pid, _data.size(), _data.c_str());
 
     int lIndex = 0;
     const char* lBuffer = _data.c_str();
@@ -183,7 +185,8 @@ bool GSocket::sendData(const GString& _data) {
                         "|process=%d"
                         "|errno=%d"
                         "|errmsg=%s"
-                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, errno, strerror(errno), _data.c_str());
+                        "|size=%d"
+                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, errno, strerror(errno), _data.size(), _data.c_str());
             return false;
         }
         lIndex += lBytes;
@@ -207,7 +210,8 @@ GString GSocket::readData() const {
                         "|process=%d"
                         "|errno=%d"
                         "|errmsg=%s"
-                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, errno, strerror(errno), lData.c_str());
+                        "|size=%d"
+                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, errno, strerror(errno), lData.size(), lData.c_str());
             return "";
         }
         lSize += lBytes;
@@ -218,12 +222,14 @@ GString GSocket::readData() const {
                         "|process=%d"
                         "|errno=%d"
                         "|errmsg=%s"
-                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, errno, strerror(errno), lData.c_str());
+                        "|size=%d"
+                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, errno, strerror(errno), lData.size(), lData.c_str());
             return "";
         }
         lData += GString(lBuffer, lBytes);
         if(!isData) {
             lReq.setData(lData);
+            lReq.setObject(*this);
             if(!lReq.analyzeHeader()) return "";
             isData = true;
         }
@@ -236,7 +242,8 @@ GString GSocket::readData() const {
                         "|process=%d"
                         "|errno=%d"
                         "|errmsg=%s"
-                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, errno, strerror(errno), lData.c_str());
+                        "|size=%d"
+                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, errno, strerror(errno), lData.size(), lData.c_str());
             return "";
         }
         if((lRemaing == 0) && (lSize >= lReq.getTotal())) break;

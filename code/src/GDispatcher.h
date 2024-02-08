@@ -11,7 +11,8 @@ public:
     ~GDispatcher();
     const GResponse& getResp() const;
     void run();
-    void runGet();
+    void runHttpGet();
+    void runHttpPost();
 
 protected:
     GResponse m_response;
