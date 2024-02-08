@@ -1,6 +1,6 @@
 //===============================================
-#ifndef _GDispatcherHttpGet_
-#define _GDispatcherHttpGet_
+#ifndef _GDispatcherHttpPost_
+#define _GDispatcherHttpPost_
 //===============================================
 #include "GDispatcherHttp.h"
 //===============================================
