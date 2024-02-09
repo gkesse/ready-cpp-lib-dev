@@ -6,6 +6,7 @@
 #include "GCsv.h"
 #include "GTree.h"
 #include "GDebug.h"
+#include "GMap.h"
 //===============================================
 GTest::GTest()
 : GObject() {
@@ -47,6 +48,9 @@ void GTest::run(int _argc, char** _argv) {
     }
     else if(lMethod == "debug") {
         runDebug(_argc, _argv);
+    }
+    else if(lMethod == "map") {
+        runMap(_argc, _argv);
     }
     else {
         slog(eGERR, "La méthode est inconnue."
@@ -344,5 +348,29 @@ void GTest::runDebug(int _argc, char** _argv) {
     printf("%s...\n", __PRETTY_FUNCTION__);
     GDebug lDebug;
     slog(eGINF, "Bonjour tout le monde");
+}
+//===============================================
+void GTest::runMap(int _argc, char** _argv) {
+    printf("%s...\n", __PRETTY_FUNCTION__);
+    GMap lMap;
+    lMap.createMap();
+
+    lMap.addData("email", "kesse@gmail.com");
+    lMap.addData("password", "123456");
+    lMap.addData("newsletter", "on");
+    lMap.addData("password", "000123");
+    lMap.toString().print();
+
+    lMap.getData("email").print();
+    lMap.getData("password").print();
+    lMap.getData("newsletter").print();
+
+    GString(lMap.size()).print();
+
+    GMap lMap2;
+    lMap2.createMap();
+    lMap2.loadMap(lMap);
+    lMap2.addData("date", "10-02-2024");
+    lMap2.toString().print();
 }
 //===============================================

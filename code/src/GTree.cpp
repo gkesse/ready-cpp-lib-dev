@@ -36,6 +36,7 @@ void GTree::clear() {
             lNode = lNode->m_next;
             delete lNode;
         }
+        m_root = 0;
     }
 }
 //===============================================
