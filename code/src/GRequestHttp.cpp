@@ -138,7 +138,7 @@ bool GRequestHttp::analyzePost() {
             GString lData = m_request.extract(FORM_SEP, i);
             GString lKey = lData.extract(DATA_SEP);
             GString lValue = lData.extractEnd(DATA_SEP);
-            m_forms[lKey] = lValue;
+            m_forms[lKey.c_str()] = lValue.c_str();
         }
     }
 
