@@ -1,163 +1,57 @@
-###==============================================
-### Ubuntu
-###==============================================
+#================================================
+### ubuntu
+#================================================
 
-Ubuntu est un système d'exploitation Linux open source
-utilisé dans un contexte de développement d'application
-serveur.
-
-#------------------------------------------------
-### Mise à jour du système
-#------------------------------------------------
+permet de créer des serveurs d'application Linux.
 
 sudo apt update
 sudo apt upgrade -y
 
-###==============================================
-### Base64
-###==============================================
+#================================================
+### base64
+#================================================
 
-Base64 est un système d'encodage utilisé dans un
-contexte où l'on veut transmettre des documents
-binaires (application, image, vidéo, audio, etc.) 
-sur le réseau internet.
-
-#------------------------------------------------
-### Installion sous Ubuntu
-#------------------------------------------------
-
-> Accéder au lien d'installation
+permet de convertir des données binaires en chaînes de caractères 
+imprimables avant de les transmettre sur le réseau internet.
 
 https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c/31322410#31322410
-
-> Aller dans un répertoire temporaire
-
-cd
-mkdir -p opts/tmp
-cd opts/tmp
-
-> Copier les sources dans des fichiers
-
-vim base64.h
-vim base64.cpp
-
-> Compiler les sources
 
 g++ -c base64.cpp -o base64.o
 ar rcs libbase64.a base64.o
 
-> Afficher l'arborescence des fichiers
+#================================================
+### git
+#================================================
 
-tree
+permet de gérer les différentes versions d'un projet.
 
-.
-├── base64.cpp
-├── base64.h
-├── base64.o
-└── libbase64.a
+#================================================
+### json
+#================================================
 
-> Copier les fichiers (*.h, *.a) dans le repertoire des librairies
+permet de serialiser des objets avant 
+de les transmettre sur le réseau internet.
 
-cp -p base64.h libs/include/base64
-cp -p libbase64.a libs/lib
+https://howtoinstall.co/package/libjson-c-dev
 
-###==============================================
-### Git
-###==============================================
-
-Git est un système de gestion de versions décentralisé
-utilisé dans un contexte où l'on veut travailler de
-manière collaborative et suivre efficacement les
-différentes version d'un projet. L'architecture de Git
-permet aux utilisateurs de pouvoir se synchroniser 
-entre eux sans forcement passer par un serveur maître.
-
-###==============================================
-### Json
-###==============================================
-
-Json est un format de données utilisé dans un contexte
-où l'on veut sérialiser des objets pour mieux les 
-transmettre sur le réseau internet.
-
-#------------------------------------------------
-### Installion sous Ubuntu
-#------------------------------------------------
-
-> Installer Json
-
-sudo apt install libjson-c-dev -y
-
-> Inclure Json dans un projet C/C++
-
-#include <json.h>
-
-> Définir Json dans un fichier Makefile
-
-CFLAGS += -I/usr/include/json-c
-
-> Linker Json dans un fichier Makefile
-
-LIBS += -L/usr/lib -ljson-c
-
-###==============================================
+#================================================
 ### ipapi
-###==============================================
+#================================================
 
-ipapi une api utilisé dans un contexte où l'on cherche
-à déterminer la localisation d'une adresse ip.
+permet de géolocaliser une adresse ip.
 
+https://ipapi.com/documentation
 https://ipapi.co/8.8.8.8/country
+https://stackoverflow.com/questions/23381402/get-ip-address-of-local-machine-on-c
 
-###==============================================
+#================================================
 ### crontab
-###==============================================
+#================================================
 
-but:
-- planifier des tâches
+permet de planifier l'exécution de programmes.
 
-commande:
-- /usr/bin/crontab
+https://man7.org/linux/man-pages/man5/crontab.5.html
 
-liste des utilisateurs autorisés:
-- /etc/crond.allow
-
-liste des utilisateurs non autorisés:
-- /etc/crond.deny
-
-gestionnaire du service:
-- /etc/rc.d/init.d/crond
-
-répertoire de lecture des tâches:
-- /var/spool/cron
-- /etc/crontab
-
-fichier logs:
-- /var/log/cron
- 
-afficher le fichier:
-- crontab -l
-
-effacer le fichier:
-- crontab -r
-
-examiner le fichier:
-- crontab -l
-
-effacer le fichier:
-- crontab -r
-
-### representation d'une ligne de tache:
-
-a1 a2 a3 a4 a5 a6
-
-a1: minutes (0-59)
-a2: heures (0-23)
-a3: jour du mois (1-31)
-a4: mois de l'année (1-12)
-a5: jour de la semaine (0-6, 0=dimanche)
-a6: commande à exécuter
-
-###==============================================
-### Fin
-###==============================================
+#================================================
+# Fin
+#================================================

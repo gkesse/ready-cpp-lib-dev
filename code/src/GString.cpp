@@ -157,7 +157,7 @@ int GString::count(const GString& _sep) const {
         lCount++;
         lPos = lPos2 + _sep.size();
     }
-    return lCount;
+    return lCount + 1;
 }
 //===============================================
 int GString::countSep(const GString& _sep) const {
@@ -262,7 +262,7 @@ GString GString::extract(const GString& _sep1, const GString& _sep2, int _pos) c
         return "";
     }
     lPos += _sep1.size();
-    int lPos2 = indexOf(_sep2);
+    int lPos2 = indexOf(_sep2, lPos);
     if(lPos2 == -1) {
         return "";
     }
@@ -587,6 +587,7 @@ bool GString::operator<(const std::string& _data) const {
 }
 //===============================================
 bool GString::operator<(const GString& _data) const {
+    if(isEmpty()) return true;
     if(m_size < _data.m_size) {
         return (memcmp(m_data, _data.m_data, m_size) <= 0);
     }
@@ -629,6 +630,7 @@ bool GString::operator<=(const std::string& _data) const {
 }
 //===============================================
 bool GString::operator<=(const GString& _data) const {
+    if(isEmpty()) return true;
     if(m_size < _data.m_size) {
         return (memcmp(m_data, _data.m_data, m_size) <= 0);
     }

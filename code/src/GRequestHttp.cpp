@@ -19,6 +19,9 @@ void GRequestHttp::setRequest(const GRequestHttp& _request) {
     m_method = _request.m_method;
     m_uri = _request.m_uri;
     m_version = _request.m_version;
+    m_contentType = _request.m_contentType;
+    m_request = _request.m_request;
+    m_forms = _request.m_forms;
 }
 //===============================================
 int GRequestHttp::getTotal() const {
@@ -93,6 +96,9 @@ bool GRequestHttp::analyzePost() {
     const GString CRLFCRLF = "\r\n\r\n";
     const GString SPACE = " ";
     const GString DOUBLE_POINT = ":";
+    const GString FORM_DATA = "application/x-www-form-urlencoded";
+    const GString FORM_SEP = "&";
+    const GString DATA_SEP = "=";
 
     // POST /carpool/inscription/email HTTP/1.1
     GString lMethod = m_data.extract(CRLF, 0);
@@ -112,7 +118,7 @@ bool GRequestHttp::analyzePost() {
     // Origin: http://192.168.1.8:9050
     GString lOrigin = m_data.extract("Origin:", CRLF).trim();
     // Content-Type: application/x-www-form-urlencoded
-    GString lContentType = m_data.extract("Content-Type:", CRLF).trim();
+    m_contentType = m_data.extract("Content-Type:", CRLF).trim();
     // User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
     GString lUserAgent = m_data.extract("User-Agent:", CRLF).trim();
     // Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
@@ -126,6 +132,16 @@ bool GRequestHttp::analyzePost() {
     // request
     m_request = m_data.extractEnd(CRLFCRLF);
 
+    if(m_contentType == FORM_DATA) {
+        int lCount = m_request.count(FORM_SEP);
+        for(int i = 0; i < lCount; i++) {
+            GString lData = m_request.extract(FORM_SEP, i);
+            GString lKey = lData.extract(DATA_SEP);
+            GString lValue = lData.extractEnd(DATA_SEP);
+            m_forms[lKey] = lValue;
+        }
+    }
+
     slog(eGINF, "Méthode de la requête HTTP POST."
                 "|adresse_ip=%s"
                 "|port=%d"
@@ -133,7 +149,8 @@ bool GRequestHttp::analyzePost() {
                 "|method=%s"
                 "|uri=%s"
                 "|version=%s"
-                "|request=%s", m_addressIP.c_str(), m_port, m_pid, m_method.c_str(), m_uri.c_str(), m_version.c_str(), m_request.c_str());
+                "|content_type=%s"
+                "|request=%s", m_addressIP.c_str(), m_port, m_pid, m_method.c_str(), m_uri.c_str(), m_version.c_str(), m_contentType.c_str(), m_request.c_str());
 
     return true;
 }
@@ -148,5 +165,9 @@ const GString& GRequestHttp::getUri() const {
 //===============================================
 const GString& GRequestHttp::getVersion() const {
     return m_uri;
+}
+//===============================================
+const GRequestHttp::GForms& GRequestHttp::getForms() const {
+    return m_forms;
 }
 //===============================================

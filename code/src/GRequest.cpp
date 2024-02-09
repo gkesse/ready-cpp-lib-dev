@@ -76,7 +76,7 @@ bool GRequest::analyzeRequest() {
         m_http.setObject(*this);
         m_http.setData(m_data);
         if(!m_http.analyzeGet()) {
-            slog(eGERR, "L'analyse de la requête HTTP a échoué."
+            slog(eGERR, "L'analyse de la requête HTTP GET a échoué."
                         "|adresse_ip=%s"
                         "|port=%d"
                         "|process=%d"
@@ -91,7 +91,7 @@ bool GRequest::analyzeRequest() {
         m_http.setObject(*this);
         m_http.setData(m_data);
         if(!m_http.analyzePost()) {
-            slog(eGERR, "L'analyse de la requête HTTP a échoué."
+            slog(eGERR, "L'analyse de la requête HTTP POST a échoué."
                         "|adresse_ip=%s"
                         "|port=%d"
                         "|process=%d"

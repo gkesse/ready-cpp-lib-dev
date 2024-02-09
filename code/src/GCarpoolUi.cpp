@@ -23,38 +23,42 @@ void GCarpoolUi::create() {
 
     init();
 
-    m_content += sformat("<!DOCTYPE html>\n");
-    m_content += sformat("<html lang='fr'>\n");
-    m_content += sformat("<head>\n");
-    //
-    m_content += sformat("<title>ReadyCar</title>\n");
-    m_content += sformat("<meta name='viewport' content='width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0, user-scalable=no'/>\n");
-    m_content += sformat("<meta charset='UTF-8'/>\n");
-    m_content += sformat("<link rel='shortcut icon' type='image/png' href='/data/img/logo.png'/>\n");
-    m_content += sformat("<link rel='stylesheet' href='/css/styles.css'/>\n");
-    //
-    m_content += sformat("</head>\n");
-    m_content += sformat("<body>\n");
-    //
-    createHome();
-    //
-    if(m_uri == "/carpool/profil") {
-        createProfil();
+    if(!isRedirectUrl()) {
+        m_content += sformat("<!DOCTYPE html>\n");
+        m_content += sformat("<html lang='fr'>\n");
+        m_content += sformat("<head>\n");
+        //
+        m_content += sformat("<title>ReadyCar</title>\n");
+        m_content += sformat("<meta name='viewport' content='width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0, user-scalable=no'/>\n");
+        m_content += sformat("<meta charset='UTF-8'/>\n");
+        m_content += sformat("<link rel='shortcut icon' type='image/png' href='/data/img/logo.png'/>\n");
+        m_content += sformat("<link rel='stylesheet' href='/css/styles.css'/>\n");
+        //
+        m_content += sformat("</head>\n");
+        m_content += sformat("<body>\n");
+        //
+        createHome();
+        //
+        if(m_uri == "/carpool/profil") {
+            createProfil();
+        }
+        else if(m_uri == "/carpool/connexion") {
+            createConnexion();
+        }
+        else if(m_uri == "/carpool/inscription") {
+            createInscription();
+        }
+        else if(m_uri == "/carpool/inscription/email") {
+            createInscriptionEmail();
+        }
+        // scripts
+        m_content += sformat("<script src='/js/GObject.js'></script>\n");
+        m_content += sformat("<script src='/js/GServer.js'></script>\n");
+        m_content += sformat("<script src='/js/scripts.js'></script>\n");
+        // footer
+        m_content += sformat("</body>\n");
+        m_content += sformat("</html>\n");
     }
-    else if(m_uri == "/carpool/connexion") {
-        createConnexion();
-    }
-    else if(m_uri == "/carpool/inscription") {
-        createInscription();
-    }
-    else if(m_uri == "/carpool/inscription/email") {
-        createInscriptionEmail();
-    }
-    //
-    m_content += sformat("<script src='/js/scripts.js'></script>\n");
-    //
-    m_content += sformat("</body>\n");
-    m_content += sformat("</html>\n");
 
     GResponseHttp lResponse;
     lResponse.setObject(*this);
@@ -62,6 +66,19 @@ void GCarpoolUi::create() {
     lResponse.create();
 
     m_response += lResponse.toResponse();
+}
+//===============================================
+bool GCarpoolUi::isRedirectUrl() {
+    if(m_type == Type::REQ_TYPE_HTTP_POST) {
+        if(m_uri == "/carpool/inscription/email") {
+            return redirectInscriptionEmail();
+        }
+    }
+    return false;
+}
+//===============================================
+void GCarpoolUi::redirectUrl(const GString& _url) {
+    m_content += sformat("<meta http-equiv='refresh' content='0; url=%s'>\n", _url.c_str());
 }
 //===============================================
 void GCarpoolUi::createHome() {
@@ -122,9 +139,23 @@ void GCarpoolUi::createInscription() {
     m_content += sformat("</div>\n");
 }
 //===============================================
+bool GCarpoolUi::redirectInscriptionEmail() {
+    GString lEmail = m_forms["email"];
+    GString lNewletter = m_forms["newsletter"];
+    bool isNewsletter = (lNewletter == "on");
+    slog(eGINF, "Les informations de la fiche d'inscription."
+                "|email=%s"
+                "|is_newsletter=%d", lEmail.c_str(), isNewsletter);
+    return isNewsletter;
+}
+//===============================================
 void GCarpoolUi::createInscriptionEmail() {
     if(m_type == Type::REQ_TYPE_HTTP_POST) {
-        m_content += sformat("<div>Tira Tira</div>\n");
+        GString lEmail = m_forms["email"];
+        GString lNewletter = m_forms["newsletter"];
+        bool isNewsletter = (lNewletter == "on");
+        m_content += sformat("<div>email: %s</div>\n", lEmail.c_str());
+        m_content += sformat("<div>is_newsletter: %d</div>\n", isNewsletter);
     }
     // address
     m_content += sformat("<div>\n");
@@ -136,7 +167,7 @@ void GCarpoolUi::createInscriptionEmail() {
     m_content += sformat(">\n");
     m_content += sformat("<a href='/carpool/inscription/email'>Email</a>\n");
     m_content += sformat("</div>\n");
-    //
+    // form_start
     m_content += sformat("<form action='' method='post'>\n");
     // email
     m_content += sformat("<div>\n");
@@ -152,7 +183,7 @@ void GCarpoolUi::createInscriptionEmail() {
     m_content += sformat("<div>\n");
     m_content += sformat("<button type='submit'>Continuer</button>\n");
     m_content += sformat("</div>\n");
-    //
+    // from_end
     m_content += sformat("</form>\n");
 }
 //===============================================

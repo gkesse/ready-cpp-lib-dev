@@ -17,6 +17,7 @@ void GPage::setPage(const GPage& _page) {
     m_uri = _page.m_uri;
     m_version = _page.m_version;
     m_type = _page.m_type;
+    m_forms = _page.m_forms;
 }
 //===============================================
 void GPage::setDispatcher(const GDispatcherHttp& _dispatcher) {
@@ -24,6 +25,7 @@ void GPage::setDispatcher(const GDispatcherHttp& _dispatcher) {
     m_uri = _dispatcher.getUri();
     m_version = _dispatcher.getVersion();
     m_type = _dispatcher.getType();
+    m_forms = _dispatcher.getForms();
 }
 //===============================================
 void GPage::createHelloWrold() {

@@ -6,6 +6,9 @@
 //===============================================
 class GRequestHttp : public GObject {
 public:
+    typedef std::map<std::string, std::string> GForms;
+
+public:
     GRequestHttp();
     ~GRequestHttp();
     void setData(const GString& _data);
@@ -17,13 +20,16 @@ public:
     const GString& getMethod() const;
     const GString& getUri() const;
     const GString& getVersion() const;
+    const GForms& getForms() const;
 
 private:
     GString m_data;
     GString m_method;
     GString m_uri;
     GString m_version;
+    GString m_contentType;
     GString m_request;
+    GForms m_forms;
     int m_total;
 };
 //===============================================

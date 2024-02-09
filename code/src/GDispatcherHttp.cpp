@@ -15,6 +15,7 @@ void GDispatcherHttp::setDispatcher(const GDispatcher& _dispatcher) {
     m_method = _dispatcher.getHttp().getMethod();
     m_uri = _dispatcher.getHttp().getUri();
     m_version = _dispatcher.getHttp().getVersion();
+    m_forms = _dispatcher.getHttp().getForms();
     m_type = _dispatcher.getType();
 }
 //===============================================
@@ -28,5 +29,13 @@ const GString& GDispatcherHttp::getUri() const {
 //===============================================
 const GString& GDispatcherHttp::getVersion() const {
     return m_version;
+}
+//===============================================
+GDispatcherHttp::GForms& GDispatcherHttp::getForms() {
+    return m_forms;
+}
+//===============================================
+const GDispatcherHttp::GForms& GDispatcherHttp::getForms() const {
+    return m_forms;
 }
 //===============================================

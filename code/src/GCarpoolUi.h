@@ -10,10 +10,13 @@ public:
     ~GCarpoolUi();
     void init();
     void create();
+    bool isRedirectUrl();
+    void redirectUrl(const GString& _url);
     void createHome();
     void createProfil();
     void createConnexion();
     void createInscription();
+    bool redirectInscriptionEmail();
     void createInscriptionEmail();
 
 private:
