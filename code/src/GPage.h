@@ -8,9 +8,6 @@ class GDispatcherHttp;
 //===============================================
 class GPage : public GResponseHttp {
 public:
-    typedef std::map<std::string, std::string> GForms;
-
-public:
     GPage();
     ~GPage();
     void setPage(const GPage& _page);
@@ -23,7 +20,7 @@ protected:
     GString m_method;
     GString m_uri;
     GString m_version;
-    GForms m_forms;
+    GMap m_forms;
 };
 //===============================================
 #endif

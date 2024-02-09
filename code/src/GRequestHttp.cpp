@@ -4,7 +4,7 @@
 GRequestHttp::GRequestHttp()
 : GObject()
 , m_total(0) {
-
+    m_forms.createMap();
 }
 //===============================================
 GRequestHttp::~GRequestHttp() {
@@ -21,7 +21,7 @@ void GRequestHttp::setRequest(const GRequestHttp& _request) {
     m_version = _request.m_version;
     m_contentType = _request.m_contentType;
     m_request = _request.m_request;
-    m_forms = _request.m_forms;
+    m_forms.loadMap(_request.m_forms);
 }
 //===============================================
 int GRequestHttp::getTotal() const {
@@ -138,7 +138,7 @@ bool GRequestHttp::analyzePost() {
             GString lData = m_request.extract(FORM_SEP, i);
             GString lKey = lData.extract(DATA_SEP);
             GString lValue = lData.extractEnd(DATA_SEP);
-            m_forms[lKey.c_str()] = lValue.c_str();
+            m_forms.addData(lKey, lValue);
         }
     }
 
@@ -164,10 +164,10 @@ const GString& GRequestHttp::getUri() const {
 }
 //===============================================
 const GString& GRequestHttp::getVersion() const {
-    return m_uri;
+    return m_version;
 }
 //===============================================
-const GRequestHttp::GForms& GRequestHttp::getForms() const {
+const GMap& GRequestHttp::getForms() const {
     return m_forms;
 }
 //===============================================

@@ -6,6 +6,7 @@
 #include "GLog.h"
 #include "GDebug.h"
 #include "GException.h"
+#include "GMap.h"
 //===============================================
 #define GOBJECT     GObject::Instance()
 #define sres        GOBJECT->getResource

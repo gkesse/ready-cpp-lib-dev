@@ -140,19 +140,19 @@ void GCarpoolUi::createInscription() {
 }
 //===============================================
 bool GCarpoolUi::redirectInscriptionEmail() {
-    GString lEmail = m_forms["email"];
-    GString lNewletter = m_forms["newsletter"];
+    GString lEmail = m_forms.getData("email");
+    GString lNewletter = m_forms.getData("newsletter");
     bool isNewsletter = (lNewletter == "on");
     slog(eGINF, "Les informations de la fiche d'inscription."
                 "|email=%s"
-                "|is_newsletter=%d", lEmail.c_str(), isNewsletter);
+                "|lNewletter=%s", lEmail.c_str(), lNewletter.c_str());
     return isNewsletter;
 }
 //===============================================
 void GCarpoolUi::createInscriptionEmail() {
     if(m_type == Type::REQ_TYPE_HTTP_POST) {
-        GString lEmail = m_forms["email"];
-        GString lNewletter = m_forms["newsletter"];
+        GString lEmail = m_forms.getData("email");
+        GString lNewletter = m_forms.getData("newsletter");
         bool isNewsletter = (lNewletter == "on");
         m_content += sformat("<div>email: %s</div>\n", lEmail.c_str());
         m_content += sformat("<div>is_newsletter: %d</div>\n", isNewsletter);
