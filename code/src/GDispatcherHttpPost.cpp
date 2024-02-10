@@ -1,9 +1,6 @@
 //===============================================
 #include "GDispatcherHttpPost.h"
-#include "GResponseHttp.h"
 #include "GPage.h"
-#include "GFile.h"
-#include "GMimeType.h"
 //===============================================
 GDispatcherHttpPost::GDispatcherHttpPost()
 : GDispatcherHttp() {
@@ -21,12 +18,23 @@ void GDispatcherHttpPost::run() {
                 "|process=%d"
                 "|uri=%s", m_addressIP.c_str(), m_port, m_pid, m_uri.c_str());
 
-    if(m_uri.startsWith("/carpool")) {
+    if(m_uri.startsWith("/callback")) {
+        runCallback();
+    }
+    else if(m_uri.startsWith("/carpool")) {
         runCarpool();
     }
     else {
-        runUnknown();
+        runNotFound();
     }
+}
+//===============================================
+void GDispatcherHttpPost::runCallback() {
+    GPage lPage;
+    lPage.setObject(*this);
+    lPage.setDispatcher(*this);
+    lPage.createCarpool();
+    m_response += lPage;
 }
 //===============================================
 void GDispatcherHttpPost::runCarpool() {
@@ -37,11 +45,11 @@ void GDispatcherHttpPost::runCarpool() {
     m_response += lPage;
 }
 //===============================================
-void GDispatcherHttpPost::runUnknown() {
+void GDispatcherHttpPost::runNotFound() {
     GPage lPage;
     lPage.setObject(*this);
     lPage.setDispatcher(*this);
-    lPage.createUnknown();
+    lPage.createNotFound();
     m_response += lPage;
 }
 //===============================================

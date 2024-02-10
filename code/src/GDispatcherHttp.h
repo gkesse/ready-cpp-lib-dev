@@ -12,13 +12,13 @@ public:
     const GString& getMethod() const;
     const GString& getUri() const;
     const GString& getVersion() const;
-    const GMap& getForms() const;
+    const GString& getRequest() const;
 
 protected:
     GString m_method;
     GString m_uri;
     GString m_version;
-    GMap m_forms;
+    GString m_request;
 };
 //===============================================
 #endif

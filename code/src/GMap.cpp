@@ -48,6 +48,18 @@ void GMap::createMap() {
     m_node = m_root;
 }
 //===============================================
+void GMap::loadMap(const GString& _data, const GString& _sepMap, const GString& _sepData) {
+    if(_data.isEmpty()) return;
+    if(!m_node) return;
+    int lCount = _data.count(_sepMap);
+    for(int i = 0; i < lCount; i++) {
+        GString lData = _data.extract(_sepMap, i);
+        GString lKey = lData.extract(_sepData);
+        GString lValue = lData.extractEnd(_sepData);
+        addData(lKey, lValue);
+    }
+}
+//===============================================
 void GMap::loadMap(const GMap& _map) {
     if(!m_node) return;
     GMap* lNode = _map.m_node;

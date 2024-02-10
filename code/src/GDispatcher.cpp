@@ -2,7 +2,6 @@
 #include "GDispatcher.h"
 #include "GDispatcherHttpGet.h"
 #include "GDispatcherHttpPost.h"
-#include "GRequest.h"
 //===============================================
 GDispatcher::GDispatcher()
 : GRequest() {

@@ -15,6 +15,9 @@ class GTestJs extends GObject {
         else if(this.m_module == "code") {
             this.runCode();
         }
+        else if(this.m_module == "ajax") {
+            this.runAjax();
+        }
         else {
             console.log(sprintf("Le module est inconnu."+
                                 "|module=%s", this.m_module));
@@ -91,6 +94,11 @@ class GTestJs extends GObject {
         lLog.m_msg = "L'opération s'est bien déroulée.";
         lLog.loadToMap(1);
         console.log(lLog.serialize());
+    }
+    //===============================================
+    runAjax() {
+        var lAjax = new GAjax();
+        lAjax.call("carpool", "inscription");
     }
     //===============================================
 }

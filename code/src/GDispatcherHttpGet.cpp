@@ -29,7 +29,7 @@ void GDispatcherHttpGet::run() {
             runCarpool();
         }
         else {
-            runUnknown();
+            runNotFound();
         }
     }
     else {
@@ -109,11 +109,11 @@ void GDispatcherHttpGet::runCarpool() {
     m_response += lPage;
 }
 //===============================================
-void GDispatcherHttpGet::runUnknown() {
+void GDispatcherHttpGet::runNotFound() {
     GPage lPage;
     lPage.setObject(*this);
     lPage.setDispatcher(*this);
-    lPage.createUnknown();
+    lPage.createNotFound();
     m_response += lPage;
 }
 //===============================================

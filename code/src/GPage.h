@@ -13,14 +13,14 @@ public:
     void setPage(const GPage& _page);
     void setDispatcher(const GDispatcherHttp& _dispatcher);
     void createHelloWrold();
-    void createUnknown();
+    void createNotFound();
     void createCarpool();
 
 protected:
     GString m_method;
     GString m_uri;
     GString m_version;
-    GMap m_forms;
+    GString m_request;
 };
 //===============================================
 #endif

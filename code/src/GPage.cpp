@@ -5,7 +5,7 @@
 //===============================================
 GPage::GPage()
 : GResponseHttp() {
-    m_forms.createMap();
+
 }
 //===============================================
 GPage::~GPage() {
@@ -16,16 +16,16 @@ void GPage::setPage(const GPage& _page) {
     m_method = _page.m_method;
     m_uri = _page.m_uri;
     m_version = _page.m_version;
+    m_request = _page.m_request;
     m_type = _page.m_type;
-    m_forms.loadMap(_page.m_forms);
 }
 //===============================================
 void GPage::setDispatcher(const GDispatcherHttp& _dispatcher) {
     m_method = _dispatcher.getMethod();
     m_uri = _dispatcher.getUri();
     m_version = _dispatcher.getVersion();
+    m_request = _dispatcher.getRequest();
     m_type = _dispatcher.getType();
-    m_forms.loadMap(_dispatcher.getForms());
 }
 //===============================================
 void GPage::createHelloWrold() {
@@ -45,16 +45,20 @@ void GPage::createHelloWrold() {
     m_response += lResponse.toResponse();
 }
 //===============================================
-void GPage::createUnknown() {
+void GPage::createNotFound() {
     slog(eGINF, "Création de la page not found."
                 "|adresse_ip=%s"
                 "|port=%d"
                 "|process=%d"
                 "|uri=%s", m_addressIP.c_str(), m_port, m_pid, m_uri.c_str());
 
+    GString lContent;
+    lContent += sformat("Page non trouvée !!!");
+
     GResponseHttp lResponse;
     lResponse.setObject(*this);
     lResponse.setStatus(GResponseHttp::eGStatus::NotFound);
+    lResponse.setContent(lContent);
     lResponse.create();
     m_response += lResponse.toResponse();
 }

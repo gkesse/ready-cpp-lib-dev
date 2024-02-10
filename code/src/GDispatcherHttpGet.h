@@ -13,7 +13,7 @@ public:
     bool isResource() const;
     void runHelloWorld();
     void runCarpool();
-    void runUnknown();
+    void runNotFound();
 };
 //===============================================
 #endif

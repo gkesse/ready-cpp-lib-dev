@@ -1,17 +1,14 @@
 //===============================================
-#ifndef _GDispatcherHttpPost_
-#define _GDispatcherHttpPost_
+#ifndef _GCallback_
+#define _GCallback_
 //===============================================
-#include "GDispatcherHttp.h"
+#include "GPage.h"
 //===============================================
-class GDispatcherHttpPost : public GDispatcherHttp {
+class GCallback : public GPage {
 public:
-    GDispatcherHttpPost();
-    ~GDispatcherHttpPost();
+    GCallback();
+    ~GCallback();
     void run();
-    void runCallback();
-    void runCarpool();
-    void runNotFound();
 };
 //===============================================
 #endif

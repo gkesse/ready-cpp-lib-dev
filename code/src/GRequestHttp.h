@@ -17,7 +17,7 @@ public:
     const GString& getMethod() const;
     const GString& getUri() const;
     const GString& getVersion() const;
-    const GMap& getForms() const;
+    const GString& getRequest() const;
 
 private:
     GString m_data;
@@ -26,7 +26,6 @@ private:
     GString m_version;
     GString m_contentType;
     GString m_request;
-    GMap m_forms;
     int m_total;
 };
 //===============================================

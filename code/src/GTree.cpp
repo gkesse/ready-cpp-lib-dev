@@ -2,7 +2,7 @@
 // GTree
 //===============================================
 #include "GTree.h"
-#include "GException.h"
+#include "GDebug.h"
 //===============================================
 GTree::GTree() {
     m_root = 0;
@@ -96,7 +96,10 @@ GTree GTree::getChild(int _index) const {
 //===============================================
 void GTree::setValue(const GString& _value) {
     if(!m_node) return;
-    if(m_node->m_type == Type::TREE_TYPE_ROOT) eThrow("Impossible de modifier la valeur d'un élément ROOT.");
+    if(m_node->m_type == Type::TREE_TYPE_ROOT) {
+        slog(eGERR, "Un élément ROOT ne possède pas de valeur.");
+        return;
+    }
     m_node->m_value = _value;
 }
 //===============================================
@@ -125,7 +128,10 @@ int GTree::countNode(const GString& _data, const GString& _node) const {
 //===============================================
 int GTree::size() const {
     if(!m_node) return 0;
-    if(m_node->m_type != Type::TREE_TYPE_ROOT) eThrow("Impossible de compter le nombre d'éléments à partir d'un élément non ROOT.");
+    if(m_node->m_type != Type::TREE_TYPE_ROOT) {
+        slog(eGERR, "Un élément non ROOT ne peut pas compter le nombre d'éléments.");
+        return 0;
+    }
     GTree* lNode = m_node->m_next;
     int lCount = 0;
     while(lNode) {
@@ -264,7 +270,10 @@ GTree::GNode GTree::GNode::appendChild() {
 //===============================================
 int GTree::GNode::countNode(const GString& _parent) const {
     if(!m_node) return 0;
-    if(m_node->m_type != Type::NODE_TYPE_ROOT) eThrow("Impossible de compter le nombre d'éléments à partir d'un élément non ROOT.");
+    if(m_node->m_type != Type::NODE_TYPE_ROOT) {
+        slog(eGERR, "Un élément non ROOT ne peut pas compter le nombre d'éléments.");
+        return 0;
+    }
     GTree::GNode* lNode = m_node->m_next;
     int lCount = 0;
     while(lNode) {
@@ -293,13 +302,19 @@ GString GTree::GNode::getValue() const {
 //===============================================
 GTree::GNode GTree::GNode::getFirst() const {
     if(!m_node) return GTree::GNode();
-    if(m_node->m_type != Type::NODE_TYPE_ROOT) eThrow("Impossible de récupérer le premier élément à partir d'un élément non ROOT.");
+    if(m_node->m_type != Type::NODE_TYPE_ROOT) {
+        slog(eGERR, "Un élément non ROOT ne peut pas récupérer le premier élément.");
+        return GTree::GNode();
+    }
     return GTree::GNode(m_node->m_next);
 }
 //===============================================
 GTree::GNode GTree::GNode::getNode(const GString& _parent, int _index) const {
     if(!m_node) return GTree::GNode();
-    if(m_node->m_type != Type::NODE_TYPE_ROOT) eThrow("Impossible de compter le nombre d'éléments à partir d'un élément non ROOT.");
+    if(m_node->m_type != Type::NODE_TYPE_ROOT) {
+        slog(eGERR, "un élément non ROOT ne peut pas récupérer de noeud.");
+        return GTree::GNode();
+    }
     GTree::GNode* lNode = m_node->m_next;
     int lCount = 0;
     while(lNode) {
@@ -316,7 +331,10 @@ GTree::GNode GTree::GNode::getNode(const GString& _parent, int _index) const {
 //===============================================
 GString GTree::GNode::toString() const {
     if(!m_node) return "";
-    if(m_node->m_type != Type::NODE_TYPE_ROOT) eThrow("Impossible de récupérer la chaîne à partir d'un élément non ROOT.");
+    if(m_node->m_type != Type::NODE_TYPE_ROOT) {
+        slog(eGERR, "un élément non ROOT ne peut pas récupérer les données TREE.");
+        return "";
+    }
     GTree::GNode* lNode = m_node->m_next;
     GString lData;
     while(lNode) {

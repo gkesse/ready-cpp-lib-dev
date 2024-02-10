@@ -4,7 +4,7 @@
 GRequestHttp::GRequestHttp()
 : GObject()
 , m_total(0) {
-    m_forms.createMap();
+
 }
 //===============================================
 GRequestHttp::~GRequestHttp() {
@@ -21,7 +21,6 @@ void GRequestHttp::setRequest(const GRequestHttp& _request) {
     m_version = _request.m_version;
     m_contentType = _request.m_contentType;
     m_request = _request.m_request;
-    m_forms.loadMap(_request.m_forms);
 }
 //===============================================
 int GRequestHttp::getTotal() const {
@@ -96,7 +95,6 @@ bool GRequestHttp::analyzePost() {
     const GString CRLFCRLF = "\r\n\r\n";
     const GString SPACE = " ";
     const GString DOUBLE_POINT = ":";
-    const GString FORM_DATA = "application/x-www-form-urlencoded";
     const GString FORM_SEP = "&";
     const GString DATA_SEP = "=";
 
@@ -132,16 +130,6 @@ bool GRequestHttp::analyzePost() {
     // request
     m_request = m_data.extractEnd(CRLFCRLF);
 
-    if(m_contentType == FORM_DATA) {
-        int lCount = m_request.count(FORM_SEP);
-        for(int i = 0; i < lCount; i++) {
-            GString lData = m_request.extract(FORM_SEP, i);
-            GString lKey = lData.extract(DATA_SEP);
-            GString lValue = lData.extractEnd(DATA_SEP);
-            m_forms.addData(lKey, lValue);
-        }
-    }
-
     slog(eGINF, "Méthode de la requête HTTP POST."
                 "|adresse_ip=%s"
                 "|port=%d"
@@ -167,7 +155,7 @@ const GString& GRequestHttp::getVersion() const {
     return m_version;
 }
 //===============================================
-const GMap& GRequestHttp::getForms() const {
-    return m_forms;
+const GString& GRequestHttp::getRequest() const {
+    return m_request;
 }
 //===============================================

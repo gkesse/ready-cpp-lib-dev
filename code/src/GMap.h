@@ -19,6 +19,7 @@ public:
     virtual ~GMap();
     void clear();
     void createMap();
+    void loadMap(const GString& _data, const GString& _sepMap = "&", const GString& _sepData = "=");
     void loadMap(const GMap& _map);
     GMap addData(const GString& _key, const GString& _value);
     GString getData(const GString& _key) const;
