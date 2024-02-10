@@ -13,6 +13,9 @@ public:
     bool isRedirectUrl();
     void redirectUrl(const GString& _url);
     void createHome();
+    void createLog();
+    void createTest();
+    void createTestJs();
     void createProfil();
     void createConnexion();
     void createInscription();

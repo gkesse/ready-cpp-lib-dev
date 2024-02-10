@@ -42,6 +42,11 @@ void GDispatcherHttpGet::run() {
 }
 //===============================================
 bool GDispatcherHttpGet::loadResource() {
+    if(!isResource()) {
+        slog(eGERR, "La ressource n'est pas authorisée."
+                    "|uri=%s", m_uri.c_str());
+        return false;
+    }
     GString lPath = sres(m_uri);
     struct stat lStat;
     // la ressource existe ?
@@ -78,6 +83,13 @@ bool GDispatcherHttpGet::loadResource() {
             return true;
         }
     }
+    return false;
+}
+//===============================================
+bool GDispatcherHttpGet::isResource() const {
+    if(m_uri.startsWith("/data/img")) return true;
+    if(m_uri.startsWith("/css")) return true;
+    if(m_uri.startsWith("/js")) return true;
     return false;
 }
 //===============================================

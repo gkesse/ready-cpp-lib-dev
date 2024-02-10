@@ -10,6 +10,7 @@ public:
     ~GDispatcherHttpGet();
     void run();
     bool loadResource();
+    bool isResource() const;
     void runHelloWorld();
     void runCarpool();
     void runUnknown();

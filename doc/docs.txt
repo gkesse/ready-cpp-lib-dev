@@ -20,19 +20,18 @@ g++ -c base64.cpp -o base64.o
 ar rcs libbase64.a base64.o
 
 #================================================
+### crontab
+#================================================
+
+permet de planifier l'exécution de programmes.
+
+https://man7.org/linux/man-pages/man5/crontab.5.html
+
+#================================================
 ### git
 #================================================
 
 permet de gérer les différentes versions d'un projet.
-
-#================================================
-### json
-#================================================
-
-permet de serialiser des objets avant 
-de les transmettre sur le réseau internet.
-
-https://howtoinstall.co/package/libjson-c-dev
 
 #================================================
 ### ipapi
@@ -45,12 +44,22 @@ https://ipapi.co/8.8.8.8/country
 https://stackoverflow.com/questions/23381402/get-ip-address-of-local-machine-on-c
 
 #================================================
-### crontab
+### javascript
 #================================================
 
-permet de planifier l'exécution de programmes.
+permet de gérer la dynamique des pages web côté client.
 
-https://man7.org/linux/man-pages/man5/crontab.5.html
+https://www.geeksforgeeks.org/multiple-class-constructors-in-javascript/
+https://www.geeksforgeeks.org/function-overloading-in-javascript/
+
+#================================================
+### json
+#================================================
+
+permet de serialiser des objets avant 
+de les transmettre sur le réseau internet.
+
+https://howtoinstall.co/package/libjson-c-dev
 
 #================================================
 # Fin

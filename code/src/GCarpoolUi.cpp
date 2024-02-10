@@ -37,9 +37,16 @@ void GCarpoolUi::create() {
         m_content += sformat("</head>\n");
         m_content += sformat("<body>\n");
         //
+        createLog();
         createHome();
         //
-        if(m_uri == "/carpool/profil") {
+        if(m_uri == "/carpool/test") {
+            createTest();
+        }
+        else if(m_uri == "/carpool/test/js") {
+            createTestJs();
+        }
+        else if(m_uri == "/carpool/profil") {
             createProfil();
         }
         else if(m_uri == "/carpool/connexion") {
@@ -52,8 +59,12 @@ void GCarpoolUi::create() {
             createInscriptionEmail();
         }
         // scripts
+        m_content += sformat("<script src='/js/functions.js'></script>\n");
+        m_content += sformat("<script src='/js/GXml.js'></script>\n");
         m_content += sformat("<script src='/js/GObject.js'></script>\n");
         m_content += sformat("<script src='/js/GServer.js'></script>\n");
+        m_content += sformat("<script src='/js/GCarpool.js'></script>\n");
+        m_content += sformat("<script src='/js/GTestJs.js'></script>\n");
         m_content += sformat("<script src='/js/scripts.js'></script>\n");
         // footer
         m_content += sformat("</body>\n");
@@ -90,6 +101,46 @@ void GCarpoolUi::createHome() {
     m_content += sformat("<a href='/carpool/recherche'>Rechercher</a>\n");
     m_content += sformat("<a href='/carpool/publication'>Publier un trajet</a>\n");
     m_content += sformat("<a href='/carpool/profil'>Profil</a>\n");
+    m_content += sformat("<a href='/carpool/test'>Test</a>\n");
+    m_content += sformat("</div>\n");
+}
+//===============================================
+void GCarpoolUi::createLog() {
+    m_content += sformat("<div id='LogId' class='Log1'>\n");
+    m_content += sformat("<div class='Log2'>\n");
+    m_content += sformat("<div id='LogTitle'><span>Messages</span> <span onclick='call_server(\"carpool\", \"fermer_log\")'>Fermer</span></div>\n");
+    m_content += sformat("<div id='LogMsg'>Logs</div>\n");
+    m_content += sformat("</div>\n");
+    m_content += sformat("</div>\n");
+}
+//===============================================
+void GCarpoolUi::createTest() {
+    // address
+    m_content += sformat("<div>\n");
+    m_content += sformat("<a href='/carpool'>Home</a>\n");
+    m_content += sformat(">\n");
+    m_content += sformat("<a href='/carpool/test'>Test</a>\n");
+    m_content += sformat("</div>\n");
+    //
+    m_content += sformat("<div>\n");
+    m_content += sformat("<a href='/carpool/test/js'>JS</a>\n");
+    m_content += sformat("</div>\n");
+}
+//===============================================
+void GCarpoolUi::createTestJs() {
+    // address
+    m_content += sformat("<div>\n");
+    m_content += sformat("<a href='/carpool'>Home</a>\n");
+    m_content += sformat(">\n");
+    m_content += sformat("<a href='/carpool/test'>Test</a>\n");
+    m_content += sformat(">\n");
+    m_content += sformat("<a href='/carpool/test/js'>JS</a>\n");
+    m_content += sformat("</div>\n");
+    //
+    m_content += sformat("<div>\n");
+    m_content += sformat("<label for='test_js_module'>Module :</label>\n");
+    m_content += sformat("<input type='text' id='test_js_module' name='test_js_module'/>\n");
+    m_content += sformat("<button onclick='call_server(\"carpool\", \"test_js\")'>Tester</button>\n");
     m_content += sformat("</div>\n");
 }
 //===============================================
@@ -171,7 +222,7 @@ void GCarpoolUi::createInscriptionEmail() {
     m_content += sformat("<a href='/carpool/inscription/email'>Email</a>\n");
     m_content += sformat("</div>\n");
     // form_start
-    m_content += sformat("<form action='' method='post'>\n");
+    m_content += sformat("<div>\n");
     // email
     m_content += sformat("<div>\n");
     m_content += sformat("<label for='email'>Email :</label>\n");
@@ -184,9 +235,9 @@ void GCarpoolUi::createInscriptionEmail() {
     m_content += sformat("</div>\n");
     // buttons
     m_content += sformat("<div>\n");
-    m_content += sformat("<button type='submit'>Continuer</button>\n");
+    m_content += sformat("<button type='button' onclick='call_server(\"carpool\", \"inscription_email\")'>Continuer</button>\n");
     m_content += sformat("</div>\n");
     // from_end
-    m_content += sformat("</form>\n");
+    m_content += sformat("</div>\n");
 }
 //===============================================

@@ -1,7 +1,8 @@
 //===============================================
-function call_server(_module, _method, _obj = null, _data = null) {
+function call_server(_module, _method, _obj = null, _params = null) {
     var lServer = new GServer();
-    lServer.run(_module, _method, _obj, _data);
+    lServer.setObjects(_module, _method, _obj, _params);
+    lServer.run();
     return true;
 }
 //===============================================
