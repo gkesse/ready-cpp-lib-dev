@@ -61,7 +61,10 @@ void GCarpoolUi::create() {
         // scripts
         m_content += sformat("<script src='/js/functions.js'></script>\n");
         m_content += sformat("<script src='/js/GXml.js'></script>\n");
+        m_content += sformat("<script src='/js/GCode.js'></script>\n");
+        m_content += sformat("<script src='/js/GLog.js'></script>\n");
         m_content += sformat("<script src='/js/GObject.js'></script>\n");
+        m_content += sformat("<script src='/js/GAjax.js'></script>\n");
         m_content += sformat("<script src='/js/GServer.js'></script>\n");
         m_content += sformat("<script src='/js/GCarpool.js'></script>\n");
         m_content += sformat("<script src='/js/GTestJs.js'></script>\n");

@@ -28,6 +28,16 @@ function sprintf() {
     });
 }
 //===============================================
+// base64
+//===============================================
+function utf8_to_b64(_data) {
+    return encodeURIComponent(btoa(_data));
+}
+//===============================================
+function b64_to_utf8(_data) {
+    return atob(decodeURIComponent(_data));
+}
+//===============================================
 // xml
 //===============================================
 String.prototype.toXml = function() {
@@ -41,5 +51,21 @@ String.prototype.toXml = function() {
         if (node.match( /^<?\w[^>]*[^\/]$/ )) indent += tab;              // increase indent
     });
     return formatted.substring(1, formatted.length-3);
+}
+//===============================================
+// string
+//===============================================
+String.prototype.toBase64 = function() {
+    var lData = this;
+    lData = btoa(lData);
+    lData = encodeURIComponent(lData);
+    return lData;
+}
+//===============================================
+String.prototype.fromBase64 = function() {
+    var lData = this;
+    lData = decodeURIComponent(lData);
+    lData = atob(lData);
+    return lData;
 }
 //===============================================
