@@ -57,7 +57,6 @@ void GPage::createNotFound() {
 
     GResponseHttp lResponse;
     lResponse.setObject(*this);
-    lResponse.setStatus(GResponseHttp::eGStatus::NotFound);
     lResponse.setContent(lContent);
     lResponse.create();
     m_response += lResponse.toResponse();

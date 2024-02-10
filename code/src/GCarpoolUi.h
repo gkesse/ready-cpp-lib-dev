@@ -16,10 +16,11 @@ public:
     void createLog();
     void createTest();
     void createTestJs();
+    bool redirectTestPost();
+    void createTestPost();
     void createProfil();
     void createConnexion();
     void createInscription();
-    bool redirectInscriptionEmail();
     void createInscriptionEmail();
 
 private:

@@ -46,6 +46,10 @@ void GCarpoolUi::create() {
         else if(m_uri == "/carpool/test/js") {
             createTestJs();
         }
+        else if(m_uri == "/carpool/test/post") {
+            createTestPost();
+        }
+        //
         else if(m_uri == "/carpool/profil") {
             createProfil();
         }
@@ -84,8 +88,8 @@ void GCarpoolUi::create() {
 //===============================================
 bool GCarpoolUi::isRedirectUrl() {
     if(m_type == Type::REQ_TYPE_HTTP_POST) {
-        if(m_uri == "/carpool/inscription/email") {
-            return redirectInscriptionEmail();
+        if(m_uri == "/carpool/test/post") {
+            return redirectTestPost();
         }
     }
     return false;
@@ -127,6 +131,7 @@ void GCarpoolUi::createTest() {
     //
     m_content += sformat("<div>\n");
     m_content += sformat("<a href='/carpool/test/js'>JS</a>\n");
+    m_content += sformat("<a href='/carpool/test/post'>POST</a>\n");
     m_content += sformat("</div>\n");
 }
 //===============================================
@@ -144,6 +149,65 @@ void GCarpoolUi::createTestJs() {
     m_content += sformat("<label for='test_js_module'>Module :</label>\n");
     m_content += sformat("<input type='text' id='test_js_module' name='test_js_module'/>\n");
     m_content += sformat("<button onclick='call_server(\"carpool\", \"test_js\")'>Tester</button>\n");
+    m_content += sformat("</div>\n");
+}
+//===============================================
+bool GCarpoolUi::redirectTestPost() {
+    GMap lForms;
+    lForms.createMap();
+    lForms.loadMap(m_request);
+    GString lEmail = lForms.getData("email");
+    GString lNewletter = lForms.getData("newsletter");
+    bool isNewsletter = (lNewletter == "on");
+
+    slog(eGINF, "Les données du test post."
+                "|email=%s"
+                "|newletter=%s"
+                "|is_newsletter=%d", lEmail.c_str(), lNewletter.c_str(), isNewsletter);
+
+    if(isNewsletter) {
+        redirectUrl("/carpool");
+    }
+    return isNewsletter;
+}
+//===============================================
+void GCarpoolUi::createTestPost() {
+    // post
+    if(m_type == Type::REQ_TYPE_HTTP_POST) {
+        GMap lForms;
+        lForms.createMap();
+        lForms.loadMap(m_request);
+        GString lEmail = lForms.getData("email");
+        GString lNewsletter = lForms.getData("newsletter");
+        bool isNewsletter = (lNewsletter == "on");
+        m_content += sformat("<div>email: %s</div>\n", lEmail.c_str());
+        m_content += sformat("<div>is_newsletter: %d</div>\n", isNewsletter);
+    }
+    // address
+    m_content += sformat("<div>\n");
+    m_content += sformat("<a href='/carpool'>Home</a>\n");
+    m_content += sformat(">\n");
+    m_content += sformat("<a href='/carpool/test'>Test</a>\n");
+    m_content += sformat(">\n");
+    m_content += sformat("<a href='/carpool/test/post'>POST</a>\n");
+    m_content += sformat("</div>\n");
+    // form_start
+    m_content += sformat("<form action='/carpool/test/post' method='post'>\n");
+    // email
+    m_content += sformat("<div>\n");
+    m_content += sformat("<label for='email'>Email :</label>\n");
+    m_content += sformat("<input type='email' id='email' name='email' required/>\n");
+    m_content += sformat("</div>\n");
+    // newsletter
+    m_content += sformat("<div>\n");
+    m_content += sformat("<input type='checkbox' id='newsletter' name='newsletter'/>\n");
+    m_content += sformat("<label for='newsletter'>Je ne souhaite pas recevoir d'informations, de bons plans et de cadeaux.</label>\n");
+    m_content += sformat("</div>\n");
+    // buttons
+    m_content += sformat("<div>\n");
+    m_content += sformat("<button type='submit'>Continuer</button>\n");
+    m_content += sformat("</div>\n");
+    // from_end
     m_content += sformat("</div>\n");
 }
 //===============================================
@@ -193,35 +257,7 @@ void GCarpoolUi::createInscription() {
     m_content += sformat("</div>\n");
 }
 //===============================================
-bool GCarpoolUi::redirectInscriptionEmail() {
-    GMap lForms;
-    lForms.createMap();
-    lForms.loadMap(m_request);
-    GString lEmail = lForms.getData("email");
-    GString lNewletter = lForms.getData("newsletter");
-    bool isNewsletter = (lNewletter == "on");
-
-    slog(eGINF, "Les informations de la fiche d'inscription."
-                "|email=%s"
-                "|newletter=%s", lEmail.c_str(), lNewletter.c_str());
-
-    if(isNewsletter) {
-        redirectUrl("/carpool");
-    }
-    return isNewsletter;
-}
-//===============================================
 void GCarpoolUi::createInscriptionEmail() {
-    if(m_type == Type::REQ_TYPE_HTTP_POST) {
-        GMap lForms;
-        lForms.createMap();
-        lForms.loadMap(m_request);
-        GString lEmail = lForms.getData("email");
-        GString lNewletter = lForms.getData("newsletter");
-        bool isNewsletter = (lNewletter == "on");
-        m_content += sformat("<div>email: %s</div>\n", lEmail.c_str());
-        m_content += sformat("<div>is_newsletter: %d</div>\n", isNewsletter);
-    }
     // address
     m_content += sformat("<div>\n");
     m_content += sformat("<a href='/carpool'>Home</a>\n");
