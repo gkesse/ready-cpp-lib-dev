@@ -146,7 +146,9 @@ bool GCarpoolUi::redirectInscriptionEmail() {
     slog(eGINF, "Les informations de la fiche d'inscription."
                 "|email=%s"
                 "|newletter=%s", lEmail.c_str(), lNewletter.c_str());
-    redirectUrl("/carpool");
+    if(isNewsletter) {
+        redirectUrl("/carpool");
+    }
     return isNewsletter;
 }
 //===============================================
