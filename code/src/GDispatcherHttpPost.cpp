@@ -13,10 +13,7 @@ GDispatcherHttpPost::~GDispatcherHttpPost() {
 //===============================================
 void GDispatcherHttpPost::run() {
     slog(eGINF, "Traitement de la requête HTTP POST."
-                "|adresse_ip=%s"
-                "|port=%d"
-                "|process=%d"
-                "|uri=%s", m_addressIP.c_str(), m_port, m_pid, m_uri.c_str());
+                "|uri=%s", m_uri.c_str());
 
     if(m_uri.startsWith("/callback")) {
         runCallback();
@@ -31,15 +28,15 @@ void GDispatcherHttpPost::run() {
 //===============================================
 void GDispatcherHttpPost::runCallback() {
     GPage lPage;
-    lPage.setObject(*this);
+    lPage.setCommon(*this);
     lPage.setDispatcher(*this);
-    lPage.createCarpool();
+    lPage.createCallback();
     m_response += lPage;
 }
 //===============================================
 void GDispatcherHttpPost::runCarpool() {
     GPage lPage;
-    lPage.setObject(*this);
+    lPage.setCommon(*this);
     lPage.setDispatcher(*this);
     lPage.createCarpool();
     m_response += lPage;
@@ -47,9 +44,9 @@ void GDispatcherHttpPost::runCarpool() {
 //===============================================
 void GDispatcherHttpPost::runNotFound() {
     GPage lPage;
-    lPage.setObject(*this);
+    lPage.setCommon(*this);
     lPage.setDispatcher(*this);
-    lPage.createNotFound();
+    lPage.createUnknown();
     m_response += lPage;
 }
 //===============================================

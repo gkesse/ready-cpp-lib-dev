@@ -25,16 +25,13 @@ void GDispatcher::run() {
     }
     else {
         slog(eGERR, "Le type de la requête est inconnu."
-                    "|adresse_ip=%s"
-                    "|port=%d"
-                    "|process=%d"
-                    "|type=%d", m_addressIP.c_str(), m_port, m_pid, m_type);
+                    "|type=%d", m_type);
     }
 }
 //===============================================
 void GDispatcher::runHttpGet() {
     GDispatcherHttpGet lObj;
-    lObj.setObject(*this);
+    lObj.setCommon(*this);
     lObj.setDispatcher(*this);
     lObj.run();
     m_response.addResp(lObj.getResp());
@@ -42,7 +39,7 @@ void GDispatcher::runHttpGet() {
 //===============================================
 void GDispatcher::runHttpPost() {
     GDispatcherHttpPost lObj;
-    lObj.setObject(*this);
+    lObj.setCommon(*this);
     lObj.setDispatcher(*this);
     lObj.run();
     m_response.addResp(lObj.getResp());

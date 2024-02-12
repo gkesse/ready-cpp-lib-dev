@@ -15,7 +15,7 @@ class GAjax extends GObject {
             return false;
         }
         
-        console.log(sprintf("Préparation de l'appel."+
+        console.log(sprintf("Préparation de l'appel du serveur."+
                             "|module=%s"+
                             "|method=%s", _module, _method));            
 
@@ -49,10 +49,10 @@ class GAjax extends GObject {
                 if(_callback) _callback(lData);
             }
         }
-        
+                
         var lMethod = "POST";
-        var lUrl = "/carpool/callback";
-        var lContentType = "application/x-www-form-urlencoded";
+        var lUrl = "/callback/carpool";
+        var lContentType = AJAX_XML_DATA;
         var lAsync = true;
         var lUser = null;
         var lPassword = null;
@@ -60,8 +60,15 @@ class GAjax extends GObject {
         lXhttp.open(lMethod, lUrl, lAsync, lUser, lPassword);
         lXhttp.setRequestHeader("Content-Type", lContentType);
 
-        var lReq = "";
-        lReq += sprintf("req=%s", _data);
+        var lReq = "NO_DATA";
+        
+        if(lContentType == AJAX_FORM_DATA) {
+            lReq = "req=" +_data;
+        }
+        else {
+            lReq = _data;
+        }
+
         lXhttp.send(lReq);
         return true;
     }

@@ -108,10 +108,7 @@ GString GResponseHttp::toReason(const eGStatus& _status) const {
     }
     if(!lStatus.flag) {
         slog(eGERR, "Le status recherché n'a pas été trouvé."
-                    "|adresse_ip=%s"
-                    "|port=%d"
-                    "|process=%d"
-                    "|status=%d", m_addressIP.c_str(), m_port, m_pid, _status);
+                    "|status=%d", _status);
     }
     return lStatus.name;
 }

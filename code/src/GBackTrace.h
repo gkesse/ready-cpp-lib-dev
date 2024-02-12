@@ -4,9 +4,7 @@
 //===============================================
 #include "GObject.h"
 //===============================================
-#define GBACKTRACE GBackTrace::Instance()
-//===============================================
-class GBackTrace {
+class GBackTrace : public GObject {
 public:
     struct GSignal {
         int m_signo;
@@ -17,15 +15,12 @@ public:
 public:
     GBackTrace();
     ~GBackTrace();
-    static GBackTrace* Instance();
     void init();
     size_t convertToVMA(size_t addr);
     GSignal getSignal(int _signo);
-    static void onSignal(int _signo);
     void print();
-
-private:
-    static GBackTrace* m_instance;
+    void runSignal(int _signo);
+    static void onSignal(int _signo);
 };
 //===============================================
 #endif

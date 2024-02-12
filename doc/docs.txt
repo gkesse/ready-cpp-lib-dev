@@ -20,6 +20,24 @@ g++ -c base64.cpp -o base64.o
 ar rcs libbase64.a base64.o
 
 #================================================
+### c
+#================================================
+
+c permet de réaliser des programmes avec un contrôle total 
+sur la gestion de la mémoire en utilisant des structures.
+
+#================================================
+### c++
+#================================================
+
+c++ permet de réaliser des programmes avec un contrôle total 
+sur la gestion de la mémoire en utilisant la programmation
+orientée objet.
+
+https://stackoverflow.com/questions/1637332/static-const-vs-define
+https://www.geeksforgeeks.org/functors-in-cpp/
+
+#================================================
 ### crontab
 #================================================
 

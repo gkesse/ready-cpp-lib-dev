@@ -12,14 +12,15 @@ public:
     ~GPage();
     void setPage(const GPage& _page);
     void setDispatcher(const GDispatcherHttp& _dispatcher);
-    void createHelloWrold();
-    void createNotFound();
+    void createCallback();
     void createCarpool();
+    void createUnknown();
 
 protected:
     GString m_method;
     GString m_uri;
     GString m_version;
+    GString m_contentType;
     GString m_request;
 };
 //===============================================

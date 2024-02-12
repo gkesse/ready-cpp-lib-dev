@@ -17,6 +17,7 @@ public:
     const GString& getMethod() const;
     const GString& getUri() const;
     const GString& getVersion() const;
+    const GString& getContentType() const;
     const GString& getRequest() const;
 
 private:

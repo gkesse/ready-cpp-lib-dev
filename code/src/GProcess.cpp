@@ -3,8 +3,6 @@
 #include "GTest.h"
 #include "GSocket.h"
 //===============================================
-GProcess* GProcess::m_instance = 0;
-//===============================================
 GProcess::GProcess()
 : GObject() {
 
@@ -12,13 +10,6 @@ GProcess::GProcess()
 //===============================================
 GProcess::~GProcess() {
 
-}
-//===============================================
-GProcess* GProcess::Instance() {
-    if(m_instance == 0) {
-        m_instance = new GProcess;
-    }
-    return m_instance;
 }
 //===============================================
 void GProcess::init() {
@@ -36,7 +27,8 @@ void GProcess::clean() {
 }
 //===============================================
 void GProcess::onExit() {
-    GPROCESS->runExit();
+    GProcess lProcess;
+    lProcess.runExit();
 }
 //===============================================
 void GProcess::runExit() {

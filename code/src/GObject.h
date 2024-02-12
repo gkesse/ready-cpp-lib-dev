@@ -2,6 +2,8 @@
 #ifndef _GObject_
 #define _GObject_
 //===============================================
+#include "GCommon.h"
+#include "GCode.h"
 #include "GCode.h"
 #include "GLog.h"
 #include "GDebug.h"
@@ -11,9 +13,7 @@
 #define GOBJECT     GObject::Instance()
 #define sres        GOBJECT->getResource
 //===============================================
-class GSocket;
-//===============================================
-class GObject {
+class GObject : public GCommon {
 public:
     GObject();
     virtual ~GObject();
@@ -21,8 +21,6 @@ public:
     virtual GObject* clone() const;
     virtual void clearMap();
     virtual void init();
-    virtual void setObject(const GObject& _obj);
-    virtual void setSocket(const GSocket& _socket);
     virtual const GLog& getLogs() const;
     virtual GString getEnv(const GString& _env) const;
     virtual GString getResource(const GString& _path) const;
@@ -37,10 +35,6 @@ private:
 protected:
     GLog m_logs;
     std::vector<GObject*> m_map;
-
-    GString m_addressIP;
-    int m_port;
-    pid_t m_pid;
 };
 //===============================================
 #endif

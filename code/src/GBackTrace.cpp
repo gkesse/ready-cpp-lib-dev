@@ -1,10 +1,8 @@
 //===============================================
 #include "GBackTrace.h"
 //===============================================
-GBackTrace* GBackTrace::m_instance = 0;
-//===============================================
 #define DEFINE_SIGNAL(x, y) {x, #x, y}
-#define DEFINE_SIGNAL_LAST {-1, "Inconnu", "Inconnu"}
+#define DEFINE_SIGNAL_LAST {-1, "Unknown", "Inconnu"}
 //===============================================
 GBackTrace::GSignal SIGNAL_MAP[] = {
         DEFINE_SIGNAL(SIGABRT, "Arrêt anormal du programme."),
@@ -14,19 +12,13 @@ GBackTrace::GSignal SIGNAL_MAP[] = {
         DEFINE_SIGNAL_LAST
 };
 //===============================================
-GBackTrace::GBackTrace() {
+GBackTrace::GBackTrace()
+: GObject() {
 
 }
 //===============================================
 GBackTrace::~GBackTrace() {
 
-}
-//===============================================
-GBackTrace* GBackTrace::Instance() {
-    if(m_instance == 0) {
-        m_instance = new GBackTrace;
-    }
-    return m_instance;
 }
 //===============================================
 void GBackTrace::init() {
@@ -55,16 +47,6 @@ GBackTrace::GSignal GBackTrace::getSignal(int _signo) {
         if(lSignal.m_signo == _signo) return lSignal;
     }
     return DEFINE_SIGNAL_LAST;
-}
-//===============================================
-void GBackTrace::onSignal(int _signo) {
-    GBackTrace::GSignal lSignal = GBACKTRACE->getSignal(_signo);
-    slog(eGWAR, "Le programme a été interrompu par le signal."
-                "|signo=%d"
-                "|signal=%s"
-                "|description=%s", _signo, lSignal.m_name, lSignal.m_desc);
-    GBACKTRACE->print();
-    exit(0);
 }
 //===============================================
 void GBackTrace::print() {
@@ -100,5 +82,22 @@ void GBackTrace::print() {
     }
 
     fprintf(stderr, "%s\n", buffer.c_str());
+}
+//===============================================
+void GBackTrace::runSignal(int _signo) {
+    GBackTrace::GSignal lSignal = getSignal(_signo);
+
+    slog(eGWAR, "Le programme a été interrompu par le signal."
+                "|signo=%d"
+                "|signal=%s"
+                "|description=%s", _signo, lSignal.m_name, lSignal.m_desc);
+
+    print();
+    exit(0);
+}
+//===============================================
+void GBackTrace::onSignal(int _signo) {
+    GBackTrace lBackTrace;
+    lBackTrace.runSignal(_signo);
 }
 //===============================================

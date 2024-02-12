@@ -2,7 +2,7 @@
 #ifndef _GTree_
 #define _GTree_
 //===============================================
-#include "GString.h"
+#include "GDebug.h"
 //===============================================
 class GTree {
 public:
@@ -50,6 +50,7 @@ public:
         GString m_child;
         GString m_value;
         Type m_type;
+        GDebug slog;
     };
 
 public:
@@ -80,6 +81,7 @@ private:
     GTree* m_next;
     GString m_value;
     Type m_type;
+    GDebug slog;
 };
 //===============================================
 #endif

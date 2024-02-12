@@ -3,10 +3,10 @@
 #define _GString_
 //===============================================
 #include "GInclude.h"
+#include "GConstant.h"
 //===============================================
-#define GSTRING     GString::Instance()
-#define sformat     GSTRING->getFormat
-#define GFORMAT(...)    GSTRINGI->getFormat(__VA_ARGS__)
+#define GSTRING         GString::Instance()
+#define sformat(...)    GSTRING->getFormat(__VA_ARGS__)
 //===============================================
 class GString {
 public:

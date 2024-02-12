@@ -1,6 +1,5 @@
 //===============================================
 #include "GCsv.h"
-#include "GDebug.h"
 //===============================================
 GCsv::GCsv() {
     m_root = 0;
@@ -60,9 +59,7 @@ GCsv GCsv::addRow() {
     if(!m_node) return GCsv();
     if(m_node->m_type == Type::CSV_TYPE_COL) {
         slog(eGERR, "Un élément COL ne peut pas ajouter un élément ROW."
-                    "|root=%p"
-                    "|node=%p"
-                    "|type=%d", m_root, m_node, m_type);
+                    "|type=%d", m_type);
         return GCsv();
     }
     GCsv* lNode = new GCsv;
@@ -96,9 +93,7 @@ GCsv GCsv::appendRow() {
     if(!m_node) return GCsv();
     if(m_node->m_type != Type::CSV_TYPE_ROOT) {
         slog(eGERR, "Un élément non ROOT ne peut pas ajouter un élément ROW."
-                    "|root=%p"
-                    "|node=%p"
-                    "|type=%d", m_root, m_node, m_type);
+                    "|type=%d", m_type);
         return GCsv();
     }
     GCsv* lNode = new GCsv;
@@ -115,9 +110,8 @@ GCsv GCsv::addCol(const GString& _value) {
     if(!m_node) return GCsv();
     if(m_node->m_type == Type::CSV_TYPE_ROOT) {
         slog(eGERR, "Un élément ROOT ne peut pas ajouter un élément COL."
-                    "|root=%p"
-                    "|node=%p"
-                    "|type=%d", m_root, m_node, m_type);
+                    "|type=%d"
+                    "|value=%s", m_type, _value.c_str());
         return GCsv();
     }
     GCsv* lNode = new GCsv;
@@ -150,9 +144,8 @@ GCsv GCsv::appendCol(const GString& _value) {
     if(!m_node) return GCsv();
     if(m_node->m_type != Type::CSV_TYPE_ROW) {
         slog(eGERR, "Un élément non ROW ne peut pas ajouter un élément COL."
-                    "|root=%p"
-                    "|node=%p"
-                    "|type=%d", m_root, m_node, m_type);
+                    "|type=%d"
+                    "|value=%s", m_type, _value.c_str());
         return GCsv();
     }
     GCsv* lNode = new GCsv;
@@ -178,10 +171,8 @@ void GCsv::setValue(const GString& _value) {
     if(!m_node) return;
     if(m_node->m_type != Type::CSV_TYPE_COL) {
         slog(eGERR, "Un élément non COL ne possède pas de valeur."
-                    "|root=%p"
-                    "|node=%p"
                     "|type=%d"
-                    "|valeur=%s", m_root, m_node, m_type, _value.c_str());
+                    "|value=%s", m_type, _value.c_str());
         return;
     }
     m_node->m_value = _value;
@@ -191,10 +182,8 @@ GCsv GCsv::getRow(int _row) const {
     if(!m_node) return GCsv();
     if(m_node->m_type != Type::CSV_TYPE_ROOT) {
         slog(eGERR, "Un élément non ROOT ne peut pas récupérer un élément ROW."
-                    "|root=%p"
-                    "|node=%p"
                     "|type=%d"
-                    "|row=%d", m_root, m_node, m_type, _row);
+                    "|row=%d", m_type, _row);
         return GCsv();
     }
     GCsv* lNode = m_node;
@@ -213,10 +202,8 @@ GCsv GCsv::getCol(int _col) const {
     if(!m_node) return GCsv();
     if(m_node->m_type != Type::CSV_TYPE_ROW) {
         slog(eGERR, "Un élément non ROW ne peut pas récupérer un élément COL."
-                    "|root=%p"
-                    "|node=%p"
                     "|type=%d"
-                    "|col=%d", m_root, m_node, m_type, _col);
+                    "|col=%d", m_type, _col);
         return GCsv();
     }
     GCsv* lNode = m_node->m_next;
@@ -236,11 +223,9 @@ GCsv GCsv::getCol(int _row, int _col) const {
     if(!m_node) return GCsv();
     if(m_node->m_type != Type::CSV_TYPE_ROOT) {
         slog(eGERR, "Un élément non ROOT ne peut pas récupérer un élément COL."
-                    "|root=%p"
-                    "|node=%p"
                     "|type=%d"
                     "|row=%s"
-                    "|col=%d", m_root, m_node, m_type, _row, _col);
+                    "|col=%d", m_type, _row, _col);
         return GCsv();
     }
     return getRow(_row).getCol(_col);
@@ -250,9 +235,7 @@ int GCsv::countRows() const {
     if(!m_node) return 0;
     if(m_node->m_type != Type::CSV_TYPE_ROOT) {
         slog(eGERR, "Un élément non ROOT ne peut pas compter le nombre de lignes."
-                    "|root=%p"
-                    "|node=%p"
-                    "|type=%d", m_root, m_node, m_type);
+                    "|type=%d", m_type);
         return 0;
     }
     GCsv* lNode = m_node;
@@ -268,17 +251,13 @@ int GCsv::countCols() const {
     if(!m_node) return 0;
     if(m_node->m_type != Type::CSV_TYPE_ROOT) {
         slog(eGERR, "Un élément non ROOT ne peut pas compter le nombre de colonnes."
-                    "|root=%p"
-                    "|node=%p"
-                    "|type=%d", m_root, m_node, m_type);
+                    "|type=%d", m_type);
         return 0;
     }
     if(!m_node->m_next) return 0;
     if(m_node->m_next->m_type != Type::CSV_TYPE_ROW) {
         slog(eGERR, "Un élément ROOT ne peut pas être suivi par un élément ROW."
-                    "|root=%p"
-                    "|node=%p"
-                    "|type=%d", m_root, m_node, m_type);
+                    "|type=%d", m_type);
         return 0;
     }
     GCsv* lNode = m_node->m_next->m_next;
@@ -295,9 +274,7 @@ int GCsv::size() const {
     if(!m_node) return 0;
     if(m_node->m_type != Type::CSV_TYPE_ROOT) {
         slog(eGERR, "Un élément non ROOT ne peut pas compter le nombre d'éléments."
-                    "|root=%p"
-                    "|node=%p"
-                    "|type=%d", m_root, m_node, m_type);
+                    "|type=%d", m_type);
         return 0;
     }
     GCsv* lNode = m_node;
@@ -313,9 +290,7 @@ GString GCsv::toRow() const {
     if(!m_node) return "";
     if(m_node->m_type != Type::CSV_TYPE_ROW) {
         slog(eGERR, "Un élément non ROW ne peut pas récupérer une ligne de données."
-                    "|root=%p"
-                    "|node=%p"
-                    "|type=%d", m_root, m_node, m_type);
+                    "|type=%d", m_type);
         return "";
     }
     GCsv* lNode = m_node->m_next;
@@ -337,9 +312,7 @@ GString GCsv::toCol() const {
     if(!m_node) return "";
     if(m_node->m_type != Type::CSV_TYPE_COL) {
         slog(eGERR, "Un élément non COL ne possède pas de valeur."
-                    "|root=%p"
-                    "|node=%p"
-                    "|type=%d", m_root, m_node, m_type);
+                    "|type=%d", m_type);
         return "";
     }
     return m_node->m_value;
@@ -349,9 +322,7 @@ GString GCsv::toString() const {
     if(!m_node) return "";
     if(m_node->m_type != Type::CSV_TYPE_ROOT) {
         slog(eGERR, "Un élément non ROOT ne peut pas récupérer les données CSV."
-                    "|root=%p"
-                    "|node=%p"
-                    "|type=%d", m_root, m_node, m_type);
+                    "|type=%d", m_type);
         return "";
     }
     GCsv* lNode = m_node;

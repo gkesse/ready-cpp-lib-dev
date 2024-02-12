@@ -36,6 +36,7 @@ void GException::throwError(const char* _format, ...) {
     va_end(lArgs);
     GString lMsg(lBuffer, lSize);
     delete[] lBuffer;
+    GDebug slog;
     slog(eGERR, lMsg.c_str());
     throw GException(lMsg);
 }

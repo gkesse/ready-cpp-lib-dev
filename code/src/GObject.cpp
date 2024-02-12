@@ -1,12 +1,10 @@
 //===============================================
 #include "GObject.h"
-#include "GSocket.h"
 //===============================================
 GObject* GObject::m_instance = 0;
 //===============================================
 GObject::GObject()
-: m_port(-1)
-, m_pid(-1) {
+: GCommon() {
 
 }
 //===============================================
@@ -41,18 +39,6 @@ void GObject::init() {
         slog(eGINF, "La racine du serveur web a été bien configurée."
                     "|webroot=%s", m_webRoot.c_str());
     }
-}
-//===============================================
-void GObject::setObject(const GObject& _obj) {
-    m_addressIP = _obj.m_addressIP;
-    m_port = _obj.m_port;
-    m_pid = _obj.m_pid;
-}
-//===============================================
-void GObject::setSocket(const GSocket& _socket) {
-    m_addressIP = _socket.getAddressIP();
-    m_port = _socket.getPort();
-    m_pid = _socket.getPid();
 }
 //===============================================
 const GLog& GObject::getLogs() const {

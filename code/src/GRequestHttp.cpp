@@ -35,10 +35,7 @@ bool GRequestHttp::analyzeHeader() {
     GString lHeader = m_data.extract(CRLFCRLF);
     if(lHeader.isEmpty()) {
         slog(eGERR, "La lecture l'entête de la requête HTTP a échoué."
-                    "|adresse_ip=%s"
-                    "|port=%d"
-                    "|process=%d"
-                    "|data=%s", m_addressIP.c_str(), m_port, m_pid, m_data.c_str());
+                    "|data=%s", m_data.c_str());
         return false;
     }
     m_total = lHeader.size() + CRLFCRLF.size() + lContentLenght;
@@ -77,13 +74,10 @@ bool GRequestHttp::analyzeGet() {
     // Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6,zh;q=0.5
     GString lAcceptLanguage = m_data.extract("Accept-Language:", CRLF).trim();
 
-    slog(eGINF, "Méthode de la requête HTTP."
-                "|adresse_ip=%s"
-                "|port=%d"
-                "|process=%d"
+    slog(eGINF, "Méthode de la requête HTTP GET."
                 "|method=%s"
                 "|uri=%s"
-                "|version=%s", m_addressIP.c_str(), m_port, m_pid, m_method.c_str(), m_uri.c_str(), m_version.c_str());
+                "|version=%s", m_method.c_str(), m_uri.c_str(), m_version.c_str());
 
     return true;
 }
@@ -131,14 +125,11 @@ bool GRequestHttp::analyzePost() {
     m_request = m_data.extractEnd(CRLFCRLF);
 
     slog(eGINF, "Méthode de la requête HTTP POST."
-                "|adresse_ip=%s"
-                "|port=%d"
-                "|process=%d"
                 "|method=%s"
                 "|uri=%s"
                 "|version=%s"
                 "|content_type=%s"
-                "|request=%s", m_addressIP.c_str(), m_port, m_pid, m_method.c_str(), m_uri.c_str(), m_version.c_str(), m_contentType.c_str(), m_request.c_str());
+                "|request=%s", m_method.c_str(), m_uri.c_str(), m_version.c_str(), m_contentType.c_str(), m_request.c_str());
 
     return true;
 }
@@ -153,6 +144,10 @@ const GString& GRequestHttp::getUri() const {
 //===============================================
 const GString& GRequestHttp::getVersion() const {
     return m_version;
+}
+//===============================================
+const GString& GRequestHttp::getContentType() const {
+    return m_contentType;
 }
 //===============================================
 const GString& GRequestHttp::getRequest() const {

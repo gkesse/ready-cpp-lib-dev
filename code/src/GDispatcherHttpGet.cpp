@@ -16,28 +16,19 @@ GDispatcherHttpGet::~GDispatcherHttpGet() {
 //===============================================
 void GDispatcherHttpGet::run() {
     slog(eGINF, "Traitement de la requête HTTP GET."
-                "|adresse_ip=%s"
-                "|port=%d"
-                "|process=%d"
-                "|uri=%s", m_addressIP.c_str(), m_port, m_pid, m_uri.c_str());
+                "|uri=%s", m_uri.c_str());
 
     if(!loadResource()) {
-        if(m_uri == "/hello/world") {
-            runHelloWorld();
-        }
-        else if(m_uri.startsWith("/carpool")) {
+        if(m_uri.startsWith("/carpool")) {
             runCarpool();
         }
         else {
-            runNotFound();
+            runUnknown();
         }
     }
     else {
         slog(eGINF, "La ressource a bien été chargée."
-                    "|adresse_ip=%s"
-                    "|port=%d"
-                    "|process=%d"
-                    "|uri=%s", m_addressIP.c_str(), m_port, m_pid, m_uri.c_str());
+                    "|uri=%s", m_uri.c_str());
     }
 }
 //===============================================
@@ -59,9 +50,9 @@ bool GDispatcherHttpGet::loadResource() {
             if(!stat(lPath.c_str(), &lStat) && !(lStat.st_mode & S_IFDIR)) {
                 // on charge le fichier (index.html).
                 GFile lFile(lPath, GFile::Mode::FILE_MODE_READ_BIN);
-                lFile.setObject(*this);
+                lFile.setCommon(*this);
                 GResponseHttp lResponse;
-                lResponse.setObject(*this);
+                lResponse.setCommon(*this);
                 lResponse.setContent(lFile.readData());
                 lResponse.create();
                 m_response += lResponse.toResponse();
@@ -73,9 +64,9 @@ bool GDispatcherHttpGet::loadResource() {
             // on charge la ressource.
             GFile lFile(lPath, GFile::Mode::FILE_MODE_READ_BIN);
             GMimeType lMimeType;
-            lMimeType.setObject(*this);
+            lMimeType.setCommon(*this);
             GResponseHttp lResponse;
-            lResponse.setObject(*this);
+            lResponse.setCommon(*this);
             lResponse.setContentType(lMimeType.getMimeType(lPath.getExtension()));
             lResponse.setContent(lFile.readData());
             lResponse.create();
@@ -93,27 +84,19 @@ bool GDispatcherHttpGet::isResource() const {
     return false;
 }
 //===============================================
-void GDispatcherHttpGet::runHelloWorld() {
-    GPage lPage;
-    lPage.setObject(*this);
-    lPage.setDispatcher(*this);
-    lPage.createHelloWrold();
-    m_response += lPage;
-}
-//===============================================
 void GDispatcherHttpGet::runCarpool() {
     GPage lPage;
-    lPage.setObject(*this);
+    lPage.setCommon(*this);
     lPage.setDispatcher(*this);
     lPage.createCarpool();
     m_response += lPage;
 }
 //===============================================
-void GDispatcherHttpGet::runNotFound() {
+void GDispatcherHttpGet::runUnknown() {
     GPage lPage;
-    lPage.setObject(*this);
+    lPage.setCommon(*this);
     lPage.setDispatcher(*this);
-    lPage.createNotFound();
+    lPage.createUnknown();
     m_response += lPage;
 }
 //===============================================

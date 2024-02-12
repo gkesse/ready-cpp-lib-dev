@@ -2,7 +2,7 @@
 #ifndef _GCsv_
 #define _GCsv_
 //===============================================
-#include "GString.h"
+#include "GDebug.h"
 //===============================================
 class GCsv {
 public:
@@ -44,6 +44,7 @@ private:
     GCsv* m_next;
     Type m_type;
     GString m_value;
+    GDebug slog;
 };
 //===============================================
 #endif

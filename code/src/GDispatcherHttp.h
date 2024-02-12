@@ -12,12 +12,14 @@ public:
     const GString& getMethod() const;
     const GString& getUri() const;
     const GString& getVersion() const;
+    const GString& getContentType() const;
     const GString& getRequest() const;
 
 protected:
     GString m_method;
     GString m_uri;
     GString m_version;
+    GString m_contentType;
     GString m_request;
 };
 //===============================================

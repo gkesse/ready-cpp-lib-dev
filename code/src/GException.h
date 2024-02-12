@@ -4,8 +4,8 @@
 //===============================================
 #include "GString.h"
 //===============================================
-#define GEXCEPTION GException::Instance()
-#define eThrow GEXCEPTION->throwError
+#define GEXCEPTION  GException::Instance()
+#define eThrow      GEXCEPTION->throwError
 //===============================================
 class GException : public std::exception {
 public:

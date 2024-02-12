@@ -15,11 +15,8 @@ public:
     const GString& getAddressIP() const;
     int getPort() const;
     pid_t getPid() const;
+    const GDebug& getDebug() const;
     static void* onThread(void* _params);
-
-private:
-    static const int SOCKET_BUFFER_SIZE = 1024; // 1Ko
-    static const int SOCKET_BUFFER_MAX = 1*1024*1024; // 1Mo
 
 private:
     int m_socket;

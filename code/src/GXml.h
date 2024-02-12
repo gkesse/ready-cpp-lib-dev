@@ -2,9 +2,9 @@
 #ifndef _GXml_
 #define _GXml_
 //===============================================
-#include "GString.h"
+#include "GCommon.h"
 //===============================================
-class GXml {
+class GXml : public GCommon {
 public:
     GXml();
     GXml(xmlDocPtr _doc2, xmlNodePtr _node2, xmlNodePtr _node);

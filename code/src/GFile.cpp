@@ -39,12 +39,9 @@ bool GFile::writeData(const GString& _data) {
         std::ofstream lFile(m_fullname.c_str());
         if(!lFile) {
             slog(eGERR, "L'ouverture du fichier a échoué."
-                        "|adresse_ip=%s"
-                        "|port=%d"
-                        "|process=%d"
                         "|filename=%s"
                         "|mode=%d"
-                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode, _data.c_str());
+                        "|data=%s", m_fullname.c_str(), m_mode, _data.c_str());
             return false;
         }
         lFile << _data.c_str();
@@ -53,12 +50,9 @@ bool GFile::writeData(const GString& _data) {
         std::ofstream lFile(m_fullname.c_str(), std::ios::out | std::ios::app);
         if(!lFile) {
             slog(eGERR, "L'ouverture du fichier a échoué."
-                        "|adresse_ip=%s"
-                        "|port=%d"
-                        "|process=%d"
                         "|filename=%s"
                         "|mode=%d"
-                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode, _data.c_str());
+                        "|data=%s", m_fullname.c_str(), m_mode, _data.c_str());
             return false;
         }
         lFile << _data.c_str();
@@ -67,24 +61,18 @@ bool GFile::writeData(const GString& _data) {
         std::ofstream lFile(m_fullname.c_str(), std::ios::out | std::ios::binary);
         if(!lFile) {
             slog(eGERR, "L'ouverture du fichier a échoué."
-                        "|adresse_ip=%s"
-                        "|port=%d"
-                        "|process=%d"
                         "|filename=%s"
                         "|mode=%d"
-                        "|data=%s", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode, _data.c_str());
+                        "|data=%s", m_fullname.c_str(), m_mode, _data.c_str());
             return false;
         }
         lFile.write(_data.c_str(), _data.size());
     }
     else {
         slog(eGERR, "Le mode d'ouverture du fichier est inconnu."
-                    "|adresse_ip=%s"
-                    "|port=%d"
-                    "|process=%d"
                     "|filename=%s"
                     "|mode=%d"
-                    "|data=%s", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode, _data.c_str());
+                    "|data=%s", m_fullname.c_str(), m_mode, _data.c_str());
         return false;
     }
     return true;
@@ -96,11 +84,8 @@ GString GFile::readData() const {
         std::ifstream lFile(m_fullname.c_str());
         if(!lFile) {
             slog(eGERR, "L'ouverture du fichier a échoué."
-                        "|adresse_ip=%s"
-                        "|port=%d"
-                        "|process=%d"
                         "|filename=%s"
-                        "|mode=%d", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode);
+                        "|mode=%d", m_fullname.c_str(), m_mode);
             return "";
         }
         std::stringstream lBuffer;
@@ -111,11 +96,8 @@ GString GFile::readData() const {
         std::ifstream lFile(m_fullname.c_str(), std::ios::in | std::ios::binary);
         if(!lFile) {
             slog(eGERR, "L'ouverture du fichier a échoué."
-                        "|adresse_ip=%s"
-                        "|port=%d"
-                        "|process=%d"
                         "|filename=%s"
-                        "|mode=%d", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode);
+                        "|mode=%d", m_fullname.c_str(), m_mode);
             return "";
         }
         std::vector<char> lData = std::vector<char>(std::istreambuf_iterator<char>(lFile), std::istreambuf_iterator<char>());
@@ -123,11 +105,8 @@ GString GFile::readData() const {
     }
     else {
         slog(eGERR, "Le mode d'ouverture du fichier est inconnu."
-                    "|adresse_ip=%s"
-                    "|port=%d"
-                    "|process=%d"
                     "|filename=%s"
-                    "|mode=%d", m_addressIP.c_str(), m_port, m_pid, m_fullname.c_str(), m_mode);
+                    "|mode=%d", m_fullname.c_str(), m_mode);
     }
     return "";
 }

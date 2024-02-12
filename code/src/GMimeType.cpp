@@ -384,10 +384,7 @@ GString GMimeType::getMimeType(const GString& _extension) const {
     }
     if(!lMimeType.flag) {
         slog(eGERR, "Le mimetype recherché n'a pas été trouvé."
-                    "|adresse_ip=%s"
-                    "|port=%d"
-                    "|process=%d"
-                    "|extension=%s", m_addressIP.c_str(), m_port, m_pid, _extension.c_str());
+                    "|extension=%s", _extension.c_str());
     }
     return lMimeType.mimeType;
 }

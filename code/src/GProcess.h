@@ -10,7 +10,6 @@ class GProcess : public GObject {
 public:
     GProcess();
     ~GProcess();
-    static GProcess* Instance();
     void init();
     void clean();
     void run(int _argc, char** _argv);
@@ -18,9 +17,6 @@ public:
     void runServer(int _argc, char** _argv);
     void runExit();
     static void onExit();
-
-private:
-    static GProcess* m_instance;
 };
 //===============================================
 #endif

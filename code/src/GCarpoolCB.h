@@ -1,13 +1,13 @@
 //===============================================
-#ifndef _GCarpoolUi_
-#define _GCarpoolUi_
+#ifndef _GCarpoolCB_
+#define _GCarpoolCB_
 //===============================================
 #include "GPage.h"
 //===============================================
-class GCarpoolUi : public GPage {
+class GCarpoolCB : public GPage {
 public:
-    GCarpoolUi();
-    ~GCarpoolUi();
+    GCarpoolCB();
+    ~GCarpoolCB();
     void init();
     void create();
     bool isRedirectUrl();

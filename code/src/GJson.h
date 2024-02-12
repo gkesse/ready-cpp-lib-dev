@@ -2,7 +2,7 @@
 #ifndef _GJson_
 #define _GJson_
 //===============================================
-#include "GString.h"
+#include "GDebug.h"
 //===============================================
 class GJson {
 public:
@@ -34,6 +34,7 @@ private:
     struct json_object* m_node;
     GString m_name;
     GString m_value;
+    GDebug slog;
 };
 //===============================================
 #endif

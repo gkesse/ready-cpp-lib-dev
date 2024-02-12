@@ -11,9 +11,8 @@ public:
     void run();
     bool loadResource();
     bool isResource() const;
-    void runHelloWorld();
     void runCarpool();
-    void runNotFound();
+    void runUnknown();
 };
 //===============================================
 #endif
