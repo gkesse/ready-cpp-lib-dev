@@ -97,8 +97,11 @@ class GTestJs extends GObject {
     }
     //===============================================
     runAjax() {
+        var lCarpool = new GCarpool();
+        lCarpool.m_email = "youremail@domain.com";
+        lCarpool.m_password = "123456";
         var lAjax = new GAjax();
-        lAjax.call("carpool", "inscription");
+        lAjax.call("carpool", "hello_world", lCarpool.serialize());
     }
     //===============================================
 }

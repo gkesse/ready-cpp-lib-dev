@@ -3,6 +3,8 @@ class GAjax extends GObject {
     //===============================================
     constructor() {
         super();
+        this.m_callback = AJAX_CALLBACK_CARPOOL;
+        this.m_contentType = AJAX_TYPE_XML;
     }
     //===============================================
     call(_module, _method, _params = "", _callback = null) {
@@ -51,8 +53,8 @@ class GAjax extends GObject {
         }
                 
         var lMethod = "POST";
-        var lUrl = "/callback/carpool";
-        var lContentType = AJAX_XML_DATA;
+        var lUrl = this.m_callback;
+        var lContentType = this.m_contentType;
         var lAsync = true;
         var lUser = null;
         var lPassword = null;
@@ -62,7 +64,7 @@ class GAjax extends GObject {
 
         var lReq = "NO_DATA";
         
-        if(lContentType == AJAX_FORM_DATA) {
+        if(lContentType == AJAX_TYPE_FORM) {
             lReq = "req=" +_data;
         }
         else {

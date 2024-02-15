@@ -2,10 +2,10 @@
 #ifndef _GRequest_
 #define _GRequest_
 //===============================================
-#include "GObject.h"
+#include "GSocket.h"
 #include "GRequestHttp.h"
 //===============================================
-class GRequest : public GObject {
+class GRequest : public GSocket {
 public:
     enum class Type {
         REQ_TYPE_UNKNOWN

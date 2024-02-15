@@ -23,7 +23,7 @@ void GDispatcherHttpGet::run() {
             runCarpool();
         }
         else {
-            runUnknown();
+            createUnknown();
         }
     }
     else {
@@ -34,7 +34,7 @@ void GDispatcherHttpGet::run() {
 //===============================================
 bool GDispatcherHttpGet::loadResource() {
     if(!isResource()) {
-        slog(eGERR, "La ressource n'est pas authorisée."
+        slog(eGERR, "La ressource n'est pas autorisée."
                     "|uri=%s", m_uri.c_str());
         return false;
     }
@@ -89,14 +89,14 @@ void GDispatcherHttpGet::runCarpool() {
     lPage.setCommon(*this);
     lPage.setDispatcher(*this);
     lPage.createCarpool();
-    m_response += lPage;
+    m_response += lPage.toResponse();
 }
 //===============================================
-void GDispatcherHttpGet::runUnknown() {
+void GDispatcherHttpGet::createUnknown() {
     GPage lPage;
     lPage.setCommon(*this);
     lPage.setDispatcher(*this);
     lPage.createUnknown();
-    m_response += lPage;
+    m_response += lPage.toResponse();
 }
 //===============================================

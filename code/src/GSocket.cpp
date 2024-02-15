@@ -2,7 +2,6 @@
 #include "GSocket.h"
 #include "GRequest.h"
 #include "GDispatcher.h"
-#include "GResponse.h"
 //===============================================
 GSocket::GSocket()
 : GObject()
@@ -123,7 +122,6 @@ void GSocket::runThread() {
     slog(eGSTA, "Début du traitement de la requête du client.");
 
     GString lRequest = readData();
-    GResponse lResp;
 
     if(!lRequest.isEmpty()) {
         slog(eGINF, "Requête reçu du client."
@@ -139,15 +137,25 @@ void GSocket::runThread() {
             lDispatcher.setCommon(lReq);
             lDispatcher.setRequest(lReq);
             lDispatcher.run();
-            lResp.addResp(lDispatcher.getResp());
+            m_response += lDispatcher.m_response;
+        }
+        else {
+            createUnknown();
         }
     }
+    else {
+        createUnknown();
+    }
 
-    sendData(lResp.toResponse());
+    sendData(m_response);
 
     slog(eGEND, "Fin du traitement de la requête du client.");
 
     close(m_socket);
+}
+//===============================================
+void GSocket::createUnknown() {
+    m_response += sformat("Un problème a été rencontré.");
 }
 //===============================================
 bool GSocket::sendData(const GString& _data) {
@@ -235,6 +243,10 @@ pid_t GSocket::getPid() const {
 //===============================================
 const GDebug& GSocket::getDebug() const {
     return slog;
+}
+//===============================================
+GString GSocket::toResponse() const {
+    return m_response;
 }
 //===============================================
 void* GSocket::onThread(void* _params) {

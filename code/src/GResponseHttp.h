@@ -90,7 +90,7 @@ public:
     void create();
     GString toReason(const eGStatus& _status) const;
 
-private:
+protected:
     eGStatus m_status;
     GString m_content;
     GString m_contentType;

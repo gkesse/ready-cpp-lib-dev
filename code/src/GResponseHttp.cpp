@@ -77,7 +77,7 @@ GResponseHttp::sGStatus HTTP_STATUS_MAP[] {
 GResponseHttp::GResponseHttp()
 : GResponse()
 , m_status(eGStatus::Ok)
-, m_contentType("text/html; charset=UTF-8")
+, m_contentType(RESPONSE_HTTP_HTML)
 , m_connection("Closed") {
 
 }

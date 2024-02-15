@@ -12,10 +12,6 @@ GDispatcher::~GDispatcher() {
 
 }
 //===============================================
-const GResponse& GDispatcher::getResp() const {
-    return m_response;
-}
-//===============================================
 void GDispatcher::run() {
     if(m_type == Type::REQ_TYPE_HTTP_GET) {
         runHttpGet();
@@ -26,6 +22,7 @@ void GDispatcher::run() {
     else {
         slog(eGERR, "Le type de la requête est inconnu."
                     "|type=%d", m_type);
+        createUnknown();
     }
 }
 //===============================================
@@ -34,7 +31,7 @@ void GDispatcher::runHttpGet() {
     lObj.setCommon(*this);
     lObj.setDispatcher(*this);
     lObj.run();
-    m_response.addResp(lObj.getResp());
+    m_response += lObj.toResponse();
 }
 //===============================================
 void GDispatcher::runHttpPost() {
@@ -42,6 +39,6 @@ void GDispatcher::runHttpPost() {
     lObj.setCommon(*this);
     lObj.setDispatcher(*this);
     lObj.run();
-    m_response.addResp(lObj.getResp());
+    m_response += lObj.toResponse();
 }
 //===============================================

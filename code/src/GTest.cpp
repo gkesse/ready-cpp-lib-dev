@@ -7,6 +7,7 @@
 #include "GTree.h"
 #include "GDebug.h"
 #include "GMap.h"
+#include "GErrorXml.h"
 //===============================================
 GTest::GTest()
 : GObject() {
@@ -51,6 +52,9 @@ void GTest::run(int _argc, char** _argv) {
     }
     else if(lMethod == "map") {
         runMap(_argc, _argv);
+    }
+    else if(lMethod == "error") {
+        runResult(_argc, _argv);
     }
     else {
         slog(eGERR, "La méthode est inconnue."
@@ -199,8 +203,6 @@ void GTest::runLogs(int _argc, char** _argv) {
     lLog.addLog("voici mon log.");
     lLog.addData("voici ma donnée.");
     lLog.serialize().print();
-
-    m_logs.addLogs(lLog);
 }
 //===============================================
 void GTest::runJson(int _argc, char** _argv) {
@@ -372,5 +374,13 @@ void GTest::runMap(int _argc, char** _argv) {
     lMap2.loadMap(lMap);
     lMap2.addData("date", "10-02-2024");
     lMap2.toString().print();
+}
+//===============================================
+void GTest::runResult(int _argc, char** _argv) {
+    printf("%s...\n", __PRETTY_FUNCTION__);
+    GString lData = "<result>OK</result>";
+    GXml lDom;
+    lDom.loadNode(lData);
+    lDom.getNode("/result").getValue().print();
 }
 //===============================================

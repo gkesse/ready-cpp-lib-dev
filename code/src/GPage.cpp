@@ -55,7 +55,7 @@ void GPage::createCarpool() {
 }
 //===============================================
 void GPage::createUnknown() {
-    slog(eGINF, "Création de la page not found."
+    slog(eGWAR, "La ressource est introuvable."
                 "|uri=%s", m_uri.c_str());
 
     GString lContent;

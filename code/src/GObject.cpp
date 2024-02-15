@@ -26,7 +26,6 @@ void GObject::clearMap() {
         delete lObj;
     }
     m_map.clear();
-    m_logs.clearMap();
 }
 //===============================================
 void GObject::init() {
@@ -39,10 +38,6 @@ void GObject::init() {
         slog(eGINF, "La racine du serveur web a été bien configurée."
                     "|webroot=%s", m_webRoot.c_str());
     }
-}
-//===============================================
-const GLog& GObject::getLogs() const {
-    return m_logs;
 }
 //===============================================
 GString GObject::getEnv(const GString& _env) const {

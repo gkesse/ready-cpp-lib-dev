@@ -11,7 +11,7 @@ public:
     GXml(const GXml& _xml);
     virtual ~GXml();
     void clear();
-    bool createDoc();
+    bool createDoc(const GString& _root = "rdv");
     bool loadXml(const GString& _data);
     bool loadNode(const GString& _data);
     void setValue(const GString& _value);

@@ -12,7 +12,7 @@ public:
     bool loadResource();
     bool isResource() const;
     void runCarpool();
-    void runUnknown();
+    void createUnknown();
 };
 //===============================================
 #endif

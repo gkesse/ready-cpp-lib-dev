@@ -37,7 +37,10 @@ void GCarpoolUi::create() {
         createLog();
         createHome();
         //
-        if(m_uri == "/carpool/test") {
+        if(m_uri == "/carpool") {
+
+        }
+        else if(m_uri == "/carpool/test") {
             createTest();
         }
         else if(m_uri == "/carpool/test/js") {
@@ -61,6 +64,9 @@ void GCarpoolUi::create() {
         }
         else if(m_uri == "/carpool/inscription/email") {
             createInscriptionEmail();
+        }
+        else {
+            createUnknown();
         }
         // scripts
         m_content += sformat("<script src='/js/functions.js'></script>\n");
@@ -301,5 +307,9 @@ void GCarpoolUi::createInscriptionEmail() {
     m_content += sformat("</div>\n");
     // from_end
     m_content += sformat("</div>\n");
+}
+//===============================================
+void GCarpoolUi::createUnknown() {
+    m_content += sformat("Page non trouvée.");
 }
 //===============================================

@@ -22,7 +22,7 @@ void GDispatcherHttpPost::run() {
         runCarpool();
     }
     else {
-        runNotFound();
+        createUnknown();
     }
 }
 //===============================================
@@ -31,7 +31,7 @@ void GDispatcherHttpPost::runCallback() {
     lPage.setCommon(*this);
     lPage.setDispatcher(*this);
     lPage.createCallback();
-    m_response += lPage;
+    m_response += lPage.toResponse();
 }
 //===============================================
 void GDispatcherHttpPost::runCarpool() {
@@ -39,14 +39,14 @@ void GDispatcherHttpPost::runCarpool() {
     lPage.setCommon(*this);
     lPage.setDispatcher(*this);
     lPage.createCarpool();
-    m_response += lPage;
+    m_response += lPage.toResponse();
 }
 //===============================================
-void GDispatcherHttpPost::runNotFound() {
+void GDispatcherHttpPost::createUnknown() {
     GPage lPage;
     lPage.setCommon(*this);
     lPage.setDispatcher(*this);
     lPage.createUnknown();
-    m_response += lPage;
+    m_response += lPage.toResponse();
 }
 //===============================================

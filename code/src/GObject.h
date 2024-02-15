@@ -21,7 +21,6 @@ public:
     virtual GObject* clone() const;
     virtual void clearMap();
     virtual void init();
-    virtual const GLog& getLogs() const;
     virtual GString getEnv(const GString& _env) const;
     virtual GString getResource(const GString& _path) const;
     virtual void print() const;
@@ -30,10 +29,9 @@ public:
 
 private:
     static GObject* m_instance;
-    GString m_webRoot;
 
 protected:
-    GLog m_logs;
+    GString m_webRoot;
     std::vector<GObject*> m_map;
 };
 //===============================================

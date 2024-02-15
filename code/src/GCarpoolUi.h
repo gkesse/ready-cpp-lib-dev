@@ -23,6 +23,7 @@ public:
     void createConnexion();
     void createInscription();
     void createInscriptionEmail();
+    void createUnknown();
 
 private:
     GString m_content;

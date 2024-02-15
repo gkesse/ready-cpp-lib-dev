@@ -1,9 +1,8 @@
 //===============================================
 #include "GRequest.h"
-#include "GRequestHttp.h"
 //===============================================
 GRequest::GRequest()
-: GObject()
+: GSocket()
 , m_type(Type::REQ_TYPE_UNKNOWN)
 , m_total(0) {
 

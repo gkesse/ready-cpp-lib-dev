@@ -8,6 +8,7 @@ GXml::GXml()
     m_node = 0;
     m_doc2 = 0;
     m_node2 = 0;
+    xmlKeepBlanksDefault(0);
 }
 //===============================================
 GXml::GXml(xmlDocPtr _doc2, xmlNodePtr _node2, xmlNodePtr _node)
@@ -34,14 +35,14 @@ void GXml::clear() {
     m_node2 = 0;
 }
 //===============================================
-bool GXml::createDoc() {
+bool GXml::createDoc(const GString& _root) {
     clear();
     m_doc = xmlNewDoc(BAD_CAST("1.0"));
     if(!m_doc) {
         slog(eGERR, "La création du document XML a échoué.");
         return false;
     }
-    m_node = xmlNewNode(NULL, BAD_CAST("rdv"));
+    m_node = xmlNewNode(NULL, BAD_CAST(_root.c_str()));
     if(!m_node) {
         slog(eGERR, "La création du noeud racine a échoué.");
         return false;
@@ -53,20 +54,21 @@ bool GXml::createDoc() {
 }
 //===============================================
 bool GXml::loadXml(const GString& _data) {
+    clear();
     if(_data.isEmpty()) {
         slog(eGERR, "Les données XML sont vides.");
         return false;
     }
-    clear();
     m_doc = xmlParseDoc(BAD_CAST(_data.c_str()));
     if(!m_doc) {
         slog(eGERR, "Le chargement du document XML a échoué."
-                    "|data=%s");
+                    "|data=%s", _data.c_str());
         return false;
     }
     m_node = xmlDocGetRootElement(m_doc);
     if(!m_node) {
-        slog(eGERR, "Le chargement du noeud racine a échoué.");
+        slog(eGERR, "Le chargement du noeud racine a échoué."
+                    "|data=%s", _data.c_str());
         return false;
     }
     m_doc2 = m_doc;
@@ -82,8 +84,7 @@ bool GXml::loadNode(const GString& _data) {
     xmlNodePtr lNode = lNodes->children;
     if(!lNode) {
         slog(eGERR, "Le chargement du noeud XML a échoué."
-                    "|doc=%p"
-                    "|node=%s", m_doc, (char*)m_node->name);
+                    "|data=%s", _data.c_str());
         return false;
     }
     while(lNode) {

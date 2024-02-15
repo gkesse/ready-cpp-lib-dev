@@ -26,7 +26,7 @@ GCode::~GCode() {
 GCode GCode::createDatas() {
     GCode lDom = getNode(sformat("/rdv/datas"));
     if(!lDom.m_node) {
-        lDom = lDom.addNode(sformat("/rdv/datas"));
+        lDom = addNode(sformat("/rdv/datas"));
     }
     return lDom;
 }

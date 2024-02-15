@@ -18,6 +18,7 @@ public:
     void runTree(int _argc, char** _argv);
     void runDebug(int _argc, char** _argv);
     void runMap(int _argc, char** _argv);
+    void runResult(int _argc, char** _argv);
 };
 //===============================================
 #endif

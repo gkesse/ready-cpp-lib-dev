@@ -3,6 +3,23 @@ class GCarpool extends GObject {
     //===============================================
     constructor() {
         super();
+        this.m_email = "";
+        this.m_password = "";
+    }
+    //===============================================
+    serialize(_code = "carpool") {
+        var lDom = new GCode();
+        lDom.createDoc();
+        lDom.addData(_code, "email", this.m_email);
+        lDom.addData(_code, "password", this.m_password);
+        return lDom.toString();
+    }
+    //===============================================
+    deserialize(_data, _code = "carpool") {
+        var lData = new GCode();
+        lData.loadXml(_data);
+        this.m_email = lData.getData(_code, "email");
+        this.m_password = lData.getData(_code, "password");
     }
     //===============================================
     run() {
