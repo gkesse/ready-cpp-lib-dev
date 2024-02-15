@@ -7,7 +7,6 @@
 #include "GTree.h"
 #include "GDebug.h"
 #include "GMap.h"
-#include "GErrorXml.h"
 //===============================================
 GTest::GTest()
 : GObject() {

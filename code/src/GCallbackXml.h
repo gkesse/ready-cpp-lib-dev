@@ -3,7 +3,6 @@
 #define _GCallbackXml_
 //===============================================
 #include "GCallback.h"
-#include "GErrorXml.h"
 //===============================================
 class GCallbackXml : public GCallback {
 public:
@@ -11,9 +10,6 @@ public:
     ~GCallbackXml();
     void createResponse();
     void createUnknown();
-
-protected:
-    GErrorXml m_errors;
 };
 //===============================================
 #endif
