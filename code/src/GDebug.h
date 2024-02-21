@@ -3,16 +3,17 @@
 #define _GDebug_
 //===============================================
 #include "GString.h"
+#include "GLog.h"
 //===============================================
-#define eGOFF   0, "OFF", __FILE__, __LINE__, __FUNCTION__
-#define eGSRV   1, "SERVER", __FILE__, __LINE__, __FUNCTION__
-#define eGEXT   2, "EXIT", __FILE__, __LINE__, __FUNCTION__
-#define eGSTA   3, "START", __FILE__, __LINE__, __FUNCTION__
-#define eGEND   4, "END", __FILE__, __LINE__, __FUNCTION__
-#define eGINF   5, "INFO", __FILE__, __LINE__, __FUNCTION__
-#define eGWAR   6, "WARNING", __FILE__, __LINE__, __FUNCTION__
-#define eGERR   7, "ERROR", __FILE__, __LINE__, __FUNCTION__
-#define eGMAN   7, "MAIN", __FILE__, __LINE__, __FUNCTION__
+#define eGOFF   DEBUG_TYPE_OFF, "OFF", __FILE__, __LINE__, __FUNCTION__
+#define eGSRV   DEBUG_TYPE_SRV, "SERVER", __FILE__, __LINE__, __FUNCTION__
+#define eGEXT   DEBUG_TYPE_EXT, "EXIT", __FILE__, __LINE__, __FUNCTION__
+#define eGSTA   DEBUG_TYPE_STA, "START", __FILE__, __LINE__, __FUNCTION__
+#define eGEND   DEBUG_TYPE_END, "END", __FILE__, __LINE__, __FUNCTION__
+#define eGINF   DEBUG_TYPE_INF, "INFO", __FILE__, __LINE__, __FUNCTION__
+#define eGWAR   DEBUG_TYPE_WAR, "WARNING", __FILE__, __LINE__, __FUNCTION__
+#define eGERR   DEBUG_TYPE_ERR, "ERROR", __FILE__, __LINE__, __FUNCTION__
+#define eGMAN   DEBUG_TYPE_MAN, "MAIN", __FILE__, __LINE__, __FUNCTION__
 //===============================================
 #define GDEBUG  GDebug::Instance()
 //===============================================
@@ -42,6 +43,7 @@ private:
     GString m_addressIP;
     int m_port;
     pid_t m_pid;
+    GLog m_logs;
 };
 //===============================================
 #endif

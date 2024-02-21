@@ -23,6 +23,7 @@ public:
     virtual void init();
     virtual GString getEnv(const GString& _env) const;
     virtual GString getResource(const GString& _path) const;
+    virtual const GLog& getLogs() const;
     virtual void print() const;
     virtual GString serialize(const GString& _code = "object") const;
     virtual void deserialize(const GString& _data, const GString& _code = "object");
@@ -33,6 +34,7 @@ private:
 protected:
     GString m_webRoot;
     std::vector<GObject*> m_map;
+    GLog m_logs;
 };
 //===============================================
 #endif

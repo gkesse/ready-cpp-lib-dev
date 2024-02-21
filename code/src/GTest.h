@@ -19,6 +19,8 @@ public:
     void runDebug(int _argc, char** _argv);
     void runMap(int _argc, char** _argv);
     void runResult(int _argc, char** _argv);
+    void runMySQL(int _argc, char** _argv);
+    void runRegex(int _argc, char** _argv);
 };
 //===============================================
 #endif

@@ -1,0 +1,29 @@
+#================================================
+### dbeaver_connection_create_mysql
+#================================================
+dbeaver > nouvelle_connexion > MySQL > terminer
+
+dbeaver > localhost > rename > readysrv > ok
+
+dbeaver > readysrv > editer_connection > ssh > utiliser_tunel_ssh > cocher
+dbeaver > readysrv > editer_connection > ssh > hote_ip > 192.168.1.8
+dbeaver > readysrv > editer_connection > ssh > nom_utilisateur > admins
+dbeaver > readysrv > editer_connection > ssh > methode_authentification > mot_de_passe
+dbeaver > readysrv > editer_connection > ssh > mot_de_passe > xxx_yyy_zzz
+dbeaver > readysrv > editer_connection > ssh > test_tunnel_configuration > ok
+
+dbeaver > readysrv > editer_connection > proprietes_pilote > allow_public_key_retrieval > true > ok
+
+dbeaver > readysrv > editer_connection > test_connexion
+dbeaver > readysrv > editer_connection > test_connexion > username > admins
+dbeaver > readysrv > editer_connection > test_connexion > password > xxx_yyy_zzz
+dbeaver > readysrv > editer_connection > test_connexion > enregistrer_mot_de_passe > cocher
+dbeaver > readysrv > editer_connection > test_connexion > ok
+dbeaver > readysrv > editer_connection > test_connexion > connecte_depuis > 112333ms
+dbeaver > readysrv > editer_connection > test_connexion > server > MySQL 8.0.36-0ubuntu0.23.10.1
+dbeaver > readysrv > editer_connection > test_connexion > driver > MySQL Connector/J mysql-connector-j-8.0.2
+dbeaver > readysrv > editer_connection > test_connexion > ok
+
+dbeaver > readysrv > editeur_sql > script_sql
+dbeaver > fichiers > enregistrer_sous > carpool.sql > enregistrer
+#================================================

@@ -31,7 +31,7 @@ void GLog::deserialize(const GString& _data, const GString& _code) {
 //===============================================
 GLog* GLog::clone() {
     GLog* lObj = new GLog;
-    lObj->setLog(*this);
+    lObj->setObj(*this);
     return lObj;
 }
 //===============================================
@@ -43,31 +43,27 @@ void GLog::clearMap() {
     m_map.clear();
 }
 //===============================================
-void GLog::setLog(const GLog& _obj) {
+void GLog::setObj(const GLog& _obj) {
     m_type = _obj.m_type;
     m_side = _obj.m_side;
     m_msg = _obj.m_msg;
 }
 //===============================================
+void GLog::addProblem() {
+    addError("Un problème a été rencontré.");
+}
+//===============================================
 void GLog::addError(const GString& _msg) {
     GLog* lObj = new GLog;
-    lObj->m_type = "error";
+    lObj->m_type = LOG_TYPE_ERROR;
     lObj->m_side = "server";
     lObj->m_msg = _msg;
     m_map.push_back(lObj);
 }
 //===============================================
-void GLog::addTechError(const GString& _msg) {
+void GLog::addInfo(const GString& _msg) {
     GLog* lObj = new GLog;
-    lObj->m_type = "tech_error";
-    lObj->m_side = "server";
-    lObj->m_msg = _msg;
-    m_map.push_back(lObj);
-}
-//===============================================
-void GLog::addLog(const GString& _msg) {
-    GLog* lObj = new GLog;
-    lObj->m_type = "log";
+    lObj->m_type = LOG_TYPE_INFO;
     lObj->m_side = "server";
     lObj->m_msg = _msg;
     m_map.push_back(lObj);
@@ -75,7 +71,7 @@ void GLog::addLog(const GString& _msg) {
 //===============================================
 void GLog::addData(const GString& _msg) {
     GLog* lObj = new GLog;
-    lObj->m_type = "data";
+    lObj->m_type = LOG_TYPE_DATA;
     lObj->m_side = "server";
     lObj->m_msg = _msg.toBase64();
     m_map.push_back(lObj);
@@ -88,40 +84,17 @@ void GLog::addLogs(const GLog& _obj) {
     }
 }
 //===============================================
-void GLog::showErrors() const {
-    if(!m_map.size()) return;
-    printf("\n");
-    for(int i = 0; i < (int)m_map.size(); i++) {
+void GLog::showLogs() const {
+    for(int i = 0; i < size(); i++) {
         GLog* lObj = m_map.at(i);
-        if(lObj->m_type == "error") {
-            printf("[ERROR] : %s\n", lObj->m_msg.c_str());
-        }
-        if(lObj->m_type == "tech_error") {
-            printf("[ETECH] : %s\n", lObj->m_msg.c_str());
-        }
-        else if(lObj->m_type == "log") {
-            printf("[INFOS] : %s\n", lObj->m_msg.c_str());
-        }
-        else if(lObj->m_type == "data") {
-            printf("[DATAS] : %s\n", lObj->m_msg.fromBase64().c_str());
-        }
+        printf("[%5s]|[%s]|%s\n", lObj->m_type.c_str(), lObj->m_side.c_str(), lObj->m_msg.c_str());
     }
-    printf("\n");
 }
 //===============================================
 bool GLog::hasErrors() const {
     for(int i = 0; i < (int)m_map.size(); i++) {
         GLog* lObj = m_map.at(i);
-        if(lObj->m_type == "error") return true;
-        if(lObj->m_type == "tech_error") return true;
-    }
-    return false;
-}
-//===============================================
-bool GLog::hasTechErrors() const {
-    for(int i = 0; i < (int)m_map.size(); i++) {
-        GLog* lObj = m_map.at(i);
-        if(lObj->m_type == "tech_error") return true;
+        if(lObj->m_type == LOG_TYPE_ERROR) return true;
     }
     return false;
 }

@@ -293,13 +293,13 @@ void GCarpoolUi::createInscriptionEmail() {
     m_content += sformat("<div>\n");
     // email
     m_content += sformat("<div>\n");
-    m_content += sformat("<label for='email'>Email :</label>\n");
-    m_content += sformat("<input type='email' id='email' name='email' required/>\n");
+    m_content += sformat("<label for='inscription_email'>Email :</label>\n");
+    m_content += sformat("<input type='email' id='inscription_email' name='inscription_email' required/>\n");
     m_content += sformat("</div>\n");
     // newsletter
     m_content += sformat("<div>\n");
-    m_content += sformat("<input type='checkbox' id='newsletter' name='newsletter'/>\n");
-    m_content += sformat("<label for='newsletter'>Je ne souhaite pas recevoir d'informations, de bons plans et de cadeaux.</label>\n");
+    m_content += sformat("<input type='checkbox' id='inscription_newsletter' name='inscription_newsletter'/>\n");
+    m_content += sformat("<label for='inscription_newsletter'>Je ne souhaite pas recevoir d'informations, de bons plans et de cadeaux.</label>\n");
     m_content += sformat("</div>\n");
     // buttons
     m_content += sformat("<div>\n");

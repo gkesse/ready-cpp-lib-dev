@@ -1,5 +1,6 @@
 //===============================================
 #include "GCarpoolCB.h"
+#include "GMySQL.h"
 //===============================================
 GCarpoolCB::GCarpoolCB()
 : GManager() {
@@ -67,6 +68,19 @@ void GCarpoolCB::runHelloWorld() {
 }
 //===============================================
 void GCarpoolCB::runInscriptionEmail() {
+    if(m_email.isEmpty()) {
+        slog(eGERR, "L'email est obligatoire.");
+        m_logs.addProblem();
+        return;
+    }
 
+    GMySQL dbSQL;
+    dbSQL.insertQuery(""
+            " insert into _user (_email) "
+            " values (?) "
+            "", MYSQL_TYPE_STRING, m_email.c_str()
+            , MYSQL_TYPE_END);
+
+    m_logs.addLogs(dbSQL.getLogs());
 }
 //===============================================

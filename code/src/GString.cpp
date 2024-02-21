@@ -379,6 +379,17 @@ GString GString::getExtension() const {
     return lPath.substr(lFound + 1);
 }
 //===============================================
+GString GString::replaceAll(const GString& _from, const GString& _to) const {
+    if(isEmpty()) return "";
+    std::string lData(m_data, m_size);
+    size_t start_pos = 0;
+    while((start_pos = lData.find(_from.c_str(), start_pos)) != std::string::npos) {
+        lData.replace(start_pos, _from.size(), _to.c_str());
+        start_pos += _to.size();
+    }
+    return lData;
+}
+//===============================================
 void GString::print() const {
     printf("%s\n", m_data);
 }

@@ -92,7 +92,7 @@ GDebug& GDebug::operator=(const GDebug& _obj) {
 }
 //===============================================
 bool GDebug::operator()(int _level, const char* _name, const char* _file, int _line, const char* _func, const char* _format, ...) const {
-    if(_level == 0) return false;
+    if(_level == DEBUG_TYPE_OFF) return false;
     va_list lArgs;
     va_start(lArgs, _format);
     int lSize = vsnprintf(0, 0, _format, lArgs);
@@ -104,6 +104,7 @@ bool GDebug::operator()(int _level, const char* _name, const char* _file, int _l
     GString lDate = getDate(DEBUG_LOG_DATE_FORMAT);
     GString lLog = sformat("%s|%s|%d|%s|%s|%s|%d|%d|%s", lDate.c_str(), _file, _line, _func, _name, m_addressIP.c_str(), m_port, m_pid, lData.c_str());
     bool isTestEnv = GDEBUG->m_isTestEnv;
+
     if(isTestEnv) {
         lLog.print();
         writeFile(lLog);
@@ -111,6 +112,7 @@ bool GDebug::operator()(int _level, const char* _name, const char* _file, int _l
     else {
         writeFile(lLog);
     }
+
     return true;
 }
 //===============================================

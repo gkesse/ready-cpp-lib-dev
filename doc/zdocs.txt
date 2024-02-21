@@ -1,38 +1,12 @@
 #================================================
-### ubuntu
-#================================================
-
-permet de créer des serveurs d'application Linux.
-
-sudo apt update
-sudo apt upgrade -y
-
-#================================================
 ### base64
 #================================================
 
-permet de convertir des données binaires en chaînes de caractères 
-imprimables avant de les transmettre sur le réseau internet.
-
 https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c/31322410#31322410
-
-g++ -c base64.cpp -o base64.o
-ar rcs libbase64.a base64.o
-
-#================================================
-### c
-#================================================
-
-c permet de réaliser des programmes avec un contrôle total 
-sur la gestion de la mémoire en utilisant des structures.
 
 #================================================
 ### c++
 #================================================
-
-c++ permet de réaliser des programmes avec un contrôle total 
-sur la gestion de la mémoire en utilisant la programmation
-orientée objet.
 
 https://stackoverflow.com/questions/1637332/static-const-vs-define
 https://www.geeksforgeeks.org/functors-in-cpp/
@@ -41,9 +15,25 @@ https://www.geeksforgeeks.org/functors-in-cpp/
 ### crontab
 #================================================
 
-permet de planifier l'exécution de programmes.
-
 https://man7.org/linux/man-pages/man5/crontab.5.html
+
+#================================================
+### dbeaver
+#================================================
+
+dbeaver > readysrv > editeur_sql > script_sql
+dbeaver > fichiers > enregistrer_sous > carpool.sql > enregistrer
+
+dbeaver > carpool_sql > create database carpool;
+dbeaver > readysrv > base_de_donnees > regenerer
+dbeaver > readysrv > base_de_donnees > carpool
+
+dbeaver > readysrv > base_de_donnees > carpool > supprimer > voir_script > perisiter
+
+dbeaver > readysrv > base_de_donnees > creer_base_de_donnees > database_name > carpool_db_test
+dbeaver > readysrv > base_de_donnees > creer_base_de_donnees > charset > utf8mb4
+dbeaver > readysrv > base_de_donnees > creer_base_de_donnees > collation > utf8mb4_0900_ai_ci
+dbeaver > readysrv > base_de_donnees > creer_base_de_donnees > ok
 
 #================================================
 ### git
@@ -55,8 +45,6 @@ permet de gérer les différentes versions d'un projet.
 ### ipapi
 #================================================
 
-permet de géolocaliser une adresse ip.
-
 https://ipapi.com/documentation
 https://ipapi.co/8.8.8.8/country
 https://stackoverflow.com/questions/23381402/get-ip-address-of-local-machine-on-c
@@ -65,8 +53,6 @@ https://stackoverflow.com/questions/23381402/get-ip-address-of-local-machine-on-
 ### javascript
 #================================================
 
-permet de gérer la dynamique des pages web côté client.
-
 https://www.geeksforgeeks.org/multiple-class-constructors-in-javascript/
 https://www.geeksforgeeks.org/function-overloading-in-javascript/
 
@@ -74,10 +60,38 @@ https://www.geeksforgeeks.org/function-overloading-in-javascript/
 ### json
 #================================================
 
-permet de serialiser des objets avant 
-de les transmettre sur le réseau internet.
-
 https://howtoinstall.co/package/libjson-c-dev
+
+#================================================
+# mysql
+#================================================
+
+sudo apt install mysql-client-core-8.0
+sudo apt install libmysqlclient-dev
+sudo systemctl status mysql
+sudo apt install mysql-server
+sudo -i
+mysql -u root -p
+create user 'admins'@'%' identified by 'r8hnRmVWlATcb34Szrq6';
+grant all privileges on *.* to 'admins'@'%' with grant option;
+select * from mysql.user;
+show columns from mysql.user;
+describe mysql.user;
+show grants for 'admins'@'localhost';
+select host, user from mysql.user;
+drop user 'admins'@'%';
+create user 'admins'@'localhost' identified by 'r8hnRmVWlATcb34Szrq6';
+grant all privileges on *.* to 'admins'@'localhost' with grant option;
+dpkg --list
+dpkg --list | grep "mysql"
+sudo apt remove package_name
+sudo apt purge package_name
+sudo apt autoremove
+sudo apt clean
+
+terminal > mysql > quit
+
+terminal > sudo apt install libmysqlcppconn-dev
 
 #================================================
 # lettres

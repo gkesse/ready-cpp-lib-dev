@@ -7,6 +7,8 @@
 #include "GTree.h"
 #include "GDebug.h"
 #include "GMap.h"
+#include "GMySQL.h"
+#include "GRegex.h"
 //===============================================
 GTest::GTest()
 : GObject() {
@@ -23,7 +25,7 @@ void GTest::run(int _argc, char** _argv) {
 
     if(lMethod == "") {
         slog(eGERR, "La méthode est obligatoire."
-                    "|module=test");
+                "|module=test");
     }
     else if(lMethod == "string") {
         runString(_argc, _argv);
@@ -52,13 +54,19 @@ void GTest::run(int _argc, char** _argv) {
     else if(lMethod == "map") {
         runMap(_argc, _argv);
     }
-    else if(lMethod == "error") {
+    else if(lMethod == "result") {
         runResult(_argc, _argv);
+    }
+    else if(lMethod == "mysql") {
+        runMySQL(_argc, _argv);
+    }
+    else if(lMethod == "regex") {
+        runRegex(_argc, _argv);
     }
     else {
         slog(eGERR, "La méthode est inconnue."
-                    "|module=test"
-                    "|method=%s", lMethod.c_str());
+                "|module=test"
+                "|method=%s", lMethod.c_str());
     }
 }
 //===============================================
@@ -136,6 +144,8 @@ void GTest::runString(int _argc, char** _argv) {
 
     GString("Bonjour Content-Length: 1234\r\n").extract("Content-Length:", "\r\n").print();
     GString("Un:-:Deux:-:Trois:-:Quatre").extractEnd(":-:", 1).print();
+
+    GString("select * from user where _id = :id and _id > :id").replaceAll(":id", 1000).print();
 }
 //===============================================
 void GTest::runXml(int _argc, char** _argv) {
@@ -199,7 +209,7 @@ void GTest::runLogs(int _argc, char** _argv) {
     lLog.serialize().print();
 
     lLog.addError("voici mon erreur.");
-    lLog.addLog("voici mon log.");
+    lLog.addInfo("voici mon log.");
     lLog.addData("voici ma donnée.");
     lLog.serialize().print();
 }
@@ -264,7 +274,7 @@ void GTest::runJson(int _argc, char** _argv) {
 
     GLog lLog;
     lLog.addError("voici mon erreur.");
-    lLog.addLog("voici mon log.");
+    lLog.addInfo("voici mon log.");
     lLog.addData("voici ma donnée.");
     lLog.serialize().print();
 
@@ -361,6 +371,7 @@ void GTest::runMap(int _argc, char** _argv) {
     lMap.addData("newsletter", "on");
     lMap.addData("password", "000123");
     lMap.toString().print();
+    GString(lMap.size()).print();
 
     lMap.getData("email").print();
     lMap.getData("password").print();
@@ -381,5 +392,78 @@ void GTest::runResult(int _argc, char** _argv) {
     GXml lDom;
     lDom.loadNode(lData);
     lDom.getNode("/result").getValue().print();
+}
+//===============================================
+void GTest::runMySQL(int _argc, char** _argv) {
+    printf("%s...\n", __PRETTY_FUNCTION__);
+    GMySQL lMySQL;
+    lMySQL.readData(""
+            " select User from mysql.user "
+            "", MYSQL_TYPE_END).print();
+
+    lMySQL.readData(""
+            " select User from mysql.user "
+            " where User = ? "
+            "", MYSQL_TYPE_STRING, "admins"
+            , MYSQL_TYPE_END).print();
+}
+//===============================================
+void GTest::runRegex(int _argc, char** _argv) {
+    printf("%s...\n", __PRETTY_FUNCTION__);
+    {
+        GRegex lRegex = "Harry Botter - The robot who lived.";
+
+        GString(lRegex.countMatch("[^\\s]+")).print();
+    }
+    {
+        GRegex lRegex = ""
+                " select * from _table"
+                " where _id = #(id)i "
+                " and _name = #(name)s "
+                " and _pass = #(pass)b "
+                "";
+
+        GString(lRegex.countMatch("#\\([A-Za-z]+\\)[a-z]")).print();
+    }
+    {
+        GRegex lRegex = ""
+                " select * from _table"
+                " where _id = #(id)i "
+                " and _name = #(name)s "
+                " and _pass = #(pass)b "
+                "";
+
+        lRegex.replaceMatch("#\\([A-Za-z]+\\)[a-z]", "?").print();
+    }
+    {
+        GRegex lRegex = ""
+                " select * from _table"
+                " where _id = #(id)i "
+                " and _name = #(name)s "
+                " and _pass = #(pass)b "
+                "";
+
+        lRegex.searchMatch("(#\\([A-Za-z]+\\)[a-z])", 0, 0).print();
+        lRegex.searchMatch("(#\\([A-Za-z]+\\)[a-z])", 1, 0).print();
+        lRegex.searchMatch("(#\\([A-Za-z]+\\)[a-z])", 2, 0).print();
+    }
+    {
+        GRegex lRegex = ""
+                " select * from _table"
+                " where _id = #(id)i "
+                " and _name = #(name)s "
+                " and _pass = #(pass)b "
+                "";
+
+        lRegex.searchMatch("#\\(([A-Za-z]+)\\)([a-z])", 0, 0).print();
+        lRegex.searchMatch("#\\(([A-Za-z]+)\\)([a-z])", 0, 1).print();
+        lRegex.searchMatch("#\\(([A-Za-z]+)\\)([a-z])", 0, 2).print();
+        lRegex.searchMatch("#\\(([A-Za-z]+)\\)([a-z])", 1, 0).print();
+        lRegex.searchMatch("#\\(([A-Za-z]+)\\)([a-z])", 1, 1).print();
+        lRegex.searchMatch("#\\(([A-Za-z]+)\\)([a-z])", 1, 2).print();
+        lRegex.searchMatch("#\\(([A-Za-z]+)\\)([a-z])", 2, 0).print();
+        lRegex.searchMatch("#\\(([A-Za-z]+)\\)([a-z])", 2, 1).print();
+        lRegex.searchMatch("#\\(([A-Za-z]+)\\)([a-z])", 2, 2).print();
+    }
 }
 //===============================================

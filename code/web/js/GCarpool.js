@@ -5,6 +5,17 @@ class GCarpool extends GObject {
         super();
         this.m_email = "";
         this.m_password = "";
+        this.m_newsletter = "";
+    }
+    //===============================================
+    readInscriptionEmail() {
+        var lObj = document.getElementById("inscription_email");
+        this.m_email = lObj.value;
+    }
+    //===============================================
+    readInscriptionNewsletter() {
+        var lObj = document.getElementById("inscription_newsletter");
+        this.m_newsletter = lObj.value;
     }
     //===============================================
     serialize(_code = "carpool") {
@@ -45,16 +56,20 @@ class GCarpool extends GObject {
                                 "|module=%s"+
                                 "|method=%s", this.m_module, this.m_method));
         }
-    }
+    } 
     //===============================================
     runInscriptionEmail() {
-        var lEmailObj = document.getElementById("email");
-        var lNewsletterObj = document.getElementById("newsletter");
-        var lEmail = lEmailObj.value;
-        var lNewsletter = lNewsletterObj.value;
+        this.readInscriptionEmail();
+        this.readInscriptionNewsletter();
+        
         console.log(sprintf("Inscription par email."+
                             "|email=%s"+
-                            "|newsletter=%s", lEmail, lNewsletter));
+                            "|newsletter=%s", this.m_email, this.m_newsletter));
+                            
+        this.readInscriptionEmail();
+        this.readInscriptionNewsletter();
+        var lAjax = new GAjax();
+        lAjax.call("carpool", "inscription_email", this.serialize());
     }
     //===============================================
     runFermerLog() {

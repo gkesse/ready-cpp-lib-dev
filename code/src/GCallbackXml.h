@@ -9,6 +9,7 @@ public:
     GCallbackXml();
     ~GCallbackXml();
     void createResponse();
+    void createOK();
     void createUnknown();
 };
 //===============================================

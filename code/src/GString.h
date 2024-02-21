@@ -61,6 +61,7 @@ public:
     GString getBasename() const;
     GString getExtension() const;
     GString getMimeType() const;
+    GString replaceAll(const GString& _from, const GString& _to) const;
     void print() const;
 
     GString& operator=(bool _data);
@@ -160,6 +161,8 @@ public:
 
 private:
     static GString* m_instance;
+
+protected:
     int m_size;
     char* m_data;
 };

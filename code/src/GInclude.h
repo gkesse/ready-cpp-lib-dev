@@ -25,6 +25,7 @@
 #include <memory>
 #include <algorithm>
 #include <fstream>
+#include <regex>
 // libxml2
 #include <libxml/parser.h>
 #include <libxml/tree.h>
@@ -33,6 +34,14 @@
 #include <base64/base64.h>
 // json-c
 #include <json.h>
+// mysql
+#include <cppconn/driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/resultset.h>
+#include <cppconn/statement.h>
+#include <cppconn/prepared_statement.h>
+// regex
+#include <boost/regex.hpp>
 // typedef
 typedef unsigned char uchar;
 typedef unsigned int uint;

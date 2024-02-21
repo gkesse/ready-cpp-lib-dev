@@ -12,6 +12,40 @@ const char* const CALLBACK_CONTENT_TYPE_JSON    = "application/json; charset=UTF
 //===============================================
 const char* const DEBUG_LOG_FILENAME            = "logs.txt";
 const char* const DEBUG_LOG_DATE_FORMAT         = "%d/%m/%Y %H:%M:%S";
+//
+const int DEBUG_TYPE_OFF                        = 0;
+const int DEBUG_TYPE_SRV                        = 1;
+const int DEBUG_TYPE_EXT                        = 2;
+const int DEBUG_TYPE_STA                        = 3;
+const int DEBUG_TYPE_END                        = 4;
+const int DEBUG_TYPE_INF                        = 5;
+const int DEBUG_TYPE_WAR                        = 6;
+const int DEBUG_TYPE_ERR                        = 7;
+const int DEBUG_TYPE_MAN                        = 8;
+//===============================================
+// log
+//===============================================
+const char* const LOG_TYPE_ERROR                = "error";
+const char* const LOG_TYPE_INFO                 = "info";
+const char* const LOG_TYPE_DATA                 = "data";
+//===============================================
+// mysql
+//===============================================
+const char* const MYSQL_CONN_PROTOCOL           = "tcp";
+const char* const MYSQL_CONN_HOSTNAME           = "localhost";
+const char* const MYSQL_CONN_DATABASE           = "db_carpool_test";
+const char* const MYSQL_CONN_USERNAME           = "admins";
+const char* const MYSQL_CONN_PASSWORD           = "r8hnRmVWlATcb34Szrq6";
+const int MYSQL_CONN_PORT                       = 3306;
+//
+const int MYSQL_PREPA_VARS_MAX                  = 10;
+//
+const int MYSQL_TYPE_END                        = 0;
+const int MYSQL_TYPE_INT                        = 1;
+const int MYSQL_TYPE_FLOAT                      = 2;
+const int MYSQL_TYPE_STRING                     = 3;
+//
+const int MYSQL_ERROR_DUPLICATION               = 1062;
 //===============================================
 // response
 //===============================================
