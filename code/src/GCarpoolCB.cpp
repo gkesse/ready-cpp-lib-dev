@@ -77,9 +77,8 @@ void GCarpoolCB::runInscriptionEmail() {
     GMySQL dbSQL;
     dbSQL.insertQuery(""
             " insert into _user (_email) "
-            " values (?) "
-            "", MYSQL_TYPE_STRING, m_email.c_str()
-            , MYSQL_TYPE_END);
+            " values (#(email)s) "
+            "", "email", m_email.c_str());
 
     m_logs.addLogs(dbSQL.getLogs());
 }

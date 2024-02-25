@@ -19,6 +19,7 @@ public:
     void createTestGet();
     bool redirectTestPost();
     void createTestPost();
+    void createTestServer();
     void createProfil();
     void createConnexion();
     void createInscription();

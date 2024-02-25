@@ -115,6 +115,7 @@ bool GMySQL::execQuery(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return false;
             }
 
@@ -128,6 +129,7 @@ bool GMySQL::execQuery(const GString& _sql, ...) {
                         "|pattern=%d"
                         "|name=%d"
                         "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
+            m_logs.addProblem();
             return false;
         }
 
@@ -140,6 +142,7 @@ bool GMySQL::execQuery(const GString& _sql, ...) {
                 slog(eGERR, "Le nom de paramètre est inconnu."
                             "|name=%s"
                             "|sql=%s", lName.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return false;
             }
             GString lType = lTypes.getData(lName);
@@ -171,6 +174,7 @@ bool GMySQL::execQuery(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return false;
             }
 
@@ -249,6 +253,7 @@ bool GMySQL::execQuery(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return false;
             }
         }
@@ -317,6 +322,7 @@ bool GMySQL::insertQuery(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return false;
             }
 
@@ -330,6 +336,7 @@ bool GMySQL::insertQuery(const GString& _sql, ...) {
                         "|pattern=%d"
                         "|name=%d"
                         "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
+            m_logs.addProblem();
             return false;
         }
 
@@ -342,6 +349,7 @@ bool GMySQL::insertQuery(const GString& _sql, ...) {
                 slog(eGERR, "Le nom de paramètre est inconnu."
                             "|name=%s"
                             "|sql=%s", lName.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return false;
             }
             GString lType = lTypes.getData(lName);
@@ -373,6 +381,7 @@ bool GMySQL::insertQuery(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return false;
             }
 
@@ -451,6 +460,7 @@ bool GMySQL::insertQuery(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return false;
             }
         }
@@ -523,6 +533,7 @@ GString GMySQL::readData(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lData;
             }
 
@@ -536,6 +547,7 @@ GString GMySQL::readData(const GString& _sql, ...) {
                         "|pattern=%d"
                         "|name=%d"
                         "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
+            m_logs.addProblem();
             return lData;
         }
 
@@ -548,6 +560,7 @@ GString GMySQL::readData(const GString& _sql, ...) {
                 slog(eGERR, "Le nom de paramètre est inconnu."
                             "|name=%s"
                             "|sql=%s", lName.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lData;
             }
             GString lType = lTypes.getData(lName);
@@ -579,6 +592,7 @@ GString GMySQL::readData(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lData;
             }
 
@@ -657,6 +671,7 @@ GString GMySQL::readData(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lData;
             }
         }
@@ -723,6 +738,7 @@ GMySQL::GRows GMySQL::readCol(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lDataMap;
             }
 
@@ -736,6 +752,7 @@ GMySQL::GRows GMySQL::readCol(const GString& _sql, ...) {
                         "|pattern=%d"
                         "|name=%d"
                         "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
+            m_logs.addProblem();
             return lDataMap;
         }
 
@@ -748,6 +765,7 @@ GMySQL::GRows GMySQL::readCol(const GString& _sql, ...) {
                 slog(eGERR, "Le nom de paramètre est inconnu."
                             "|name=%s"
                             "|sql=%s", lName.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lDataMap;
             }
             GString lType = lTypes.getData(lName);
@@ -779,6 +797,7 @@ GMySQL::GRows GMySQL::readCol(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lDataMap;
             }
 
@@ -857,6 +876,7 @@ GMySQL::GRows GMySQL::readCol(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lDataMap;
             }
         }
@@ -922,6 +942,7 @@ GMySQL::GRows GMySQL::readRow(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lDataMap;
             }
 
@@ -935,6 +956,7 @@ GMySQL::GRows GMySQL::readRow(const GString& _sql, ...) {
                         "|pattern=%d"
                         "|name=%d"
                         "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
+            m_logs.addProblem();
             return lDataMap;
         }
 
@@ -947,6 +969,7 @@ GMySQL::GRows GMySQL::readRow(const GString& _sql, ...) {
                 slog(eGERR, "Le nom de paramètre est inconnu."
                             "|name=%s"
                             "|sql=%s", lName.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lDataMap;
             }
             GString lType = lTypes.getData(lName);
@@ -978,6 +1001,7 @@ GMySQL::GRows GMySQL::readRow(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lDataMap;
             }
 
@@ -1056,6 +1080,7 @@ GMySQL::GRows GMySQL::readRow(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lDataMap;
             }
         }
@@ -1124,6 +1149,7 @@ GMySQL::GMaps GMySQL::readMap(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lDataMap;
             }
 
@@ -1137,6 +1163,7 @@ GMySQL::GMaps GMySQL::readMap(const GString& _sql, ...) {
                         "|pattern=%d"
                         "|name=%d"
                         "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
+            m_logs.addProblem();
             return lDataMap;
         }
 
@@ -1149,6 +1176,7 @@ GMySQL::GMaps GMySQL::readMap(const GString& _sql, ...) {
                 slog(eGERR, "Le nom de paramètre est inconnu."
                             "|name=%s"
                             "|sql=%s", lName.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lDataMap;
             }
             GString lType = lTypes.getData(lName);
@@ -1180,6 +1208,7 @@ GMySQL::GMaps GMySQL::readMap(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lDataMap;
             }
 
@@ -1258,6 +1287,7 @@ GMySQL::GMaps GMySQL::readMap(const GString& _sql, ...) {
                             "|name=%s"
                             "|type=%s"
                             "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                m_logs.addProblem();
                 return lDataMap;
             }
         }

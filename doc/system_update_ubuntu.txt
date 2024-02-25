@@ -1,5 +1,5 @@
 #================================================
-### ubuntu_system_update
+### system_update_ubuntu
 #================================================
 sudo apt update
 sudo apt upgrade -y

@@ -1,8 +1,8 @@
 #================================================
-### ubuntu_package_search
+### package_search_ubuntu
 #================================================
 apt-cache search <package>
 apt-cache search base64
 apt-cache search json
-pt-cache search regex
+apt-cache search regex
 #================================================

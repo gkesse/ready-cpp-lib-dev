@@ -1,0 +1,10 @@
+#================================================
+### mysql_commands
+#================================================
+select * from mysql.user;
+show columns from mysql.user;
+describe mysql.user;
+show grants for 'admins'@'localhost';
+select host, user from mysql.user;
+drop user 'admins'@'%';
+#================================================

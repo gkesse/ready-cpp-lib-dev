@@ -1,0 +1,8 @@
+#================================================
+### package_remove_ubuntu
+#================================================
+sudo apt remove package_name
+sudo apt purge package_name
+sudo apt autoremove package_name
+sudo apt clean
+#================================================

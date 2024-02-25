@@ -1,0 +1,17 @@
+#================================================
+### dbeaver_commands
+#================================================
+dbeaver > readysrv > editeur_sql > script_sql
+dbeaver > fichiers > enregistrer_sous > carpool.sql > enregistrer
+
+dbeaver > carpool_sql > create database carpool;
+dbeaver > readysrv > base_de_donnees > regenerer
+dbeaver > readysrv > base_de_donnees > carpool
+
+dbeaver > readysrv > base_de_donnees > carpool > supprimer > voir_script > perisiter
+
+dbeaver > readysrv > base_de_donnees > creer_base_de_donnees > database_name > carpool_db_test
+dbeaver > readysrv > base_de_donnees > creer_base_de_donnees > charset > utf8mb4
+dbeaver > readysrv > base_de_donnees > creer_base_de_donnees > collation > utf8mb4_0900_ai_ci
+dbeaver > readysrv > base_de_donnees > creer_base_de_donnees > ok
+#================================================

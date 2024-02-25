@@ -1,0 +1,9 @@
+#================================================
+# systemd_commands_ubuntu
+#================================================
+sudo systemctl status mysql
+sudo systemctl stop mysql
+sudo systemctl start mysql
+sudo systemctl restart mysql
+sudo systemctl reload mysql
+#================================================

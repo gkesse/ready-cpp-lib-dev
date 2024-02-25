@@ -38,13 +38,6 @@ const char* const MYSQL_CONN_USERNAME           = "admins";
 const char* const MYSQL_CONN_PASSWORD           = "r8hnRmVWlATcb34Szrq6";
 const int MYSQL_CONN_PORT                       = 3306;
 //
-const int MYSQL_PREPA_VARS_MAX                  = 10;
-//
-const int MYSQL_TYPE_END                        = 0;
-const int MYSQL_TYPE_INT                        = 1;
-const int MYSQL_TYPE_FLOAT                      = 2;
-const int MYSQL_TYPE_STRING                     = 3;
-//
 const int MYSQL_ERROR_DUPLICATION               = 1062;
 //===============================================
 // response

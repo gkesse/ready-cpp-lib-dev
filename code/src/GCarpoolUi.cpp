@@ -36,11 +36,8 @@ void GCarpoolUi::create() {
         //
         createLog();
         createHome();
-        //
-        if(m_uri == "/carpool") {
-
-        }
-        else if(m_uri == "/carpool/test") {
+        // test
+        if(m_uri == "/carpool/test") {
             createTest();
         }
         else if(m_uri == "/carpool/test/js") {
@@ -52,7 +49,10 @@ void GCarpoolUi::create() {
         else if(m_uri == "/carpool/test/post") {
             createTestPost();
         }
-        //
+        else if(m_uri == "/carpool/test/server") {
+            createTestServer();
+        }
+        // profil
         else if(m_uri == "/carpool/profil") {
             createProfil();
         }
@@ -140,6 +140,7 @@ void GCarpoolUi::createTest() {
     m_content += sformat("<a href='/carpool/test/js'>JS</a>\n");
     m_content += sformat("<a href='/carpool/test/get'>GET</a>\n");
     m_content += sformat("<a href='/carpool/test/post'>POST</a>\n");
+    m_content += sformat("<a href='/carpool/test/server'>SERVER</a>\n");
     m_content += sformat("</div>\n");
 }
 //===============================================
@@ -155,7 +156,7 @@ void GCarpoolUi::createTestJs() {
     //
     m_content += sformat("<div>\n");
     m_content += sformat("<label for='test_js_module'>Module :</label>\n");
-    m_content += sformat("<input type='text' id='test_js_module' name='test_js_module'/>\n");
+    m_content += sformat("<input type='text' id='test_js_module' maxlength='50'/>\n");
     m_content += sformat("<button onclick='call_server(\"carpool\", \"test_js\")'>Tester</button>\n");
     m_content += sformat("</div>\n");
 }
@@ -185,11 +186,7 @@ bool GCarpoolUi::redirectTestPost() {
                 "|email=%s"
                 "|newletter=%s"
                 "|is_newsletter=%d", lEmail.c_str(), lNewletter.c_str(), isNewsletter);
-
-    if(isNewsletter) {
-        redirectUrl("/carpool");
-    }
-    return isNewsletter;
+    return false;
 }
 //===============================================
 void GCarpoolUi::createTestPost() {
@@ -229,6 +226,35 @@ void GCarpoolUi::createTestPost() {
     m_content += sformat("<button type='submit'>Continuer</button>\n");
     m_content += sformat("</div>\n");
     // from_end
+    m_content += sformat("</div>\n");
+}
+//===============================================
+void GCarpoolUi::createTestServer() {
+    // address
+    m_content += sformat("<div>\n");
+    m_content += sformat("<a href='/carpool'>Home</a>\n");
+    m_content += sformat(">\n");
+    m_content += sformat("<a href='/carpool/test'>Test</a>\n");
+    m_content += sformat(">\n");
+    m_content += sformat("<a href='/carpool/test/server'>SERVER</a>\n");
+    m_content += sformat("</div>\n");
+    //
+    m_content += sformat("<div>\n");
+    m_content += sformat("<div>\n");
+    m_content += sformat("<label for='test_server_module'>Module :</label>\n");
+    m_content += sformat("<input type='text' id='test_server_module' maxlength='50'/>\n");
+    m_content += sformat("</div>\n");
+    m_content += sformat("<div>\n");
+    m_content += sformat("<label for='test_server_method'>Module :</label>\n");
+    m_content += sformat("<input type='text' id='test_server_method' maxlength='50'/>\n");
+    m_content += sformat("</div>\n");
+    m_content += sformat("<div>\n");
+    m_content += sformat("<label for='test_server_params'>Module :</label>\n");
+    m_content += sformat("<textarea type='text' id='test_server_params' maxlength='5000'></textarea>\n");
+    m_content += sformat("</div>\n");
+    m_content += sformat("<div>\n");
+    m_content += sformat("<button onclick='call_server(\"carpool\", \"test_server\")'>Tester</button>\n");
+    m_content += sformat("</div>\n");
     m_content += sformat("</div>\n");
 }
 //===============================================

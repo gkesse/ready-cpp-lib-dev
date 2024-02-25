@@ -2,11 +2,10 @@
 ### mysql_server_install_ubuntu
 #================================================
 sudo apt install mysql-server
-sudo apt install libmysqlclient-dev
-sudo systemctl status mysql
+sudo apt install libmysqlcppconn-dev
 sudo -i
 mysql -u root -p
 create user 'admins'@'localhost' identified by 'r8hnRmVWlATcb34Szrq6';
 grant all privileges on *.* to 'admins'@'localhost' with grant option;
-mysql > quit
+quit
 #================================================
