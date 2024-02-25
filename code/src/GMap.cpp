@@ -50,7 +50,13 @@ void GMap::createMap() {
 //===============================================
 void GMap::loadMap(const GString& _data, const GString& _sepMap, const GString& _sepData) {
     if(_data.isEmpty()) return;
-    if(!m_node) return;
+    if(!m_node) {
+        slog(eGERR, "Le noeud courant n'est pas initialisé."
+                    "|sep_map=%s"
+                    "|sep_data=%s"
+                    "|data=%s", _sepMap.c_str(), _sepData.c_str(), _data.c_str());
+        return;
+    }
     int lCount = _data.count(_sepMap);
     for(int i = 0; i < lCount; i++) {
         GString lData = _data.extract(_sepMap, i);
@@ -61,7 +67,10 @@ void GMap::loadMap(const GString& _data, const GString& _sepMap, const GString& 
 }
 //===============================================
 void GMap::loadMap(const GMap& _map) {
-    if(!m_node) return;
+    if(!m_node) {
+        slog(eGERR, "Le noeud courant n'est pas initialisé.");
+        return;
+    }
     GMap* lNode = _map.m_node;
     while(lNode) {
         if(lNode->m_type == Type::MAP_TYPE_ELEMENT) {
@@ -72,7 +81,10 @@ void GMap::loadMap(const GMap& _map) {
 }
 //===============================================
 GMap GMap::addData(const GString& _key, const GString& _value) {
-    if(!m_node) return GMap();
+    if(!m_node) {
+        slog(eGERR, "Le noeud courant n'est pas initialisé.");
+        return GMap();
+    }
 
     GMap* lNode = m_node;
     GMap* lPrev = lNode;
@@ -98,7 +110,10 @@ GMap GMap::addData(const GString& _key, const GString& _value) {
 }
 //===============================================
 GString GMap::getData(const GString& _key) const {
-    if(!m_node) return "";
+    if(!m_node) {
+        slog(eGERR, "Le noeud courant n'est pas initialisé.");
+        return "";
+    }
     GMap* lNode = m_node;
     while(lNode) {
         if(lNode->m_type == Type::MAP_TYPE_ELEMENT) {
@@ -109,12 +124,55 @@ GString GMap::getData(const GString& _key) const {
     return "";
 }
 //===============================================
+GMapKV GMap::getData(int _index) const {
+    GMapKV lMapKV;
+    if(!m_node) {
+        slog(eGERR, "Le noeud courant n'est pas initialisé.");
+        return lMapKV;
+    }
+    GMap* lNode = m_node;
+    int lCount = 0;
+    while(lNode) {
+        if(lNode->m_type == Type::MAP_TYPE_ELEMENT) {
+            if(lCount == _index) {
+                lMapKV.m_key = lNode->m_key;
+                lMapKV.m_value = lNode->m_value;
+                return lMapKV;
+            }
+            lCount++;
+        }
+        lNode = lNode->m_next;
+    }
+    return lMapKV;
+}
+//===============================================
 int GMap::size() const {
     return m_size;
 }
 //===============================================
+bool GMap::isKey(const GString& _key) const {
+    if(!m_node) {
+        slog(eGERR, "Le noeud courant n'est pas initialisé."
+                    "|key=%s", _key.c_str());
+        return false;
+    }
+
+    GMap* lNode = m_node;
+    while(lNode) {
+        if(lNode->m_type == Type::MAP_TYPE_ELEMENT) {
+            if(lNode->m_key == _key) return true;
+        }
+        lNode = lNode->m_next;
+    }
+
+    return false;
+}
+//===============================================
 GString GMap::toString() const {
-    if(!m_node) return "";
+    if(!m_node) {
+        slog(eGERR, "Le noeud courant n'est pas initialisé.");
+        return "";
+    }
     GString lData;
     GMap* lNode = m_node;
     while(lNode) {

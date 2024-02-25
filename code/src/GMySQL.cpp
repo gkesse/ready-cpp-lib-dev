@@ -1,6 +1,6 @@
 //===============================================
 #include "GMySQL.h"
-#include "GCode.h"
+#include "GRegex.h"
 //===============================================
 GMySQL* GMySQL::m_instance = 0;
 //===============================================
@@ -88,45 +88,169 @@ bool GMySQL::execQuery(const GString& _sql, ...) {
             m_logs.addProblem();
             return false;
         }
-        lStatement.reset(lConn->prepareStatement(_sql.c_str()));
+
+        GRegex lRegex = _sql;
+        int lCount = lRegex.countMatch("#\\([A-Za-z]+\\)[a-z]");
+        GMap lTypes, lPatterns, lValues;
+        std::vector<GString> lParams;
+
+        lTypes.createMap();
+        lPatterns.createMap();
+        lValues.createMap();
+
+        for(int i = 0; i < lCount; i++) {
+            GString lPattern = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 0);
+            GString lName = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 1);
+            GString lType = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 2);
+
+            if((lType != "b") && (lType != "bool") &&
+               (lType != "i") && (lType != "int") &&
+               (lType != "ii") && (lType != "bigint") &&
+               (lType != "s") && (lType != "string") &&
+               (lType != "d") && (lType != "double") &&
+               (lType != "bb") && (lType != "blob") &&
+               (lType != "dt") && (lType != "datetime")) {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|pattern=%s"
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
+                return false;
+            }
+
+            lTypes.addData(lName, lType);
+            lPatterns.addData(lPattern, lName);
+            lParams.push_back(lPattern);
+        }
+
+        if(lTypes.size() != lPatterns.size()) {
+            slog(eGERR, "Les nombres de paramètres et de patterns sont différents."
+                        "|pattern=%d"
+                        "|name=%d"
+                        "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
+            return false;
+        }
 
         va_list lArgs;
         va_start(lArgs, _sql);
-        int i = 0;
-        int j = 1;
-        for(; i < MYSQL_PREPA_VARS_MAX; i++) {
-            int lType = (int)va_arg(lArgs, int);
-            if(lType == MYSQL_TYPE_END) {
-                break;
-            }
-            else if(lType == MYSQL_TYPE_INT) {
-                int lValue = (int)va_arg(lArgs, int);
-                lStatement->setInt(j++, lValue);
-            }
-            else if(lType == MYSQL_TYPE_FLOAT) {
-                double lValue = (double)va_arg(lArgs, double);
-                lStatement->setDouble(j++, lValue);
-            }
-            else if(lType == MYSQL_TYPE_STRING) {
-                const char* lValue = (const char*)va_arg(lArgs, const char*);
-                lStatement->setString(j++, lValue);
-            }
-            else {
-                slog(eGERR, "Le type de la variable est inconnu."
-                            "|type=%d"
-                            "|sql=%s", lType, _sql.c_str());
-                m_logs.addProblem();
+
+        for(int i = 0; i < lTypes.size(); i++) {
+            GString lName = (const char*)va_arg(lArgs, const char*);
+            if(!lTypes.isKey(lName)) {
+                slog(eGERR, "Le nom de paramètre est inconnu."
+                            "|name=%s"
+                            "|sql=%s", lName.c_str(), _sql.c_str());
                 return false;
             }
+            GString lType = lTypes.getData(lName);
+            GString lValue;
+
+            if((lType == "b") || (lType == "bool")) {
+                lValue = (bool)va_arg(lArgs, int);
+            }
+            else if((lType == "i") || (lType == "int")) {
+                lValue = (int)va_arg(lArgs, int);
+            }
+            else if((lType == "ii") || (lType == "bigint")) {
+                lValue = (long)va_arg(lArgs, long);
+            }
+            else if((lType == "d") || (lType == "double")) {
+                lValue = (double)va_arg(lArgs, double);
+            }
+            else if((lType == "s") || (lType == "string")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else if((lType == "bb") && (lType == "blob")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else if((lType == "dt") && (lType == "datetime")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                return false;
+            }
+
+            lValues.addData(lName, lValue);
         }
+
         va_end(lArgs);
 
-        if(i == MYSQL_PREPA_VARS_MAX) {
-            slog(eGERR, "Le nombre maximal de variables est atteint."
-                        "|max=%d"
-                        "|sql=%s", i, _sql.c_str());
-            m_logs.addProblem();
-            return false;
+        GString lSql = lRegex.replaceMatch("#\\([A-Za-z]+\\)[a-z]", "?");
+
+        slog(eGOFF, "La requête sql a été transformée."
+                    "|size=%d"
+                    "|sql=%s", lParams.size(), lSql.c_str());
+
+        lStatement.reset(lConn->prepareStatement(lSql.c_str()));
+
+        GString lSqlText = lRegex;
+
+        for(int i = 0; i < lPatterns.size(); i++) {
+            GMapKV lMapKV = lPatterns.getData(i);
+            GString lPattern = lMapKV.m_key;
+            GString lName = lMapKV.m_value;
+            GString lValue = lValues.getData(lName);
+            GString lType = lTypes.getData(lName);
+
+            if((lType == "s") || (lType == "string")) {
+                lValue = sformat("'%s'", lValue.c_str());
+            }
+
+            lSqlText = lSqlText.replaceAll(lPattern, lValue);
+        }
+
+        slog(eGOFF, "La requête sql a été traduite."
+                    "|size=%d"
+                    "|sql=%s", lParams.size(), lSqlText.c_str());
+
+        int j = 1;
+        for(int i = 0; i < lParams.size(); i++) {
+            GString lPattern = lParams.at(i);
+            GString lName = lPatterns.getData(lPattern);
+            GString lValue = lValues.getData(lName);
+            GString lType = lTypes.getData(lName);
+
+            slog(eGOFF, "La requête sql a été analysée."
+                        "|index=%d"
+                        "|pattern=%s"
+                        "|name=%s"
+                        "|type=%s"
+                        "|value=%s", i, lPattern.c_str(), lName.c_str(), lType.c_str(), lValue.c_str());
+
+            if((lType == "b") || (lType == "bool")) {
+                lStatement->setBoolean(j++, lValue.toBool());
+            }
+            else if((lType == "i") || (lType == "int")) {
+                lStatement->setInt(j++, lValue.toInt());
+            }
+            else if((lType == "ii") || (lType == "bigint")) {
+                lStatement->setBigInt(j++, lValue.c_str());
+            }
+            else if((lType == "d") || (lType == "double")) {
+                lStatement->setDouble(j++, lValue.toDouble());
+            }
+            else if((lType == "s") || (lType == "string")) {
+                lStatement->setString(j++, lValue.c_str());
+            }
+            else if((lType == "bb") && (lType == "blob")) {
+                std::string lData(lValue.c_str(), lValue.size());
+                std::istringstream lBlob(lData);
+                lStatement->setBlob(j++, &lBlob);
+            }
+            else if((lType == "dt") && (lType == "datetime")) {
+                lStatement->setDateTime(j++, lValue.c_str());
+            }
+            else {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                return false;
+            }
         }
 
         lStatement->execute();
@@ -166,49 +290,172 @@ bool GMySQL::insertQuery(const GString& _sql, ...) {
             m_logs.addProblem();
             return false;
         }
-        lStatement.reset(lConn->prepareStatement(_sql.c_str()));
 
-        va_list lArgs;
-        va_start(lArgs, _sql);
-        int i = 0;
-        int j = 1;
-        for(; i < MYSQL_PREPA_VARS_MAX; i++) {
-            int lType = (int)va_arg(lArgs, int);
-            if(lType == MYSQL_TYPE_END) {
-                break;
-            }
-            else if(lType == MYSQL_TYPE_INT) {
-                int lValue = (int)va_arg(lArgs, int);
-                lStatement->setInt(j++, lValue);
-            }
-            else if(lType == MYSQL_TYPE_FLOAT) {
-                double lValue = (double)va_arg(lArgs, double);
-                lStatement->setDouble(j++, lValue);
-            }
-            else if(lType == MYSQL_TYPE_STRING) {
-                const char* lValue = (const char*)va_arg(lArgs, const char*);
-                lStatement->setString(j++, lValue);
-            }
-            else {
-                slog(eGERR, "Le type de la variable est inconnu."
-                            "|type=%d"
-                            "|sql=%s", lType, _sql.c_str());
-                m_logs.addProblem();
+        GRegex lRegex = _sql;
+        int lCount = lRegex.countMatch("#\\([A-Za-z]+\\)[a-z]");
+        GMap lTypes, lPatterns, lValues;
+        std::vector<GString> lParams;
+
+        lTypes.createMap();
+        lPatterns.createMap();
+        lValues.createMap();
+
+        for(int i = 0; i < lCount; i++) {
+            GString lPattern = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 0);
+            GString lName = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 1);
+            GString lType = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 2);
+
+            if((lType != "b") && (lType != "bool") &&
+               (lType != "i") && (lType != "int") &&
+               (lType != "ii") && (lType != "bigint") &&
+               (lType != "s") && (lType != "string") &&
+               (lType != "d") && (lType != "double") &&
+               (lType != "bb") && (lType != "blob") &&
+               (lType != "dt") && (lType != "datetime")) {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|pattern=%s"
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
                 return false;
             }
-        }
-        va_end(lArgs);
 
-        if(i == MYSQL_PREPA_VARS_MAX) {
-            slog(eGERR, "Le nombre maximal de variables est atteint."
-                        "|max=%d"
-                        "|sql=%s", i, _sql.c_str());
-            m_logs.addProblem();
+            lTypes.addData(lName, lType);
+            lPatterns.addData(lPattern, lName);
+            lParams.push_back(lPattern);
+        }
+
+        if(lTypes.size() != lPatterns.size()) {
+            slog(eGERR, "Les nombres de paramètres et de patterns sont différents."
+                        "|pattern=%d"
+                        "|name=%d"
+                        "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
             return false;
         }
 
-        lStatement->execute();
+        va_list lArgs;
+        va_start(lArgs, _sql);
 
+        for(int i = 0; i < lTypes.size(); i++) {
+            GString lName = (const char*)va_arg(lArgs, const char*);
+            if(!lTypes.isKey(lName)) {
+                slog(eGERR, "Le nom de paramètre est inconnu."
+                            "|name=%s"
+                            "|sql=%s", lName.c_str(), _sql.c_str());
+                return false;
+            }
+            GString lType = lTypes.getData(lName);
+            GString lValue;
+
+            if((lType == "b") || (lType == "bool")) {
+                lValue = (bool)va_arg(lArgs, int);
+            }
+            else if((lType == "i") || (lType == "int")) {
+                lValue = (int)va_arg(lArgs, int);
+            }
+            else if((lType == "ii") || (lType == "bigint")) {
+                lValue = (long)va_arg(lArgs, long);
+            }
+            else if((lType == "d") || (lType == "double")) {
+                lValue = (double)va_arg(lArgs, double);
+            }
+            else if((lType == "s") || (lType == "string")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else if((lType == "bb") && (lType == "blob")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else if((lType == "dt") && (lType == "datetime")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                return false;
+            }
+
+            lValues.addData(lName, lValue);
+        }
+
+        va_end(lArgs);
+
+        GString lSql = lRegex.replaceMatch("#\\([A-Za-z]+\\)[a-z]", "?");
+
+        slog(eGOFF, "La requête sql a été transformée."
+                    "|size=%d"
+                    "|sql=%s", lParams.size(), lSql.c_str());
+
+        lStatement.reset(lConn->prepareStatement(lSql.c_str()));
+
+        GString lSqlText = lRegex;
+
+        for(int i = 0; i < lPatterns.size(); i++) {
+            GMapKV lMapKV = lPatterns.getData(i);
+            GString lPattern = lMapKV.m_key;
+            GString lName = lMapKV.m_value;
+            GString lValue = lValues.getData(lName);
+            GString lType = lTypes.getData(lName);
+
+            if((lType == "s") || (lType == "string")) {
+                lValue = sformat("'%s'", lValue.c_str());
+            }
+
+            lSqlText = lSqlText.replaceAll(lPattern, lValue);
+        }
+
+        slog(eGOFF, "La requête sql a été traduite."
+                    "|size=%d"
+                    "|sql=%s", lParams.size(), lSqlText.c_str());
+
+        int j = 1;
+        for(int i = 0; i < lParams.size(); i++) {
+            GString lPattern = lParams.at(i);
+            GString lName = lPatterns.getData(lPattern);
+            GString lValue = lValues.getData(lName);
+            GString lType = lTypes.getData(lName);
+
+            slog(eGOFF, "La requête sql a été analysée."
+                        "|index=%d"
+                        "|pattern=%s"
+                        "|name=%s"
+                        "|type=%s"
+                        "|value=%s", i, lPattern.c_str(), lName.c_str(), lType.c_str(), lValue.c_str());
+
+            if((lType == "b") || (lType == "bool")) {
+                lStatement->setBoolean(j++, lValue.toBool());
+            }
+            else if((lType == "i") || (lType == "int")) {
+                lStatement->setInt(j++, lValue.toInt());
+            }
+            else if((lType == "ii") || (lType == "bigint")) {
+                lStatement->setBigInt(j++, lValue.c_str());
+            }
+            else if((lType == "d") || (lType == "double")) {
+                lStatement->setDouble(j++, lValue.toDouble());
+            }
+            else if((lType == "s") || (lType == "string")) {
+                lStatement->setString(j++, lValue.c_str());
+            }
+            else if((lType == "bb") && (lType == "blob")) {
+                std::string lData(lValue.c_str(), lValue.size());
+                std::istringstream lBlob(lData);
+                lStatement->setBlob(j++, &lBlob);
+            }
+            else if((lType == "dt") && (lType == "datetime")) {
+                lStatement->setDateTime(j++, lValue.c_str());
+            }
+            else {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                return false;
+            }
+        }
+
+        lStatement->execute();
         lResultSet.reset(lStatement->executeQuery("select @@identity as id"));
         lResultSet->next();
         m_id = (int)lResultSet->getInt64("id");
@@ -244,126 +491,174 @@ GString GMySQL::readData(const GString& _sql, ...) {
 
     try {
         if(!openDatabase(lConn)) {
-            slog(eGERR, "L'ouverture de la base donnée a échoué."
+            slog(eGERR, "L'ouverture de la base données a échoué."
                         "|sql=%s", _sql.c_str());
             m_logs.addProblem();
             return lData;
         }
-        lStatement.reset(lConn->prepareStatement(_sql.c_str()));
+
+        GRegex lRegex = _sql;
+        int lCount = lRegex.countMatch("#\\([A-Za-z]+\\)[a-z]");
+        GMap lTypes, lPatterns, lValues;
+        std::vector<GString> lParams;
+
+        lTypes.createMap();
+        lPatterns.createMap();
+        lValues.createMap();
+
+        for(int i = 0; i < lCount; i++) {
+            GString lPattern = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 0);
+            GString lName = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 1);
+            GString lType = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 2);
+
+            if((lType != "b") && (lType != "bool") &&
+               (lType != "i") && (lType != "int") &&
+               (lType != "ii") && (lType != "bigint") &&
+               (lType != "s") && (lType != "string") &&
+               (lType != "d") && (lType != "double") &&
+               (lType != "bb") && (lType != "blob") &&
+               (lType != "dt") && (lType != "datetime")) {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|pattern=%s"
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
+                return lData;
+            }
+
+            lTypes.addData(lName, lType);
+            lPatterns.addData(lPattern, lName);
+            lParams.push_back(lPattern);
+        }
+
+        if(lTypes.size() != lPatterns.size()) {
+            slog(eGERR, "Les nombres de paramètres et de patterns sont différents."
+                        "|pattern=%d"
+                        "|name=%d"
+                        "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
+            return lData;
+        }
 
         va_list lArgs;
         va_start(lArgs, _sql);
-        int i = 0;
-        int j = 1;
-        for(; i < MYSQL_PREPA_VARS_MAX; i++) {
-            int lType = (int)va_arg(lArgs, int);
-            if(lType == MYSQL_TYPE_END) {
-                break;
-            }
-            else if(lType == MYSQL_TYPE_INT) {
-                int lValue = (int)va_arg(lArgs, int);
-                lStatement->setInt(j++, lValue);
-            }
-            else if(lType == MYSQL_TYPE_FLOAT) {
-                double lValue = (double)va_arg(lArgs, double);
-                lStatement->setDouble(j++, lValue);
-            }
-            else if(lType == MYSQL_TYPE_STRING) {
-                const char* lValue = (const char*)va_arg(lArgs, const char*);
-                lStatement->setString(j++, lValue);
-            }
-            else {
-                slog(eGERR, "Le type de la variable est inconnu."
-                            "|type=%d"
-                            "|sql=%s", lType, _sql.c_str());
-                m_logs.addProblem();
+
+        for(int i = 0; i < lTypes.size(); i++) {
+            GString lName = (const char*)va_arg(lArgs, const char*);
+            if(!lTypes.isKey(lName)) {
+                slog(eGERR, "Le nom de paramètre est inconnu."
+                            "|name=%s"
+                            "|sql=%s", lName.c_str(), _sql.c_str());
                 return lData;
             }
-        }
-        va_end(lArgs);
+            GString lType = lTypes.getData(lName);
+            GString lValue;
 
-        if(i == MYSQL_PREPA_VARS_MAX) {
-            slog(eGERR, "Le nombre maximal de variables est atteint."
-                        "|max=%d"
-                        "|sql=%s", i, _sql.c_str());
-            m_logs.addProblem();
-            return lData;
-        }
-
-        lResultSet.reset(lStatement->executeQuery());
-    }
-    catch (sql::SQLException &e) {
-        slog(eGERR, "L'exécution de la requête a échoué."
-                "|error_code=%d"
-                "|error_state=%s"
-                "|error_msg=%s"
-                "|sql=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what(), _sql.c_str());
-        m_logs.addProblem();
-        m_errorCode = e.getErrorCode();
-        return lData;
-    }
-
-
-    while(lResultSet->next()) {
-        lData = lResultSet->getString(1);
-        break;
-    }
-
-    return lData;
-}
-//===============================================
-GString GMySQL::readData2(const GString& _sql, ...) {
-    std::shared_ptr<sql::Connection> lConn;
-    std::shared_ptr<sql::PreparedStatement> lStatement;
-    std::shared_ptr<sql::ResultSet> lResultSet;
-    GString lData;
-
-    try {
-        if(!openDatabase(lConn)) {
-            slog(eGERR, "L'ouverture de la base donnée a échoué."
-                        "|sql=%s", _sql.c_str());
-            m_logs.addProblem();
-            return lData;
-        }
-        lStatement.reset(lConn->prepareStatement(_sql.c_str()));
-
-        va_list lArgs;
-        va_start(lArgs, _sql);
-        int i = 0;
-        int j = 1;
-        for(; i < MYSQL_PREPA_VARS_MAX; i++) {
-            int lType = (int)va_arg(lArgs, int);
-            if(lType == MYSQL_TYPE_END) {
-                break;
+            if((lType == "b") || (lType == "bool")) {
+                lValue = (bool)va_arg(lArgs, int);
             }
-            else if(lType == MYSQL_TYPE_INT) {
-                int lValue = (int)va_arg(lArgs, int);
-                lStatement->setInt(j++, lValue);
+            else if((lType == "i") || (lType == "int")) {
+                lValue = (int)va_arg(lArgs, int);
             }
-            else if(lType == MYSQL_TYPE_FLOAT) {
-                double lValue = (double)va_arg(lArgs, double);
-                lStatement->setDouble(j++, lValue);
+            else if((lType == "ii") || (lType == "bigint")) {
+                lValue = (long)va_arg(lArgs, long);
             }
-            else if(lType == MYSQL_TYPE_STRING) {
-                const char* lValue = (const char*)va_arg(lArgs, const char*);
-                lStatement->setString(j++, lValue);
+            else if((lType == "d") || (lType == "double")) {
+                lValue = (double)va_arg(lArgs, double);
+            }
+            else if((lType == "s") || (lType == "string")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else if((lType == "bb") && (lType == "blob")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else if((lType == "dt") && (lType == "datetime")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
             }
             else {
-                slog(eGERR, "Le type de la variable est inconnu."
-                            "|type=%d"
-                            "|sql=%s", lType, _sql.c_str());
-                m_logs.addProblem();
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
                 return lData;
             }
+
+            lValues.addData(lName, lValue);
         }
+
         va_end(lArgs);
 
-        if(i == MYSQL_PREPA_VARS_MAX) {
-            slog(eGERR, "Le nombre maximal de variables est atteint."
-                        "|max=%d"
-                        "|sql=%s", i, _sql.c_str());
-            m_logs.addProblem();
-            return lData;
+        GString lSql = lRegex.replaceMatch("#\\([A-Za-z]+\\)[a-z]", "?");
+
+        slog(eGOFF, "La requête sql a été transformée."
+                    "|size=%d"
+                    "|sql=%s", lParams.size(), lSql.c_str());
+
+        lStatement.reset(lConn->prepareStatement(lSql.c_str()));
+
+        GString lSqlText = lRegex;
+
+        for(int i = 0; i < lPatterns.size(); i++) {
+            GMapKV lMapKV = lPatterns.getData(i);
+            GString lPattern = lMapKV.m_key;
+            GString lName = lMapKV.m_value;
+            GString lValue = lValues.getData(lName);
+            GString lType = lTypes.getData(lName);
+
+            if((lType == "s") || (lType == "string")) {
+                lValue = sformat("'%s'", lValue.c_str());
+            }
+
+            lSqlText = lSqlText.replaceAll(lPattern, lValue);
+        }
+
+        slog(eGOFF, "La requête sql a été traduite."
+                    "|size=%d"
+                    "|sql=%s", lParams.size(), lSqlText.c_str());
+
+        int j = 1;
+        for(int i = 0; i < lParams.size(); i++) {
+            GString lPattern = lParams.at(i);
+            GString lName = lPatterns.getData(lPattern);
+            GString lValue = lValues.getData(lName);
+            GString lType = lTypes.getData(lName);
+
+            slog(eGOFF, "La requête sql a été analysée."
+                        "|index=%d"
+                        "|pattern=%s"
+                        "|name=%s"
+                        "|type=%s"
+                        "|value=%s", i, lPattern.c_str(), lName.c_str(), lType.c_str(), lValue.c_str());
+
+            if((lType == "b") || (lType == "bool")) {
+                lStatement->setBoolean(j++, lValue.toBool());
+            }
+            else if((lType == "i") || (lType == "int")) {
+                lStatement->setInt(j++, lValue.toInt());
+            }
+            else if((lType == "ii") || (lType == "bigint")) {
+                lStatement->setBigInt(j++, lValue.c_str());
+            }
+            else if((lType == "d") || (lType == "double")) {
+                lStatement->setDouble(j++, lValue.toDouble());
+            }
+            else if((lType == "s") || (lType == "string")) {
+                lStatement->setString(j++, lValue.c_str());
+            }
+            else if((lType == "bb") && (lType == "blob")) {
+                std::string lData(lValue.c_str(), lValue.size());
+                std::istringstream lBlob(lData);
+                lStatement->setBlob(j++, &lBlob);
+            }
+            else if((lType == "dt") && (lType == "datetime")) {
+                lStatement->setDateTime(j++, lValue.c_str());
+            }
+            else {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                return lData;
+            }
         }
 
         lResultSet.reset(lStatement->executeQuery());
@@ -401,45 +696,169 @@ GMySQL::GRows GMySQL::readCol(const GString& _sql, ...) {
             m_logs.addProblem();
             return lDataMap;
         }
-        lStatement.reset(lConn->prepareStatement(_sql.c_str()));
+
+        GRegex lRegex = _sql;
+        int lCount = lRegex.countMatch("#\\([A-Za-z]+\\)[a-z]");
+        GMap lTypes, lPatterns, lValues;
+        std::vector<GString> lParams;
+
+        lTypes.createMap();
+        lPatterns.createMap();
+        lValues.createMap();
+
+        for(int i = 0; i < lCount; i++) {
+            GString lPattern = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 0);
+            GString lName = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 1);
+            GString lType = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 2);
+
+            if((lType != "b") && (lType != "bool") &&
+               (lType != "i") && (lType != "int") &&
+               (lType != "ii") && (lType != "bigint") &&
+               (lType != "s") && (lType != "string") &&
+               (lType != "d") && (lType != "double") &&
+               (lType != "bb") && (lType != "blob") &&
+               (lType != "dt") && (lType != "datetime")) {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|pattern=%s"
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
+                return lDataMap;
+            }
+
+            lTypes.addData(lName, lType);
+            lPatterns.addData(lPattern, lName);
+            lParams.push_back(lPattern);
+        }
+
+        if(lTypes.size() != lPatterns.size()) {
+            slog(eGERR, "Les nombres de paramètres et de patterns sont différents."
+                        "|pattern=%d"
+                        "|name=%d"
+                        "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
+            return lDataMap;
+        }
 
         va_list lArgs;
         va_start(lArgs, _sql);
-        int i = 0;
-        int j = 1;
-        for(; i < MYSQL_PREPA_VARS_MAX; i++) {
-            int lType = (int)va_arg(lArgs, int);
-            if(lType == MYSQL_TYPE_END) {
-                break;
-            }
-            else if(lType == MYSQL_TYPE_INT) {
-                int lValue = (int)va_arg(lArgs, int);
-                lStatement->setInt(j++, lValue);
-            }
-            else if(lType == MYSQL_TYPE_FLOAT) {
-                double lValue = (double)va_arg(lArgs, double);
-                lStatement->setDouble(j++, lValue);
-            }
-            else if(lType == MYSQL_TYPE_STRING) {
-                const char* lValue = (const char*)va_arg(lArgs, const char*);
-                lStatement->setString(j++, lValue);
-            }
-            else {
-                slog(eGERR, "Le type de la variable est inconnu."
-                            "|type=%d"
-                            "|sql=%s", lType, _sql.c_str());
-                m_logs.addProblem();
+
+        for(int i = 0; i < lTypes.size(); i++) {
+            GString lName = (const char*)va_arg(lArgs, const char*);
+            if(!lTypes.isKey(lName)) {
+                slog(eGERR, "Le nom de paramètre est inconnu."
+                            "|name=%s"
+                            "|sql=%s", lName.c_str(), _sql.c_str());
                 return lDataMap;
             }
+            GString lType = lTypes.getData(lName);
+            GString lValue;
+
+            if((lType == "b") || (lType == "bool")) {
+                lValue = (bool)va_arg(lArgs, int);
+            }
+            else if((lType == "i") || (lType == "int")) {
+                lValue = (int)va_arg(lArgs, int);
+            }
+            else if((lType == "ii") || (lType == "bigint")) {
+                lValue = (long)va_arg(lArgs, long);
+            }
+            else if((lType == "d") || (lType == "double")) {
+                lValue = (double)va_arg(lArgs, double);
+            }
+            else if((lType == "s") || (lType == "string")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else if((lType == "bb") && (lType == "blob")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else if((lType == "dt") && (lType == "datetime")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                return lDataMap;
+            }
+
+            lValues.addData(lName, lValue);
         }
+
         va_end(lArgs);
 
-        if(i == MYSQL_PREPA_VARS_MAX) {
-            slog(eGERR, "Le nombre maximal de variables est atteint."
-                        "|max=%d"
-                        "|sql=%s", i, _sql.c_str());
-            m_logs.addProblem();
-            return lDataMap;
+        GString lSql = lRegex.replaceMatch("#\\([A-Za-z]+\\)[a-z]", "?");
+
+        slog(eGOFF, "La requête sql a été transformée."
+                    "|size=%d"
+                    "|sql=%s", lParams.size(), lSql.c_str());
+
+        lStatement.reset(lConn->prepareStatement(lSql.c_str()));
+
+        GString lSqlText = lRegex;
+
+        for(int i = 0; i < lPatterns.size(); i++) {
+            GMapKV lMapKV = lPatterns.getData(i);
+            GString lPattern = lMapKV.m_key;
+            GString lName = lMapKV.m_value;
+            GString lValue = lValues.getData(lName);
+            GString lType = lTypes.getData(lName);
+
+            if((lType == "s") || (lType == "string")) {
+                lValue = sformat("'%s'", lValue.c_str());
+            }
+
+            lSqlText = lSqlText.replaceAll(lPattern, lValue);
+        }
+
+        slog(eGOFF, "La requête sql a été traduite."
+                    "|size=%d"
+                    "|sql=%s", lParams.size(), lSqlText.c_str());
+
+        int j = 1;
+        for(int i = 0; i < lParams.size(); i++) {
+            GString lPattern = lParams.at(i);
+            GString lName = lPatterns.getData(lPattern);
+            GString lValue = lValues.getData(lName);
+            GString lType = lTypes.getData(lName);
+
+            slog(eGOFF, "La requête sql a été analysée."
+                        "|index=%d"
+                        "|pattern=%s"
+                        "|name=%s"
+                        "|type=%s"
+                        "|value=%s", i, lPattern.c_str(), lName.c_str(), lType.c_str(), lValue.c_str());
+
+            if((lType == "b") || (lType == "bool")) {
+                lStatement->setBoolean(j++, lValue.toBool());
+            }
+            else if((lType == "i") || (lType == "int")) {
+                lStatement->setInt(j++, lValue.toInt());
+            }
+            else if((lType == "ii") || (lType == "bigint")) {
+                lStatement->setBigInt(j++, lValue.c_str());
+            }
+            else if((lType == "d") || (lType == "double")) {
+                lStatement->setDouble(j++, lValue.toDouble());
+            }
+            else if((lType == "s") || (lType == "string")) {
+                lStatement->setString(j++, lValue.c_str());
+            }
+            else if((lType == "bb") && (lType == "blob")) {
+                std::string lData(lValue.c_str(), lValue.size());
+                std::istringstream lBlob(lData);
+                lStatement->setBlob(j++, &lBlob);
+            }
+            else if((lType == "dt") && (lType == "datetime")) {
+                lStatement->setDateTime(j++, lValue.c_str());
+            }
+            else {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                return lDataMap;
+            }
         }
 
         lResultSet.reset(lStatement->executeQuery());
@@ -476,45 +895,169 @@ GMySQL::GRows GMySQL::readRow(const GString& _sql, ...) {
             m_logs.addProblem();
             return lDataMap;
         }
-        lStatement.reset(lConn->prepareStatement(_sql.c_str()));
+
+        GRegex lRegex = _sql;
+        int lCount = lRegex.countMatch("#\\([A-Za-z]+\\)[a-z]");
+        GMap lTypes, lPatterns, lValues;
+        std::vector<GString> lParams;
+
+        lTypes.createMap();
+        lPatterns.createMap();
+        lValues.createMap();
+
+        for(int i = 0; i < lCount; i++) {
+            GString lPattern = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 0);
+            GString lName = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 1);
+            GString lType = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 2);
+
+            if((lType != "b") && (lType != "bool") &&
+               (lType != "i") && (lType != "int") &&
+               (lType != "ii") && (lType != "bigint") &&
+               (lType != "s") && (lType != "string") &&
+               (lType != "d") && (lType != "double") &&
+               (lType != "bb") && (lType != "blob") &&
+               (lType != "dt") && (lType != "datetime")) {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|pattern=%s"
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
+                return lDataMap;
+            }
+
+            lTypes.addData(lName, lType);
+            lPatterns.addData(lPattern, lName);
+            lParams.push_back(lPattern);
+        }
+
+        if(lTypes.size() != lPatterns.size()) {
+            slog(eGERR, "Les nombres de paramètres et de patterns sont différents."
+                        "|pattern=%d"
+                        "|name=%d"
+                        "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
+            return lDataMap;
+        }
 
         va_list lArgs;
         va_start(lArgs, _sql);
-        int i = 0;
-        int j = 1;
-        for(; i < MYSQL_PREPA_VARS_MAX; i++) {
-            int lType = (int)va_arg(lArgs, int);
-            if(lType == MYSQL_TYPE_END) {
-                break;
-            }
-            else if(lType == MYSQL_TYPE_INT) {
-                int lValue = (int)va_arg(lArgs, int);
-                lStatement->setInt(j++, lValue);
-            }
-            else if(lType == MYSQL_TYPE_FLOAT) {
-                double lValue = (double)va_arg(lArgs, double);
-                lStatement->setDouble(j++, lValue);
-            }
-            else if(lType == MYSQL_TYPE_STRING) {
-                const char* lValue = (const char*)va_arg(lArgs, const char*);
-                lStatement->setString(j++, lValue);
-            }
-            else {
-                slog(eGERR, "Le type de la variable est inconnu."
-                            "|type=%d"
-                            "|sql=%s", lType, _sql.c_str());
-                m_logs.addProblem();
+
+        for(int i = 0; i < lTypes.size(); i++) {
+            GString lName = (const char*)va_arg(lArgs, const char*);
+            if(!lTypes.isKey(lName)) {
+                slog(eGERR, "Le nom de paramètre est inconnu."
+                            "|name=%s"
+                            "|sql=%s", lName.c_str(), _sql.c_str());
                 return lDataMap;
             }
+            GString lType = lTypes.getData(lName);
+            GString lValue;
+
+            if((lType == "b") || (lType == "bool")) {
+                lValue = (bool)va_arg(lArgs, int);
+            }
+            else if((lType == "i") || (lType == "int")) {
+                lValue = (int)va_arg(lArgs, int);
+            }
+            else if((lType == "ii") || (lType == "bigint")) {
+                lValue = (long)va_arg(lArgs, long);
+            }
+            else if((lType == "d") || (lType == "double")) {
+                lValue = (double)va_arg(lArgs, double);
+            }
+            else if((lType == "s") || (lType == "string")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else if((lType == "bb") && (lType == "blob")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else if((lType == "dt") && (lType == "datetime")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                return lDataMap;
+            }
+
+            lValues.addData(lName, lValue);
         }
+
         va_end(lArgs);
 
-        if(i == MYSQL_PREPA_VARS_MAX) {
-            slog(eGERR, "Le nombre maximal de variables est atteint."
-                        "|max=%d"
-                        "|sql=%s", i, _sql.c_str());
-            m_logs.addProblem();
-            return lDataMap;
+        GString lSql = lRegex.replaceMatch("#\\([A-Za-z]+\\)[a-z]", "?");
+
+        slog(eGOFF, "La requête sql a été transformée."
+                    "|size=%d"
+                    "|sql=%s", lParams.size(), lSql.c_str());
+
+        lStatement.reset(lConn->prepareStatement(lSql.c_str()));
+
+        GString lSqlText = lRegex;
+
+        for(int i = 0; i < lPatterns.size(); i++) {
+            GMapKV lMapKV = lPatterns.getData(i);
+            GString lPattern = lMapKV.m_key;
+            GString lName = lMapKV.m_value;
+            GString lValue = lValues.getData(lName);
+            GString lType = lTypes.getData(lName);
+
+            if((lType == "s") || (lType == "string")) {
+                lValue = sformat("'%s'", lValue.c_str());
+            }
+
+            lSqlText = lSqlText.replaceAll(lPattern, lValue);
+        }
+
+        slog(eGOFF, "La requête sql a été traduite."
+                    "|size=%d"
+                    "|sql=%s", lParams.size(), lSqlText.c_str());
+
+        int j = 1;
+        for(int i = 0; i < lParams.size(); i++) {
+            GString lPattern = lParams.at(i);
+            GString lName = lPatterns.getData(lPattern);
+            GString lValue = lValues.getData(lName);
+            GString lType = lTypes.getData(lName);
+
+            slog(eGOFF, "La requête sql a été analysée."
+                        "|index=%d"
+                        "|pattern=%s"
+                        "|name=%s"
+                        "|type=%s"
+                        "|value=%s", i, lPattern.c_str(), lName.c_str(), lType.c_str(), lValue.c_str());
+
+            if((lType == "b") || (lType == "bool")) {
+                lStatement->setBoolean(j++, lValue.toBool());
+            }
+            else if((lType == "i") || (lType == "int")) {
+                lStatement->setInt(j++, lValue.toInt());
+            }
+            else if((lType == "ii") || (lType == "bigint")) {
+                lStatement->setBigInt(j++, lValue.c_str());
+            }
+            else if((lType == "d") || (lType == "double")) {
+                lStatement->setDouble(j++, lValue.toDouble());
+            }
+            else if((lType == "s") || (lType == "string")) {
+                lStatement->setString(j++, lValue.c_str());
+            }
+            else if((lType == "bb") && (lType == "blob")) {
+                std::string lData(lValue.c_str(), lValue.size());
+                std::istringstream lBlob(lData);
+                lStatement->setBlob(j++, &lBlob);
+            }
+            else if((lType == "dt") && (lType == "datetime")) {
+                lStatement->setDateTime(j++, lValue.c_str());
+            }
+            else {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                return lDataMap;
+            }
         }
 
         lResultSet.reset(lStatement->executeQuery());
@@ -554,45 +1097,169 @@ GMySQL::GMaps GMySQL::readMap(const GString& _sql, ...) {
             m_logs.addProblem();
             return lDataMap;
         }
-        lStatement.reset(lConn->prepareStatement(_sql.c_str()));
+
+        GRegex lRegex = _sql;
+        int lCount = lRegex.countMatch("#\\([A-Za-z]+\\)[a-z]");
+        GMap lTypes, lPatterns, lValues;
+        std::vector<GString> lParams;
+
+        lTypes.createMap();
+        lPatterns.createMap();
+        lValues.createMap();
+
+        for(int i = 0; i < lCount; i++) {
+            GString lPattern = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 0);
+            GString lName = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 1);
+            GString lType = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 2);
+
+            if((lType != "b") && (lType != "bool") &&
+               (lType != "i") && (lType != "int") &&
+               (lType != "ii") && (lType != "bigint") &&
+               (lType != "s") && (lType != "string") &&
+               (lType != "d") && (lType != "double") &&
+               (lType != "bb") && (lType != "blob") &&
+               (lType != "dt") && (lType != "datetime")) {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|pattern=%s"
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
+                return lDataMap;
+            }
+
+            lTypes.addData(lName, lType);
+            lPatterns.addData(lPattern, lName);
+            lParams.push_back(lPattern);
+        }
+
+        if(lTypes.size() != lPatterns.size()) {
+            slog(eGERR, "Les nombres de paramètres et de patterns sont différents."
+                        "|pattern=%d"
+                        "|name=%d"
+                        "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
+            return lDataMap;
+        }
 
         va_list lArgs;
         va_start(lArgs, _sql);
-        int i = 0;
-        int j = 1;
-        for(; i < MYSQL_PREPA_VARS_MAX; i++) {
-            int lType = (int)va_arg(lArgs, int);
-            if(lType == MYSQL_TYPE_END) {
-                break;
-            }
-            else if(lType == MYSQL_TYPE_INT) {
-                int lValue = (int)va_arg(lArgs, int);
-                lStatement->setInt(j++, lValue);
-            }
-            else if(lType == MYSQL_TYPE_FLOAT) {
-                double lValue = (double)va_arg(lArgs, double);
-                lStatement->setDouble(j++, lValue);
-            }
-            else if(lType == MYSQL_TYPE_STRING) {
-                const char* lValue = (const char*)va_arg(lArgs, const char*);
-                lStatement->setString(j++, lValue);
-            }
-            else {
-                slog(eGERR, "Le type de la variable est inconnu."
-                            "|type=%d"
-                            "|sql=%s", lType, _sql.c_str());
-                m_logs.addProblem();
+
+        for(int i = 0; i < lTypes.size(); i++) {
+            GString lName = (const char*)va_arg(lArgs, const char*);
+            if(!lTypes.isKey(lName)) {
+                slog(eGERR, "Le nom de paramètre est inconnu."
+                            "|name=%s"
+                            "|sql=%s", lName.c_str(), _sql.c_str());
                 return lDataMap;
             }
+            GString lType = lTypes.getData(lName);
+            GString lValue;
+
+            if((lType == "b") || (lType == "bool")) {
+                lValue = (bool)va_arg(lArgs, int);
+            }
+            else if((lType == "i") || (lType == "int")) {
+                lValue = (int)va_arg(lArgs, int);
+            }
+            else if((lType == "ii") || (lType == "bigint")) {
+                lValue = (long)va_arg(lArgs, long);
+            }
+            else if((lType == "d") || (lType == "double")) {
+                lValue = (double)va_arg(lArgs, double);
+            }
+            else if((lType == "s") || (lType == "string")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else if((lType == "bb") && (lType == "blob")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else if((lType == "dt") && (lType == "datetime")) {
+                lValue = (const char*)va_arg(lArgs, const char*);
+            }
+            else {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                return lDataMap;
+            }
+
+            lValues.addData(lName, lValue);
         }
+
         va_end(lArgs);
 
-        if(i == MYSQL_PREPA_VARS_MAX) {
-            slog(eGERR, "Le nombre maximal de variables est atteint."
-                        "|max=%d"
-                        "|sql=%s", i, _sql.c_str());
-            m_logs.addProblem();
-            return lDataMap;
+        GString lSql = lRegex.replaceMatch("#\\([A-Za-z]+\\)[a-z]", "?");
+
+        slog(eGOFF, "La requête sql a été transformée."
+                    "|size=%d"
+                    "|sql=%s", lParams.size(), lSql.c_str());
+
+        lStatement.reset(lConn->prepareStatement(lSql.c_str()));
+
+        GString lSqlText = lRegex;
+
+        for(int i = 0; i < lPatterns.size(); i++) {
+            GMapKV lMapKV = lPatterns.getData(i);
+            GString lPattern = lMapKV.m_key;
+            GString lName = lMapKV.m_value;
+            GString lValue = lValues.getData(lName);
+            GString lType = lTypes.getData(lName);
+
+            if((lType == "s") || (lType == "string")) {
+                lValue = sformat("'%s'", lValue.c_str());
+            }
+
+            lSqlText = lSqlText.replaceAll(lPattern, lValue);
+        }
+
+        slog(eGOFF, "La requête sql a été traduite."
+                    "|size=%d"
+                    "|sql=%s", lParams.size(), lSqlText.c_str());
+
+        int j = 1;
+        for(int i = 0; i < lParams.size(); i++) {
+            GString lPattern = lParams.at(i);
+            GString lName = lPatterns.getData(lPattern);
+            GString lValue = lValues.getData(lName);
+            GString lType = lTypes.getData(lName);
+
+            slog(eGOFF, "La requête sql a été analysée."
+                        "|index=%d"
+                        "|pattern=%s"
+                        "|name=%s"
+                        "|type=%s"
+                        "|value=%s", i, lPattern.c_str(), lName.c_str(), lType.c_str(), lValue.c_str());
+
+            if((lType == "b") || (lType == "bool")) {
+                lStatement->setBoolean(j++, lValue.toBool());
+            }
+            else if((lType == "i") || (lType == "int")) {
+                lStatement->setInt(j++, lValue.toInt());
+            }
+            else if((lType == "ii") || (lType == "bigint")) {
+                lStatement->setBigInt(j++, lValue.c_str());
+            }
+            else if((lType == "d") || (lType == "double")) {
+                lStatement->setDouble(j++, lValue.toDouble());
+            }
+            else if((lType == "s") || (lType == "string")) {
+                lStatement->setString(j++, lValue.c_str());
+            }
+            else if((lType == "bb") && (lType == "blob")) {
+                std::string lData(lValue.c_str(), lValue.size());
+                std::istringstream lBlob(lData);
+                lStatement->setBlob(j++, &lBlob);
+            }
+            else if((lType == "dt") && (lType == "datetime")) {
+                lStatement->setDateTime(j++, lValue.c_str());
+            }
+            else {
+                slog(eGERR, "Le type de paramètre est inconnu."
+                            "|name=%s"
+                            "|type=%s"
+                            "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+                return lDataMap;
+            }
         }
 
         lResultSet.reset(lStatement->executeQuery());

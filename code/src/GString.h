@@ -14,6 +14,7 @@ public:
     GString(bool _data);
     GString(char _data);
     GString(int _data);
+    GString(long _data);
     GString(double _data);
     GString(char* _data, int _size);
     GString(const char* _data);
@@ -67,6 +68,7 @@ public:
     GString& operator=(bool _data);
     GString& operator=(char _data);
     GString& operator=(int _data);
+    GString& operator=(long _data);
     GString& operator=(double _data);
     GString& operator=(const char* _data);
     GString& operator=(const std::string& _data);
@@ -77,6 +79,7 @@ public:
     GString& operator+=(bool _data);
     GString& operator+=(char _data);
     GString& operator+=(int _data);
+    GString& operator+=(long _data);
     GString& operator+=(double _data);
     GString& operator+=(const char* _data);
     GString& operator+=(const std::string& _data);
@@ -87,6 +90,7 @@ public:
     bool operator==(bool _data) const;
     bool operator==(char _data) const;
     bool operator==(int _data) const;
+    bool operator==(long _data) const;
     bool operator==(double _data) const;
     bool operator==(const char* _data) const;
     bool operator==(const std::string& _data) const;
@@ -97,6 +101,7 @@ public:
     bool operator!=(bool _data) const;
     bool operator!=(char _data) const;
     bool operator!=(int _data) const;
+    bool operator!=(long _data) const;
     bool operator!=(double _data) const;
     bool operator!=(const char* _data) const;
     bool operator!=(const std::string& _data) const;
@@ -107,6 +112,7 @@ public:
     bool operator<(bool _data) const;
     bool operator<(char _data) const;
     bool operator<(int _data) const;
+    bool operator<(long _data) const;
     bool operator<(double _data) const;
     bool operator<(const char* _data) const;
     bool operator<(const std::string& _data) const;
@@ -117,6 +123,7 @@ public:
     bool operator<=(bool _data) const;
     bool operator<=(char _data) const;
     bool operator<=(int _data) const;
+    bool operator<=(long _data) const;
     bool operator<=(double _data) const;
     bool operator<=(const char* _data) const;
     bool operator<=(const std::string& _data) const;
@@ -127,6 +134,7 @@ public:
     bool operator>(bool _data) const;
     bool operator>(char _data) const;
     bool operator>(int _data) const;
+    bool operator>(long _data) const;
     bool operator>(double _data) const;
     bool operator>(const char* _data) const;
     bool operator>(const std::string& _data) const;
@@ -137,6 +145,7 @@ public:
     bool operator>=(bool _data) const;
     bool operator>=(char _data) const;
     bool operator>=(int _data) const;
+    bool operator>=(long _data) const;
     bool operator>=(double _data) const;
     bool operator>=(const char* _data) const;
     bool operator>=(const std::string& _data) const;
@@ -150,6 +159,7 @@ public:
     friend GString operator+(const GString& _data1,  bool _data2);
     friend GString operator+(const GString& _data1, char _data2);
     friend GString operator+(const GString& _data1, int _data2);
+    friend GString operator+(const GString& _data1, long _data2);
     friend GString operator+(const GString& _data1, double _data2);
     friend GString operator+(const GString& _data1, const char* _data2);
     friend GString operator+(const GString& _data1, const std::string& _data2);

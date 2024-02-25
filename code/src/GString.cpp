@@ -25,6 +25,12 @@ GString::GString(int _data) {
     snprintf(m_data, m_size + 1, "%d", _data);
 }
 //===============================================
+GString::GString(long _data) {
+    m_size = snprintf(0, 0, "%ld", _data);
+    m_data = new char[m_size + 1];
+    snprintf(m_data, m_size + 1, "%ld", _data);
+}
+//===============================================
 GString::GString(double _data) {
     m_size = snprintf(0, 0, "%f", _data);
     m_data = new char[m_size + 1];
@@ -418,6 +424,14 @@ GString& GString::operator=(int _data) {
     return *this;
 }
 //===============================================
+GString& GString::operator=(long _data) {
+    clear();
+    m_size = snprintf(0, 0, "%ld", _data);
+    m_data = new char[m_size + 1];
+    snprintf(m_data, m_size + 1, "%ld", _data);
+    return *this;
+}
+//===============================================
 GString& GString::operator=(double _data) {
     clear();
     m_size = snprintf(0, 0, "%f", _data);
@@ -457,6 +471,11 @@ GString& GString::operator+=(char _data) {
 }
 //===============================================
 GString& GString::operator+=(int _data) {
+    *this += GString(_data);
+    return *this;
+}
+//===============================================
+GString& GString::operator+=(long _data) {
     *this += GString(_data);
     return *this;
 }
@@ -508,6 +527,10 @@ bool GString::operator==(int _data) const {
     return (*this == GString(_data));
 }
 //===============================================
+bool GString::operator==(long _data) const {
+    return (*this == GString(_data));
+}
+//===============================================
 bool GString::operator==(double _data) const {
     return (*this == GString(_data));
 }
@@ -545,6 +568,10 @@ bool GString::operator!=(int _data) const {
     return !(*this == _data);
 }
 //===============================================
+bool GString::operator!=(long _data) const {
+    return !(*this == _data);
+}
+//===============================================
 bool GString::operator!=(const char* _data) const {
     return !(*this == _data);
 }
@@ -574,6 +601,10 @@ bool GString::operator<(char _data) const {
 }
 //===============================================
 bool GString::operator<(int _data) const {
+    return (*this < GString(_data));
+}
+//===============================================
+bool GString::operator<(long _data) const {
     return (*this < GString(_data));
 }
 //===============================================
@@ -620,6 +651,10 @@ bool GString::operator<=(int _data) const {
     return (*this <= GString(_data));
 }
 //===============================================
+bool GString::operator<=(long _data) const {
+    return (*this <= GString(_data));
+}
+//===============================================
 bool GString::operator<=(double _data) const {
     return (*this <= GString(_data));
 }
@@ -663,6 +698,10 @@ bool GString::operator>(int _data) const {
     return (*this > _data);
 }
 //===============================================
+bool GString::operator>(long _data) const {
+    return (*this > _data);
+}
+//===============================================
 bool GString::operator>(double _data) const {
     return (*this > _data);
 }
@@ -702,6 +741,10 @@ bool GString::operator>=(char _data) const {
 }
 //===============================================
 bool GString::operator>=(int _data) const {
+    return (*this >= _data);
+}
+//===============================================
+bool GString::operator>=(long _data) const {
     return (*this >= _data);
 }
 //===============================================
@@ -756,6 +799,12 @@ GString operator+(const GString& _data1, char _data2) {
 }
 //===============================================
 GString operator+(const GString& _data1, int _data2) {
+    GString lData(_data1);
+    lData += _data2;
+    return lData;
+}
+//===============================================
+GString operator+(const GString& _data1, long _data2) {
     GString lData(_data1);
     lData += _data2;
     return lData;

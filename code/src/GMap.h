@@ -2,7 +2,15 @@
 #ifndef _GMap_
 #define _GMap_
 //===============================================
-#include "GString.h"
+#include "GCommon.h"
+//===============================================
+class GMap;
+struct GMapKV;
+//===============================================
+struct GMapKV {
+    GString m_key;
+    GString m_value;
+};
 //===============================================
 class GMap {
 public:
@@ -23,7 +31,9 @@ public:
     void loadMap(const GMap& _map);
     GMap addData(const GString& _key, const GString& _value);
     GString getData(const GString& _key) const;
+    GMapKV getData(int _index) const;
     int size() const;
+    bool isKey(const GString& _key) const;
     GString toString() const;
     GMap& operator=(const GMap& _map);
 
@@ -35,6 +45,7 @@ private:
     GString m_value;
     Type m_type;
     int m_size;
+    GDebug slog;
 };
 //===============================================
 #endif

@@ -399,13 +399,12 @@ void GTest::runMySQL(int _argc, char** _argv) {
     GMySQL lMySQL;
     lMySQL.readData(""
             " select User from mysql.user "
-            "", MYSQL_TYPE_END).print();
+            "").print();
 
     lMySQL.readData(""
             " select User from mysql.user "
-            " where User = ? "
-            "", MYSQL_TYPE_STRING, "admins"
-            , MYSQL_TYPE_END).print();
+            " where User = #(user)s "
+            "", "user", "admins").print();
 }
 //===============================================
 void GTest::runRegex(int _argc, char** _argv) {
@@ -464,6 +463,207 @@ void GTest::runRegex(int _argc, char** _argv) {
         lRegex.searchMatch("#\\(([A-Za-z]+)\\)([a-z])", 2, 0).print();
         lRegex.searchMatch("#\\(([A-Za-z]+)\\)([a-z])", 2, 1).print();
         lRegex.searchMatch("#\\(([A-Za-z]+)\\)([a-z])", 2, 2).print();
+    }
+    {
+        GRegex lRegex = ""
+                " select * from _table"
+                " where _id = #(id)i "
+                " and _name = #(name)s "
+                " and _pass = #(pass)b "
+                " and _userId = #(id)ia "
+                " and _country = #(name)sb"
+                "";
+
+        int lCount = lRegex.countMatch("#\\([A-Za-z]+\\)[a-z]");
+        GMap lNameTypes;
+        lNameTypes.createMap();
+
+        if(lCount) {
+            for(int i = 0; i < lCount; i++) {
+                GString lPattern = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 0);
+                GString lName = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 1);
+                GString lType = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 2);
+
+                if((lType != "i") && (lType != "int") &&
+                   (lType != "ui") && (lType != "uint") &&
+                   (lType != "ii") && (lType != "bigint") &&
+                   (lType != "s") && (lType != "string") &&
+                   (lType != "d") && (lType != "double") &&
+                   (lType != "b") && (lType != "bool") &&
+                   (lType != "bb") && (lType != "blob") &&
+                   (lType != "dt") && (lType != "datetime")) {
+                    slog(eGERR, "Le type du paramètre est inconnu."
+                                "|pattern=%s"
+                                "|name=%s"
+                                "|type=%s", lPattern.c_str(), lName.c_str(), lType.c_str());
+                }
+                else {
+                    slog(eGINF, "Analyse de la requête."
+                                "|pattern=%s"
+                                "|name=%s"
+                                "|type=%s", lPattern.c_str(), lName.c_str(), lType.c_str());
+                }
+                lNameTypes.addData(lName, lType);
+            }
+
+            int lCount2 = lNameTypes.size();
+
+            slog(eGINF, "Le nombre de noms de paramètres."
+                        "|count=%d", lCount2);
+
+            for(int i = 0; i < lCount2; i++) {
+                GMapKV lMapKV = lNameTypes.getData(i);
+                slog(eGINF, "La liste des types de paramètres."
+                            "|name=%s"
+                            "|type=%s", lMapKV.m_key.c_str(), lMapKV.m_value.c_str());
+            }
+        }
+        {
+            runRegex2(""
+                    " select * from _table"
+                    " where _id = #(id)i "
+                    " and _name = #(name)s "
+                    " and _pass = #(pass)s "
+                    " and _userId = #(id)i "
+                    " and _country = #(name)s"
+                    "", "id", 1000
+                    , "name", "kessege"
+                    , "pass", "123456");
+        }
+    }
+}
+//===============================================
+void GTest::runRegex2(const GString& _sql, ...) {
+    if(_sql.isEmpty()) return;
+    GRegex lRegex = _sql;
+    int lCount = lRegex.countMatch("#\\([A-Za-z]+\\)[a-z]");
+    GMap lTypes, lPatterns, lValues;
+    std::vector<GString> lParams;
+
+    lTypes.createMap();
+    lPatterns.createMap();
+    lValues.createMap();
+
+    for(int i = 0; i < lCount; i++) {
+        GString lPattern = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 0);
+        GString lName = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 1);
+        GString lType = lRegex.searchMatch("#\\(([A-Za-z]+)\\)([^ ]+)", i, 2);
+
+        if((lType != "b") && (lType != "bool") &&
+           (lType != "i") && (lType != "int") &&
+           (lType != "ii") && (lType != "bigint") &&
+           (lType != "s") && (lType != "string") &&
+           (lType != "d") && (lType != "double") &&
+           (lType != "bb") && (lType != "blob") &&
+           (lType != "dt") && (lType != "datetime")) {
+            slog(eGERR, "Le type de paramètre est inconnu."
+                        "|pattern=%s"
+                        "|name=%s"
+                        "|type=%s"
+                        "|sql=%s", lPattern.c_str(), lName.c_str(), lType.c_str(), _sql.c_str());
+            return;
+        }
+
+        lTypes.addData(lName, lType);
+        lPatterns.addData(lPattern, lName);
+        lParams.push_back(lPattern);
+    }
+
+    if(lTypes.size() != lPatterns.size()) {
+        slog(eGERR, "Les nombres de paramètres et de patterns sont différents."
+                    "|pattern=%d"
+                    "|name=%d"
+                    "|sql=%s", lPatterns.size(), lTypes.size(), _sql.c_str());
+        return;
+    }
+
+    va_list lArgs;
+    va_start(lArgs, _sql);
+
+    for(int i = 0; i < lTypes.size(); i++) {
+        GString lName = (const char*)va_arg(lArgs, const char*);
+        if(!lTypes.isKey(lName)) {
+            slog(eGERR, "Le nom de paramètre est inconnu."
+                        "|name=%s"
+                        "|sql=%s", lName.c_str(), _sql.c_str());
+            return;
+        }
+        GString lType = lTypes.getData(lName);
+        GString lValue;
+
+        if((lType == "b") || (lType == "bool")) {
+            lValue = (bool)va_arg(lArgs, int);
+        }
+        else if((lType == "i") || (lType == "int")) {
+            lValue = (int)va_arg(lArgs, int);
+        }
+        else if((lType == "ii") || (lType == "bigint")) {
+            lValue = (long)va_arg(lArgs, long);
+        }
+        else if((lType == "d") || (lType == "double")) {
+            lValue = (double)va_arg(lArgs, double);
+        }
+        else if((lType == "s") || (lType == "string")) {
+            lValue = (const char*)va_arg(lArgs, const char*);
+        }
+        else if((lType == "bb") && (lType == "blob")) {
+            lValue = (const char*)va_arg(lArgs, const char*);
+        }
+        else if((lType == "dt") && (lType == "datetime")) {
+            lValue = (const char*)va_arg(lArgs, const char*);
+        }
+        else {
+            slog(eGERR, "Le type de paramètre est inconnu."
+                        "|name=%s"
+                        "|type=%s"
+                        "|sql=%s", lName.c_str(), lType.c_str(), _sql.c_str());
+            return;
+        }
+
+        lValues.addData(lName, lValue);
+    }
+
+    va_end(lArgs);
+
+    GString lSql = lRegex.replaceMatch("#\\([A-Za-z]+\\)[a-z]", "?");
+
+    slog(eGOFF, "La requête sql a été transformée."
+                "|size=%d"
+                "|sql=%s", lParams.size(), lSql.c_str());
+
+    GString lSqlText = lRegex;
+
+    for(int i = 0; i < lPatterns.size(); i++) {
+        GMapKV lMapKV = lPatterns.getData(i);
+        GString lPattern = lMapKV.m_key;
+        GString lName = lMapKV.m_value;
+        GString lValue = lValues.getData(lName);
+        GString lType = lTypes.getData(lName);
+
+        if((lType == "s") || (lType == "string")) {
+            lValue = sformat("'%s'", lValue.c_str());
+        }
+
+        lSqlText = lSqlText.replaceAll(lPattern, lValue);
+    }
+
+    slog(eGOFF, "La requête sql a été traduite."
+                "|size=%d"
+                "|sql=%s", lParams.size(), lSqlText.c_str());
+
+    for(int i = 0; i < lParams.size(); i++) {
+        GString lPattern = lParams.at(i);
+        GString lName = lPatterns.getData(lPattern);
+        GString lValue = lValues.getData(lName);
+        GString lType = lTypes.getData(lName);
+
+        slog(eGOFF, "La requête sql a été analysée."
+                    "|index=%d"
+                    "|pattern=%s"
+                    "|name=%s"
+                    "|type=%s"
+                    "|value=%s", i, lPattern.c_str(), lName.c_str(), lType.c_str(), lValue.c_str());
+
     }
 }
 //===============================================

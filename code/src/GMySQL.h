@@ -24,7 +24,6 @@ public:
     bool execQuery(const GString& _sql, ...);
     bool insertQuery(const GString& _sql, ...);
     GString readData(const GString& _sql, ...);
-    GString readData2(const GString& _sql, ...);
     GRows readCol(const GString& _sql, ...);
     GRows readRow(const GString& _sql, ...);
     GMaps readMap(const GString& _sql, ...);

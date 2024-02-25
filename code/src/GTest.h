@@ -21,6 +21,7 @@ public:
     void runResult(int _argc, char** _argv);
     void runMySQL(int _argc, char** _argv);
     void runRegex(int _argc, char** _argv);
+    void runRegex2(const GString& _sql, ...);
 };
 //===============================================
 #endif
