@@ -10,7 +10,6 @@ public:
     ~GCallback();
     void run();
     void runXml();
-    void runCarpool();
 };
 //===============================================
 #endif

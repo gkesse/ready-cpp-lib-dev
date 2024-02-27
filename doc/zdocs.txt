@@ -30,6 +30,12 @@ https://man7.org/linux/man-pages/man5/crontab.5.html
 https://devimalplanet.com/how-to-dbeaver-remote-database-ssh
 
 #================================================
+# email
+#================================================
+
+https://www.geeksforgeeks.org/check-if-given-email-address-is-valid-or-not-in-cpp/
+
+#================================================
 ### git
 #================================================
 
@@ -51,6 +57,12 @@ https://ipapi.co/8.8.8.8/country
 https://stackoverflow.com/questions/23381402/get-ip-address-of-local-machine-on-c
 
 #================================================
+### html
+#================================================
+
+https://www.geeksforgeeks.org/html-textarea-tag/
+
+#================================================
 ### javascript
 #================================================
 
@@ -67,7 +79,15 @@ https://howtoinstall.co/package/libjson-c-dev
 # mysql
 #================================================
 
+https://www.w3schools.com/sql/func_mysql_last_insert_id.asp
 https://stackoverflow.com/questions/71046698/equivalent-of-mysql-real-escape-string
+
+#================================================
+# uuid
+#================================================
+
+https://www.geeksforgeeks.org/how-to-get-a-unique-identifier-for-object-in-cpp/
+https://www.geeksforgeeks.org/uuid-function-in-mysql/
 
 #================================================
 # lettres

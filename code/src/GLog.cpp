@@ -53,6 +53,10 @@ void GLog::addProblem() {
     addError("Un problème a été rencontré.");
 }
 //===============================================
+void GLog::addSuccess() {
+    addInfo("L'opération a réussi.");
+}
+//===============================================
 void GLog::addError(const GString& _msg) {
     GLog* lObj = new GLog;
     lObj->m_type = LOG_TYPE_ERROR;

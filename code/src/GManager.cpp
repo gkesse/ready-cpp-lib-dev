@@ -10,6 +10,12 @@ GManager::~GManager() {
 
 }
 //===============================================
+void GManager::setManager(const GManager& _obj) {
+    m_request = _obj.m_request;
+    m_module = _obj.m_module;
+    m_method = _obj.m_method;
+}
+//===============================================
 GString GManager::serialize(const GString& _code) const {
     GCode lDom;
     lDom.createDoc();
@@ -23,12 +29,5 @@ void GManager::deserialize(const GString& _data, const GString& _code) {
     lDom.loadXml(_data);
     m_module = lDom.getData(_code, "module");
     m_method = lDom.getData(_code, "method");
-}
-//===============================================
-void GManager::run() {
-    deserialize(m_request);
-    slog(eGINF, "Traitement de la requête XML."
-                "|module=%s"
-                "|method=%s", m_module.c_str(), m_method.c_str());
 }
 //===============================================

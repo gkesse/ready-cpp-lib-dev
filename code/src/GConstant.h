@@ -8,6 +8,11 @@ const char* const CALLBACK_CONTENT_TYPE_FORM    = "application/x-www-form-urlenc
 const char* const CALLBACK_CONTENT_TYPE_XML     = "application/xml; charset=UTF-8";
 const char* const CALLBACK_CONTENT_TYPE_JSON    = "application/json; charset=UTF-8";
 //===============================================
+// carpool
+//===============================================
+const char CARPOOL_STATUS_UNKONWN               = '0';
+const char CARPOOL_STATUS_EMAIL_CREATE          = '1';
+//===============================================
 // debug
 //===============================================
 const char* const DEBUG_LOG_FILENAME            = "logs.txt";

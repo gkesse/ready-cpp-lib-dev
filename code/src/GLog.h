@@ -14,6 +14,7 @@ public:
     void clearMap();
     void setObj(const GLog& _obj);
     void addProblem();
+    void addSuccess();
     void addError(const GString& _msg);
     void addInfo(const GString& _msg);
     void addData(const GString& _msg);

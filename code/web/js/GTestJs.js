@@ -1,15 +1,17 @@
 //===============================================
-class GTestJs extends GObject {
+class GTestJs extends GServer {
     //===============================================
     constructor() {
         super();
     }
     //===============================================
+    readModule() {
+        var lObj = document.getElementById("test_js_module");
+        this.m_module = lObj.value;
+    }
+    //===============================================
     run() {
-        if(this.m_module == "") {
-            console.log(sprintf("Le module est obligatoire."));
-        }
-        else if(this.m_module == "xml") {
+        if(this.m_module == "xml") {
             this.runXml();
         }
         else if(this.m_module == "code") {
@@ -97,11 +99,9 @@ class GTestJs extends GObject {
     }
     //===============================================
     runAjax() {
-        var lCarpool = new GCarpool();
-        lCarpool.m_email = "youremail@domain.com";
-        lCarpool.m_password = "123456";
         var lAjax = new GAjax();
-        lAjax.call("carpool", "hello_world", lCarpool.serialize());
+        lAjax.m_url = "/callback/carpool/test";
+        lAjax.call("test", "hello_world");
     }
     //===============================================
 }

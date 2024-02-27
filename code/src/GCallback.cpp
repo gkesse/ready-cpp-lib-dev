@@ -1,6 +1,6 @@
 //===============================================
 #include "GCallback.h"
-#include "GCarpoolCB.h"
+#include "GCallbackXml.h"
 //===============================================
 GCallback::GCallback()
 : GPage() {
@@ -25,20 +25,7 @@ void GCallback::run() {
 }
 //===============================================
 void GCallback::runXml() {
-    if(m_uri.startsWith("/callback/carpool")) {
-        runCarpool();
-    }
-    else {
-        slog(eGERR, "Le callback n'est pas géré."
-                    "|uri=%s"
-                    "|content_type=%s"
-                    "|request=%s", m_uri.c_str(), m_contentType.c_str(), m_request.c_str());
-        createUnknown();
-    }
-}
-//===============================================
-void GCallback::runCarpool() {
-    GCarpoolCB lObj;
+    GCallbackXml lObj;
     lObj.setCommon(*this);
     lObj.setPage(*this);
     lObj.run();

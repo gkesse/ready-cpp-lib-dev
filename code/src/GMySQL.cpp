@@ -36,9 +36,19 @@ int GMySQL::getErrorCode() const {
     return m_errorCode;
 }
 //===============================================
-GString GMySQL::convertZeroToNull(int _data) {
+GString GMySQL::convertZeroToNull(int _data) const {
     if(_data == 0) return "null";
     return _data;
+}
+//===============================================
+GString GMySQL::convertBooleanToChar(bool _data) const {
+    if(_data) return "'1'";
+    return "'0'";
+}
+//===============================================
+GString GMySQL::getUUID() const {
+    GMySQL dbSQL;
+    return dbSQL.readData("select uuid() as _uuid");
 }
 //===============================================
 int GMySQL::getColumnCount(std::shared_ptr<sql::ResultSet>& _resultSet) const {
@@ -267,7 +277,6 @@ bool GMySQL::execQuery(const GString& _sql, ...) {
                         "|error_state=%s"
                         "|error_msg=%s"
                         "|sql=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what(), _sql.c_str());
-            m_logs.addError("La donnée existe déjà.");
         }
         else {
             slog(eGERR, "L'exécution de la requête a échoué."
@@ -275,8 +284,8 @@ bool GMySQL::execQuery(const GString& _sql, ...) {
                     "|error_state=%s"
                     "|error_msg=%s"
                     "|sql=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what(), _sql.c_str());
-            m_logs.addProblem();
         }
+        m_logs.addProblem();
         m_errorCode = e.getErrorCode();
         return false;
     }
@@ -286,6 +295,7 @@ bool GMySQL::execQuery(const GString& _sql, ...) {
 bool GMySQL::insertQuery(const GString& _sql, ...) {
     std::shared_ptr<sql::Connection> lConn;
     std::shared_ptr<sql::PreparedStatement> lStatement;
+    std::shared_ptr<sql::Statement> lStatementId;
     std::shared_ptr<sql::ResultSet> lResultSet;
 
     try {
@@ -397,6 +407,7 @@ bool GMySQL::insertQuery(const GString& _sql, ...) {
                     "|sql=%s", lParams.size(), lSql.c_str());
 
         lStatement.reset(lConn->prepareStatement(lSql.c_str()));
+        lStatementId.reset(lConn->createStatement());
 
         GString lSqlText = lRegex;
 
@@ -466,18 +477,17 @@ bool GMySQL::insertQuery(const GString& _sql, ...) {
         }
 
         lStatement->execute();
-        lResultSet.reset(lStatement->executeQuery("select @@identity as id"));
+        lResultSet.reset(lStatementId->executeQuery("SELECT LAST_INSERT_ID() as _id"));
         lResultSet->next();
-        m_id = (int)lResultSet->getInt64("id");
+        m_id = (int)lResultSet->getInt64("_id");
     }
     catch (sql::SQLException& e) {
         if(e.getErrorCode() == MYSQL_ERROR_DUPLICATION) {
-            slog(eGWAR, "La donnée existe déjà."
+            slog(eGERR, "La donnée existe déjà."
                         "|error_code=%d"
                         "|error_state=%s"
                         "|error_msg=%s"
                         "|sql=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what(), _sql.c_str());
-            m_logs.addInfo("La donnée existe déjà.");
         }
         else {
             slog(eGERR, "L'exécution de la requête a échoué."
@@ -485,8 +495,8 @@ bool GMySQL::insertQuery(const GString& _sql, ...) {
                     "|error_state=%s"
                     "|error_msg=%s"
                     "|sql=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what(), _sql.c_str());
-            m_logs.addProblem();
         }
+        m_logs.addProblem();
         m_errorCode = e.getErrorCode();
         return false;
     }

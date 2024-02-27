@@ -30,6 +30,13 @@ GRegex::~GRegex() {
 
 }
 //===============================================
+bool GRegex::isMatch(const GString& _match) const {
+    if(isEmpty()) return false;
+    std::string lData(m_data, m_size);
+    std::regex pattern(_match.c_str());
+    return std::regex_match(lData, pattern);
+}
+//===============================================
 int GRegex::countMatch(const GString& _match) const {
     if(isEmpty()) return 0;
     std::string lData(m_data, m_size);

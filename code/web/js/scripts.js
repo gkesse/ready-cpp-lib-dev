@@ -1,8 +1,13 @@
 //===============================================
-function call_server(_module, _method, _obj = null, _params = null) {
-    var lServer = new GServer();
-    lServer.setObjects(_module, _method, _obj, _params);
+function call_carpool(_module, _method = "", _obj = null, _params = "") {
+    var lServer = new GCarpoolCB();
+    lServer.setParams(_module, _method, _obj, _params);
     lServer.run();
-    return true;
+}
+//===============================================
+function call_test_js() {
+    var lServer = new GTestJs();
+    lServer.readModule();
+    lServer.run();
 }
 //===============================================

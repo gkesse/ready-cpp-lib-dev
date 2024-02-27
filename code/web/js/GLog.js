@@ -30,9 +30,9 @@ class GLog {
         this.m_map.push(lObj);
     }
     //===============================================
-    addLog(_msg) {
+    addInfo(_msg) {
         var lObj = new GLog();
-        lObj.m_type = "log";
+        lObj.m_type = "info";
         lObj.m_side = "client_js";
         lObj.m_msg = _msg;
         this.m_map.push(lObj);
@@ -69,6 +69,10 @@ class GLog {
         }
     }
     //===============================================
+    isEmpty() {
+        return (this.m_map.length == 0);
+    }
+    //===============================================
     hasErrors() {
         for(var i = 0; i < this.m_map.length; i++) {
             var lObj = this.m_map[i];
@@ -77,10 +81,10 @@ class GLog {
         return false;
     }
     //===============================================
-    hasLogs() {
+    hasInfos() {
         for(var i = 0; i < this.m_map.length; i++) {
             var lObj = this.m_map[i];
-            if(lObj.m_type == "log") return true;
+            if(lObj.m_type == "info") return true;
         }
         return false;
     }
@@ -106,11 +110,11 @@ class GLog {
         return lErrors;
     }
     //===============================================
-    getLogs() {
+    getInfos() {
         var lLogs = "";
         for(var i = 0; i < this.m_map.length; i++) {
             var lObj = this.m_map[i];
-            if(lObj.m_type != "log") continue;
+            if(lObj.m_type != "info") continue;
             var lLog = lObj.m_msg;
             if(i != 0) lLogs += "<br>";
             lLog = sprintf("<i class='fa fa-chevron-right'></i> %s", lLog);

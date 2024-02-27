@@ -405,6 +405,10 @@ void GTest::runMySQL(int _argc, char** _argv) {
             " select User from mysql.user "
             " where User = #(user)s "
             "", "user", "admins").print();
+
+    lMySQL.readData("select uuid() as _uuid").print();
+
+    suuid().print();
 }
 //===============================================
 void GTest::runRegex(int _argc, char** _argv) {

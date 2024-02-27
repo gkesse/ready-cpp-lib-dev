@@ -1,18 +1,15 @@
 //===============================================
-#ifndef _GCallbackXml_
-#define _GCallbackXml_
+#ifndef _GCarpoolTestUi_
+#define _GCarpoolTestUi_
 //===============================================
-#include "GCallback.h"
+#include "GManager.h"
 //===============================================
-class GCallbackXml : public GCallback {
+class GCarpoolTestUi : public GManager {
 public:
-    GCallbackXml();
-    ~GCallbackXml();
+    GCarpoolTestUi();
+    ~GCarpoolTestUi();
     void run();
-    void runCarpool();
-    void createResponse();
-    void createOK();
-    void createUnknown();
+    void runHelloWorld();
 };
 //===============================================
 #endif

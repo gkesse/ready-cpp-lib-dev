@@ -3,8 +3,12 @@ class GAjax extends GObject {
     //===============================================
     constructor() {
         super();
-        this.m_callback = AJAX_CALLBACK_CARPOOL;
+        this.m_url = "";
         this.m_contentType = AJAX_TYPE_XML;
+        this.m_method = "post";
+        this.m_async = true;
+        this.m_user = null;
+        this.m_password = null;
     }
     //===============================================
     call(_module, _method, _params = "", _callback = null) {
@@ -16,10 +20,20 @@ class GAjax extends GObject {
             console.log(sprintf("La méthode est obligatoire."));            
             return false;
         }
+        if(this.m_url == "") {
+            console.log(sprintf("L'URL est obligatoire."));            
+            return false;
+        }
+        if(this.m_contentType == "") {
+            console.log(sprintf("Le content type est obligatoire."));            
+            return false;
+        }
         
         console.log(sprintf("Préparation de l'appel du serveur."+
                             "|module=%s"+
-                            "|method=%s", _module, _method));            
+                            "|method=%s"+
+                            "|url=%s"+
+                            "|content_type=%s", _module, _method, this.m_url, this.m_contentType));            
 
         var lDom = new GCode();
         lDom.createDoc();
@@ -45,24 +59,24 @@ class GAjax extends GObject {
             if(this.readyState == 4 && this.status == 200) {
                 var lData = this.responseText;
                 
-                console.log(sprintf("Retour du serveur."+
+                console.log(sprintf("Réponse du serveur."+
                                     "|data=%s", lData));            
-
+                
                 if(_callback) _callback(lData);
             }
         }
                 
-        var lMethod = "POST";
-        var lUrl = this.m_callback;
+        var lMethod = this.m_method;
+        var lUrl = this.m_url;
         var lContentType = this.m_contentType;
-        var lAsync = true;
-        var lUser = null;
-        var lPassword = null;
+        var lAsync = this.m_async;
+        var lUser = this.m_user;
+        var lPassword = this.m_password;
 
         lXhttp.open(lMethod, lUrl, lAsync, lUser, lPassword);
         lXhttp.setRequestHeader("Content-Type", lContentType);
 
-        var lReq = "NO_DATA";
+        var lReq = "";
         
         if(lContentType == AJAX_TYPE_FORM) {
             lReq = "req=" +_data;

@@ -6,6 +6,8 @@
 //===============================================
 #define GMYSQL      GMySQL::Instance()
 #define czton       GMYSQL->convertZeroToNull
+#define cbtoc       GMYSQL->convertBooleanToChar
+#define suuid       GMYSQL->getUUID
 //===============================================
 class GMySQL : public GObject {
 public:
@@ -18,7 +20,9 @@ public:
     static GMySQL* Instance();
     int getId() const;
     int getErrorCode() const;
-    GString convertZeroToNull(int _data);
+    GString convertZeroToNull(int _data) const;
+    GString convertBooleanToChar(bool _data) const;
+    GString getUUID() const;
     int getColumnCount(std::shared_ptr<sql::ResultSet>& _resultSet) const;
     bool openDatabase(std::shared_ptr<sql::Connection>& _conn);
     bool execQuery(const GString& _sql, ...);
