@@ -31,7 +31,8 @@ void GDispatcher::runHttpGet() {
     lObj.setCommon(*this);
     lObj.setDispatcher(*this);
     lObj.run();
-    m_response += lObj.toResponse();
+    m_logs.addLogs(lObj.getLogs());
+    setResponse(lObj);
 }
 //===============================================
 void GDispatcher::runHttpPost() {
@@ -39,6 +40,7 @@ void GDispatcher::runHttpPost() {
     lObj.setCommon(*this);
     lObj.setDispatcher(*this);
     lObj.run();
-    m_response += lObj.toResponse();
+    m_logs.addLogs(lObj.getLogs());
+    setResponse(lObj);
 }
 //===============================================

@@ -8,6 +8,7 @@ class GSocket : public GObject {
 public:
     GSocket();
     ~GSocket();
+    void setResponse(const GSocket& _obj);
     void runServer();
     void runThread();
     virtual void createUnknown();
@@ -17,7 +18,7 @@ public:
     int getPort() const;
     pid_t getPid() const;
     const GDebug& getDebug() const;
-    GString toResponse() const;
+    void sendResponse();
     static void* onThread(void* _params);
 
 private:
@@ -28,6 +29,7 @@ private:
 
 protected:
     GString m_response;
+    bool m_isClose;
 };
 //===============================================
 #endif

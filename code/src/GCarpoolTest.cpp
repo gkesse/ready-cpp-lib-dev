@@ -33,7 +33,8 @@ void GCarpoolTest::runTest() {
     lObj.setCommon(*this);
     lObj.setManager(*this);
     lObj.run();
-    m_response += lObj.toResponse();
+    m_logs.addLogs(lObj.getLogs());
+    setResponse(lObj);
 }
 //===============================================
 void GCarpoolTest::runEmail() {
@@ -41,6 +42,7 @@ void GCarpoolTest::runEmail() {
     lObj.setCommon(*this);
     lObj.setManager(*this);
     lObj.run();
-    m_response += lObj.toResponse();
+    m_logs.addLogs(lObj.getLogs());
+    setResponse(lObj);
 }
 //===============================================

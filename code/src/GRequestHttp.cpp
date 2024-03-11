@@ -128,8 +128,7 @@ bool GRequestHttp::analyzePost() {
                 "|method=%s"
                 "|uri=%s"
                 "|version=%s"
-                "|content_type=%s"
-                "|request=%s", m_method.c_str(), m_uri.c_str(), m_version.c_str(), m_contentType.c_str(), m_request.c_str());
+                "|content_type=%s", m_method.c_str(), m_uri.c_str(), m_version.c_str(), m_contentType.c_str());
 
     return true;
 }

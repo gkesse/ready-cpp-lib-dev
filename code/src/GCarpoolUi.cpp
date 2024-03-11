@@ -91,8 +91,8 @@ void GCarpoolUi::create() {
     lResponse.setCommon(*this);
     lResponse.setContent(m_content);
     lResponse.create();
-
-    m_response += lResponse.toResponse();
+    m_logs.addLogs(lResponse.getLogs());
+    setResponse(lResponse);
 }
 //===============================================
 bool GCarpoolUi::isRedirectUrl() {

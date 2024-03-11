@@ -23,6 +23,8 @@ void GDispatcherHttpGet::run() {
             runCarpool();
         }
         else {
+            slog(eGERR, "L'uri n'est pas gérée."
+                        "|uri=%s", m_uri.c_str());
             createUnknown();
         }
     }
@@ -55,7 +57,7 @@ bool GDispatcherHttpGet::loadResource() {
                 lResponse.setCommon(*this);
                 lResponse.setContent(lFile.readData());
                 lResponse.create();
-                m_response += lResponse.toResponse();
+                setResponse(lResponse);
                 return true;
             }
         }
@@ -70,7 +72,7 @@ bool GDispatcherHttpGet::loadResource() {
             lResponse.setContentType(lMimeType.getMimeType(lPath.getExtension()));
             lResponse.setContent(lFile.readData());
             lResponse.create();
-            m_response += lResponse.toResponse();
+            setResponse(lResponse);
             return true;
         }
     }
@@ -89,7 +91,8 @@ void GDispatcherHttpGet::runCarpool() {
     lPage.setCommon(*this);
     lPage.setDispatcher(*this);
     lPage.createCarpool();
-    m_response += lPage.toResponse();
+    m_logs.addLogs(lPage.getLogs());
+    setResponse(lPage);
 }
 //===============================================
 void GDispatcherHttpGet::createUnknown() {
@@ -97,6 +100,7 @@ void GDispatcherHttpGet::createUnknown() {
     lPage.setCommon(*this);
     lPage.setDispatcher(*this);
     lPage.createUnknown();
-    m_response += lPage.toResponse();
+    m_logs.addLogs(lPage.getLogs());
+    setResponse(lPage);
 }
 //===============================================

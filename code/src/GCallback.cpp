@@ -29,6 +29,7 @@ void GCallback::runXml() {
     lObj.setCommon(*this);
     lObj.setPage(*this);
     lObj.run();
-    m_response += lObj.toResponse();
+    m_logs.addLogs(lObj.getLogs());
+    setResponse(lObj);
 }
 //===============================================

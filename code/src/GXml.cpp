@@ -55,10 +55,7 @@ bool GXml::createDoc(const GString& _root) {
 //===============================================
 bool GXml::loadXml(const GString& _data) {
     clear();
-    if(_data.isEmpty()) {
-        slog(eGERR, "Les données XML sont vides.");
-        return false;
-    }
+    if(_data.isEmpty()) return false;
     m_doc = xmlParseDoc(BAD_CAST(_data.c_str()));
     if(!m_doc) {
         slog(eGERR, "Le chargement du document XML a échoué."
@@ -137,6 +134,7 @@ GXml GXml::addNode(const GString& _path, const GString& _value) {
 //===============================================
 void GXml::addData(const GString& _name, const GString& _value) {
     if(!m_node) return;
+    if(_value.isEmpty()) return;
     xmlNodePtr lNode = xmlNewNode(NULL, BAD_CAST(_name.c_str()));
     xmlNodeSetContent(lNode, BAD_CAST(_value.c_str()));
     xmlAddChild(m_node, lNode);

@@ -11,9 +11,9 @@ GManager::~GManager() {
 }
 //===============================================
 void GManager::setManager(const GManager& _obj) {
-    m_request = _obj.m_request;
     m_module = _obj.m_module;
     m_method = _obj.m_method;
+    m_request = _obj.m_request;
 }
 //===============================================
 GString GManager::serialize(const GString& _code) const {

@@ -9,13 +9,13 @@
 #define cbtoc       GMYSQL->convertBooleanToChar
 #define suuid       GMYSQL->getUUID
 //===============================================
+typedef std::vector<GString>    GMySQLRow;
+typedef std::vector<GMySQLRow>  GMySQLMap;
+//===============================================
 class GMySQL : public GObject {
 public:
-    typedef std::vector<GString> GRows;
-    typedef std::vector<GRows> GMaps;
-
-public:
     GMySQL();
+    GMySQL(const GString& _database);
     ~GMySQL();
     static GMySQL* Instance();
     int getId() const;
@@ -28,9 +28,9 @@ public:
     bool execQuery(const GString& _sql, ...);
     bool insertQuery(const GString& _sql, ...);
     GString readData(const GString& _sql, ...);
-    GRows readCol(const GString& _sql, ...);
-    GRows readRow(const GString& _sql, ...);
-    GMaps readMap(const GString& _sql, ...);
+    GMySQLRow readCol(const GString& _sql, ...);
+    GMySQLRow readRow(const GString& _sql, ...);
+    GMySQLMap readMap(const GString& _sql, ...);
 
 private:
     static GMySQL* m_instance;

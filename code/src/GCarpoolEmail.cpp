@@ -48,7 +48,7 @@ void GCarpoolEmail::run() {
         runInscription();
     }
     else {
-        slog(eGERR, "Le méthode est inconnue."
+        slog(eGERR, "La méthode est inconnue."
                     "|module=%s"
                     "|method=%s", m_module.c_str(), m_method.c_str());
         createUnknown();

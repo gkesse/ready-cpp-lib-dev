@@ -8,12 +8,18 @@ GSocket::GSocket()
 , m_socket(-1)
 , m_addressIP("0.0.0.0")
 , m_port(0)
-, m_pid(0) {
+, m_pid(0)
+, m_isClose(true) {
 
 }
 //===============================================
 GSocket::~GSocket() {
 
+}
+//===============================================
+void GSocket::setResponse(const GSocket& _obj) {
+    m_response = _obj.m_response;
+    m_isClose = _obj.m_isClose;
 }
 //===============================================
 void GSocket::runServer() {
@@ -124,7 +130,7 @@ void GSocket::runThread() {
     GString lRequest = readData();
 
     if(!lRequest.isEmpty()) {
-        slog(eGINF, "Requête reçu du client."
+        slog(eGINF, "Réception de la requête du client."
                     "|size=%d"
                     "|data=%s", lRequest.size(), lRequest.c_str());
 
@@ -137,7 +143,8 @@ void GSocket::runThread() {
             lDispatcher.setCommon(lReq);
             lDispatcher.setRequest(lReq);
             lDispatcher.run();
-            m_response += lDispatcher.m_response;
+            m_logs.addLogs(lDispatcher.getLogs());
+            setResponse(lDispatcher);
         }
         else {
             createUnknown();
@@ -146,12 +153,7 @@ void GSocket::runThread() {
     else {
         createUnknown();
     }
-
-    sendData(m_response);
-
-    slog(eGEND, "Fin du traitement de la requête du client.");
-
-    close(m_socket);
+    sendResponse();
 }
 //===============================================
 void GSocket::createUnknown() {
@@ -245,8 +247,13 @@ const GDebug& GSocket::getDebug() const {
     return slog;
 }
 //===============================================
-GString GSocket::toResponse() const {
-    return m_response;
+void GSocket::sendResponse() {
+    sendData(m_response);
+    if(m_isClose) {
+        slog(eGINF, "Fermeture du point de connexion socket.");
+        close(m_socket);
+    }
+    slog(eGEND, "Fin du traitement de la requête du client.");
 }
 //===============================================
 void* GSocket::onThread(void* _params) {

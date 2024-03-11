@@ -1,19 +1,16 @@
 //===============================================
-#ifndef _GCallbackXml_
-#define _GCallbackXml_
+#ifndef _GChatCB_
+#define _GChatCB_
 //===============================================
-#include "GCallback.h"
+#include "GManager.h"
 //===============================================
-class GCallbackXml : public GCallback {
+class GChatCB : public GManager {
 public:
-    GCallbackXml();
-    ~GCallbackXml();
+    GChatCB();
+    ~GChatCB();
+    void deserializeXml();
     void run();
-    void runCarpool();
-    void runChat();
-    void createResponse();
-    void createOK();
-    void createUnknown();
+    void runUser();
 };
 //===============================================
 #endif

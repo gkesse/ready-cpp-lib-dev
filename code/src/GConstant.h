@@ -51,6 +51,8 @@ const char* const RESPONSE_HTTP_FORM            = "application/x-www-form-urlenc
 const char* const RESPONSE_HTTP_HTML            = "text/html; charset=UTF-8";
 const char* const RESPONSE_HTTP_XML             = "application/xml; charset=UTF-8";
 const char* const RESPONSE_HTTP_JSON            = "application/json; charset=UTF-8";
+const char* const RESPONSE_CONNECT_CLOSE        = "close";
+const char* const RESPONSE_CONNECT_KEEP_ALIVE   = "keep-alive";
 //===============================================
 // socket
 //===============================================

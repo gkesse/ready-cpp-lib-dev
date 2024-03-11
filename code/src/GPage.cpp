@@ -33,14 +33,14 @@ void GPage::setDispatcher(const GDispatcherHttp& _dispatcher) {
 //===============================================
 void GPage::createCallback() {
     slog(eGINF, "Traitement du callback."
-                "|uri=%s"
-                "|request=%s", m_uri.c_str(), m_request.c_str());
+                "|uri=%s", m_uri.c_str());
 
     GCallback lPage;
     lPage.setCommon(*this);
     lPage.setPage(*this);
     lPage.run();
-    m_response += lPage.toResponse();
+    m_logs.addLogs(lPage.getLogs());
+    setResponse(lPage);
 }
 //===============================================
 void GPage::createCarpool() {
@@ -51,7 +51,8 @@ void GPage::createCarpool() {
     lPage.setCommon(*this);
     lPage.setPage(*this);
     lPage.create();
-    m_response += lPage.toResponse();
+    m_logs.addLogs(lPage.getLogs());
+    setResponse(lPage);
 }
 //===============================================
 void GPage::createUnknown() {
@@ -59,12 +60,13 @@ void GPage::createUnknown() {
                 "|uri=%s", m_uri.c_str());
 
     GString lContent;
-    lContent += sformat("Page non trouvée.");
+    lContent += sformat("Page non trouvée.\n");
 
     GResponseHttp lResponse;
     lResponse.setCommon(*this);
     lResponse.setContent(lContent);
     lResponse.create();
-    m_response += lResponse.toResponse();
+    m_logs.addLogs(lResponse.getLogs());
+    setResponse(lResponse);
 }
 //===============================================

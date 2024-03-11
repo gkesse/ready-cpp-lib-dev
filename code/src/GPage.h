@@ -20,7 +20,6 @@ protected:
     GString m_method;
     GString m_uri;
     GString m_version;
-    GString m_contentType;
     GString m_request;
 };
 //===============================================

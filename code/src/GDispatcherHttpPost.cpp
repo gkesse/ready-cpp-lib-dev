@@ -31,7 +31,8 @@ void GDispatcherHttpPost::runCallback() {
     lPage.setCommon(*this);
     lPage.setDispatcher(*this);
     lPage.createCallback();
-    m_response += lPage.toResponse();
+    m_logs.addLogs(lPage.getLogs());
+    setResponse(lPage);
 }
 //===============================================
 void GDispatcherHttpPost::runCarpool() {
@@ -39,7 +40,8 @@ void GDispatcherHttpPost::runCarpool() {
     lPage.setCommon(*this);
     lPage.setDispatcher(*this);
     lPage.createCarpool();
-    m_response += lPage.toResponse();
+    m_logs.addLogs(lPage.getLogs());
+    setResponse(lPage);
 }
 //===============================================
 void GDispatcherHttpPost::createUnknown() {
@@ -47,6 +49,7 @@ void GDispatcherHttpPost::createUnknown() {
     lPage.setCommon(*this);
     lPage.setDispatcher(*this);
     lPage.createUnknown();
-    m_response += lPage.toResponse();
+    m_logs.addLogs(lPage.getLogs());
+    setResponse(lPage);
 }
 //===============================================

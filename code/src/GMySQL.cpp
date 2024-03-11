@@ -17,6 +17,19 @@ GMySQL::GMySQL()
 
 }
 //===============================================
+GMySQL::GMySQL(const GString& _database)
+: GObject()
+, m_protocol(MYSQL_CONN_PROTOCOL)
+, m_hostname(MYSQL_CONN_HOSTNAME)
+, m_database(_database)
+, m_username(MYSQL_CONN_USERNAME)
+, m_password(MYSQL_CONN_PASSWORD)
+, m_port(MYSQL_CONN_PORT)
+, m_id(0)
+, m_errorCode(0) {
+
+}
+//===============================================
 GMySQL::~GMySQL() {
 
 }
@@ -708,11 +721,11 @@ GString GMySQL::readData(const GString& _sql, ...) {
     return lData;
 }
 //===============================================
-GMySQL::GRows GMySQL::readCol(const GString& _sql, ...) {
+GMySQLRow GMySQL::readCol(const GString& _sql, ...) {
     std::shared_ptr<sql::Connection> lConn;
     std::shared_ptr<sql::PreparedStatement> lStatement;
     std::shared_ptr<sql::ResultSet> lResultSet;
-    GMySQL::GRows lDataMap;
+    GMySQLRow lDataMap;
 
     try {
         if(!openDatabase(lConn)) {
@@ -912,11 +925,11 @@ GMySQL::GRows GMySQL::readCol(const GString& _sql, ...) {
     return lDataMap;
 }
 //===============================================
-GMySQL::GRows GMySQL::readRow(const GString& _sql, ...) {
+GMySQLRow GMySQL::readRow(const GString& _sql, ...) {
     std::shared_ptr<sql::Connection> lConn;
     std::shared_ptr<sql::PreparedStatement> lStatement;
     std::shared_ptr<sql::ResultSet> lResultSet;
-    GMySQL::GRows lDataMap;
+    GMySQLRow lDataMap;
 
     try {
         if(!openDatabase(lConn)) {
@@ -1119,11 +1132,11 @@ GMySQL::GRows GMySQL::readRow(const GString& _sql, ...) {
     return lDataMap;
 }
 //===============================================
-GMySQL::GMaps GMySQL::readMap(const GString& _sql, ...) {
+GMySQLMap GMySQL::readMap(const GString& _sql, ...) {
     std::shared_ptr<sql::Connection> lConn;
     std::shared_ptr<sql::PreparedStatement> lStatement;
     std::shared_ptr<sql::ResultSet> lResultSet;
-    GMySQL::GMaps lDataMap;
+    GMySQLMap lDataMap;
 
     try {
         if(!openDatabase(lConn)) {
@@ -1317,7 +1330,7 @@ GMySQL::GMaps GMySQL::readMap(const GString& _sql, ...) {
 
     int lColumns = getColumnCount(lResultSet);
     while(lResultSet->next()) {
-        GMySQL::GRows lDataRow;
+        GMySQLRow lDataRow;
         for(int i = 1; i <= lColumns; i++) {
             GString lData = lResultSet->getString(i).c_str();
             lDataRow.push_back(lData);
