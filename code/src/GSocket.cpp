@@ -259,7 +259,10 @@ void GSocket::sendResponse() {
 void* GSocket::onThread(void* _params) {
     GSocket* lClient = (GSocket*)_params;
     lClient->runThread();
-    delete lClient;
+    if(!m_isContinue) {
+        slog(eGINF, "Suppression du point de connexion socket.");
+        delete lClient;
+    }
     return 0;
 }
 //===============================================

@@ -1,6 +1,5 @@
 //===============================================
 #include "GCallbackXml.h"
-#include "GResponseHttpXml.h"
 #include "GCarpoolCB.h"
 #include "GChatCB.h"
 //===============================================
