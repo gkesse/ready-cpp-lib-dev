@@ -40,8 +40,8 @@
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
-// regex
-#include <boost/regex.hpp>
+// openssl
+#include <openssl/sha.h>
 // typedef
 typedef unsigned char uchar;
 typedef unsigned int uint;

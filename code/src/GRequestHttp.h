@@ -14,10 +14,12 @@ public:
     bool analyzeHeader();
     bool analyzeGet();
     bool analyzePost();
+
     const GString& getMethod() const;
     const GString& getUri() const;
     const GString& getVersion() const;
     const GString& getContentType() const;
+    const GString& getSecWebSocketKey() const;
     const GString& getRequest() const;
 
 private:
@@ -26,6 +28,7 @@ private:
     GString m_uri;
     GString m_version;
     GString m_contentType;
+    GString m_secWebSocketKey;
     GString m_request;
     int m_total;
 };

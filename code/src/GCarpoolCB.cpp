@@ -23,7 +23,7 @@ void GCarpoolCB::run() {
         slog(eGERR, "Le callback n'est pas géré."
                     "|uri=%s"
                     "|content_type=%s"
-                    "|request=%s", m_uri.c_str(), m_contentType.c_str(), m_request.c_str());
+                    "|request=%s", m_uri.c_str(), m_contentTypeReq.c_str(), m_request.c_str());
         createUnknown();
     }
 }

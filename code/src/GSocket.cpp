@@ -9,7 +9,7 @@ GSocket::GSocket()
 , m_addressIP("0.0.0.0")
 , m_port(0)
 , m_pid(0)
-, m_isClose(true) {
+, m_isContinue(false) {
 
 }
 //===============================================
@@ -19,7 +19,7 @@ GSocket::~GSocket() {
 //===============================================
 void GSocket::setResponse(const GSocket& _obj) {
     m_response = _obj.m_response;
-    m_isClose = _obj.m_isClose;
+    m_isContinue = _obj.m_isContinue;
 }
 //===============================================
 void GSocket::runServer() {
@@ -249,7 +249,7 @@ const GDebug& GSocket::getDebug() const {
 //===============================================
 void GSocket::sendResponse() {
     sendData(m_response);
-    if(m_isClose) {
+    if(!m_isContinue) {
         slog(eGINF, "Fermeture du point de connexion socket.");
         close(m_socket);
     }

@@ -3,6 +3,7 @@
 #define _GDispatcherHttpGet_
 //===============================================
 #include "GDispatcherHttp.h"
+#include "GPage.h"
 //===============================================
 class GDispatcherHttpGet : public GDispatcherHttp {
 public:
@@ -10,9 +11,8 @@ public:
     ~GDispatcherHttpGet();
     void run();
     bool loadResource();
-    bool isResource() const;
     void runCarpool();
-    void createUnknown();
+    void runChat();
 };
 //===============================================
 #endif

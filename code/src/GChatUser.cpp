@@ -98,6 +98,7 @@ void GChatUser::runConnect() {
         GChatUser lObj;
         lObj.setUuid(m_uuid);
         m_content += lObj.serializeXml();
+        m_isContinue = false;
     }
 }
 //===============================================

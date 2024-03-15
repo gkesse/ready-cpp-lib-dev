@@ -99,10 +99,12 @@ void GResponseHttp::setContent(const GString& _content) {
 }
 //===============================================
 void GResponseHttp::setResponseHttp(const GResponseHttp& _obj) {
-    m_status        = _obj.m_status;
-    m_content       = _obj.m_content;
-    m_contentType   = _obj.m_contentType;
-    m_connection    = _obj.m_connection;
+    m_status            = _obj.m_status;
+    m_content           = _obj.m_content;
+    m_contentType       = _obj.m_contentType;
+    m_connection        = _obj.m_connection;
+    m_secWebSocketKey   = _obj.m_secWebSocketKey;
+    setResponse(_obj);
 }
 //===============================================
 GString GResponseHttp::toReason(const eGResponseHttpStatus& _status) const {
@@ -116,7 +118,6 @@ GString GResponseHttp::toReason(const eGResponseHttpStatus& _status) const {
     if(!lStatus.flag) {
         slog(eGERR, "Le status recherché n'a pas été trouvé."
                     "|status=%d", _status);
-        m_logs.addProblem();
     }
     return lStatus.name;
 }
@@ -126,14 +127,54 @@ const GString& GResponseHttp::toContent() const {
 }
 //===============================================
 void GResponseHttp::create() {
+    if(!m_secWebSocketKey.isEmpty()) {
+        createWebsocket();
+    }
+    else {
+        createHttp();
+    }
+}
+//===============================================
+void GResponseHttp::createHttp() {
+    if(m_isContinue) m_connection = RESPONSE_CONNECT_KEEP_ALIVE;
+
     slog(eGINF, "Création de la réponse à envoyer au client."
                 "|status=%d"
-                "|content_type=%s", m_status, m_contentType.c_str());
+                "|content_type=%s"
+                "|continue=%d"
+                "|connection=%s", m_status, m_contentType.c_str(), m_isContinue, m_connection.c_str());
 
     m_response += sformat("HTTP/1.1 %d %s\r\n", m_status, toReason(m_status).c_str());
     m_response += sformat("Content-Type: %s\r\n", m_contentType.c_str());
     m_response += sformat("Content-Length: %d\r\n", m_content.size());
     m_response += sformat("Connection: %s\r\n", m_connection.c_str());
+    m_response += sformat("\r\n");
+    m_response += m_content;
+}
+//===============================================
+void GResponseHttp::createWebsocket() {
+    m_connection = RESPONSE_CONNECT_UPGRADE;
+    m_status = eGResponseHttpStatus::SwitchingProtocol;
+    GString lUpgrade = RESPONSE_UPGRADE_WEBSOCKET;
+    m_content = "";
+
+    slog(eGINF, "Création de la réponse à envoyer au client."
+                "|status=%d"
+                "|content_type=%s"
+                "|continue=%d"
+                "|connection=%s"
+                "|sec_websocket_key=%s", m_status, m_contentType.c_str(), m_isContinue
+                , m_connection.c_str(), m_secWebSocketKey.c_str());
+
+    GString lSecWebSocketAccept = m_secWebSocketKey + WEBSOCKET_MAGGIC_NUMBER;
+    uchar lHashBuf[SHA_DIGEST_LENGTH];
+    SHA1(lSecWebSocketAccept.uc_str(), lSecWebSocketAccept.size(), lHashBuf);
+    GString lHash(lHashBuf, SHA_DIGEST_LENGTH);
+
+    m_response += sformat("HTTP/1.1 %d %s\r\n", m_status, toReason(m_status).c_str());
+    m_response += sformat("Upgrade: %s\r\n", lUpgrade.c_str());
+    m_response += sformat("Connection: %s\r\n", m_connection.c_str());
+    m_response += sformat("Sec-WebSocket-Accept: %s\r\n", lHash.toBase64().c_str());
     m_response += sformat("\r\n");
     m_response += m_content;
 }

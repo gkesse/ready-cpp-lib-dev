@@ -23,6 +23,7 @@ public:
     virtual void init();
     virtual GString getEnv(const GString& _env) const;
     virtual GString getResource(const GString& _path) const;
+    virtual GLog& getLogs();
     virtual const GLog& getLogs() const;
     virtual void print() const;
     virtual GString serialize(const GString& _code = "object") const;

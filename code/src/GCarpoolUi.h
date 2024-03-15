@@ -9,9 +9,10 @@ public:
     GCarpoolUi();
     ~GCarpoolUi();
     void init();
-    void create();
+    void run();
     bool isRedirectUrl();
     void redirectUrl(const GString& _url);
+    void createPage();
     void createHome();
     void createLog();
     void createTest();
@@ -25,9 +26,6 @@ public:
     void createInscription();
     void createInscriptionEmail();
     void createUnknown();
-
-private:
-    GString m_content;
 };
 //===============================================
 #endif

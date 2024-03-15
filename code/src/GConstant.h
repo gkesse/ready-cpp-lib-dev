@@ -53,6 +53,8 @@ const char* const RESPONSE_HTTP_XML             = "application/xml; charset=UTF-
 const char* const RESPONSE_HTTP_JSON            = "application/json; charset=UTF-8";
 const char* const RESPONSE_CONNECT_CLOSE        = "close";
 const char* const RESPONSE_CONNECT_KEEP_ALIVE   = "keep-alive";
+const char* const RESPONSE_CONNECT_UPGRADE      = "upgrade";
+const char* const RESPONSE_UPGRADE_WEBSOCKET    = "websocket";
 //===============================================
 // socket
 //===============================================
@@ -61,6 +63,10 @@ const int SOCKET_PORT                           = 9050;
 const int SOCKET_BACKLOG                        = 20;
 const int SOCKET_BUFFER_SIZE                    = 1024;
 const int SOCKET_BUFFER_MAX                     = 1*1024*1024;
+//===============================================
+// websocket
+//===============================================
+const char* const WEBSOCKET_MAGGIC_NUMBER       = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 //===============================================
 #endif
 //===============================================

@@ -42,6 +42,11 @@ GString::GString(char* _data, int _size) {
     create(_data, _size);
 }
 //===============================================
+GString::GString(uchar* _data, int _size) {
+    m_data = 0;
+    create((char*)_data, _size);
+}
+//===============================================
 GString::GString(const char* _data) {
     m_data = 0;
     create(_data, strlen(_data));
@@ -97,8 +102,16 @@ const char* GString::c_str() const {
     return m_data;
 }
 //===============================================
-char*& GString::data() {
+char*& GString::c_str() {
     return m_data;
+}
+//===============================================
+const uchar* GString::uc_str() const {
+    return (const uchar*)m_data;
+}
+//===============================================
+uchar*& GString::uc_str() {
+    return (uchar*&)m_data;
 }
 //===============================================
 int GString::size() const {

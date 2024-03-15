@@ -50,6 +50,10 @@ GString GObject::getResource(const GString& _path) const {
     return sformat("%s%s", m_webRoot.c_str(), _path.c_str());
 }
 //===============================================
+GLog& GObject::getLogs() {
+    return m_logs;
+}
+//===============================================
 const GLog& GObject::getLogs() const {
     return m_logs;
 }

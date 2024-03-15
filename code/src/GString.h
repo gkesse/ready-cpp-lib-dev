@@ -17,6 +17,7 @@ public:
     GString(long _data);
     GString(double _data);
     GString(char* _data, int _size);
+    GString(uchar* _data, int _size);
     GString(const char* _data);
     GString(const std::string& _data);
     GString(const std::vector<char>& _data);
@@ -28,7 +29,9 @@ public:
     void clear();
     void create(const char* _data, int _size);
     const char* c_str() const;
-    char*& data();
+    char*& c_str();
+    const uchar* uc_str() const;
+    uchar*& uc_str();
     int size() const;
     bool isEmpty() const;
     bool createPath(mode_t _mode) const;

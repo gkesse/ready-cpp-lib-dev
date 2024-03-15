@@ -1,9 +1,10 @@
 //===============================================
 #include "GRequest.h"
+#include "GRequestHttp.h"
 //===============================================
 GRequest::GRequest()
 : GSocket()
-, m_type(Type::REQ_TYPE_UNKNOWN)
+, m_type(eGRequestType::REQ_TYPE_UNKNOWN)
 , m_total(0) {
 
 }
@@ -16,15 +17,15 @@ void GRequest::setData(const GString& _data) {
     m_data = _data;
 }
 //===============================================
-void GRequest::setRequest(const GRequest& _request) {
-    m_type = _request.m_type;
-    m_http.setRequest(_request.m_http);
+void GRequest::setRequest(const GRequest& _obj) {
+    m_type  = _obj.m_type;
+    m_http.setRequest(_obj.m_http);
 }
 //===============================================
 bool GRequest::analyzeHeader() {
     if(m_data.isEmpty()) return false;
     if(m_data.startsWith("GET")) {
-        m_type = Type::REQ_TYPE_HTTP_GET;
+        m_type = eGRequestType::REQ_TYPE_HTTP_GET;
         m_http.setData(m_data);
         if(!m_http.analyzeHeader()) {
             slog(eGERR, "L'analyse de la requête GET a échoué."
@@ -36,7 +37,7 @@ bool GRequest::analyzeHeader() {
         m_total = m_http.getTotal();
     }
     else if(m_data.startsWith("POST")) {
-        m_type = Type::REQ_TYPE_HTTP_POST;
+        m_type = eGRequestType::REQ_TYPE_HTTP_POST;
         m_http.setData(m_data);
         if(!m_http.analyzeHeader()) {
             slog(eGERR, "L'analyse de la requête POST a échoué."
@@ -52,7 +53,7 @@ bool GRequest::analyzeHeader() {
                     "|type=%d"
                     "|size=%d"
                     "|data=%s", m_type, m_data.size(), m_data.c_str());
-        m_type = Type::REQ_TYPE_UNKNOWN;
+        m_type = eGRequestType::REQ_TYPE_UNKNOWN;
         m_total = m_data.size();
         return false;
     }
@@ -62,7 +63,7 @@ bool GRequest::analyzeHeader() {
 bool GRequest::analyzeRequest() {
     if(m_data.isEmpty()) return false;
     if(m_data.startsWith("GET")) {
-        m_type = Type::REQ_TYPE_HTTP_GET;
+        m_type = eGRequestType::REQ_TYPE_HTTP_GET;
         m_http.setCommon(*this);
         m_http.setData(m_data);
         if(!m_http.analyzeGet()) {
@@ -74,7 +75,7 @@ bool GRequest::analyzeRequest() {
         }
     }
     else if(m_data.startsWith("POST")) {
-        m_type = Type::REQ_TYPE_HTTP_POST;
+        m_type = eGRequestType::REQ_TYPE_HTTP_POST;
         m_http.setCommon(*this);
         m_http.setData(m_data);
         if(!m_http.analyzePost()) {
@@ -90,7 +91,7 @@ bool GRequest::analyzeRequest() {
                     "|type=%d"
                     "|size=%d"
                     "|data=%s", m_type, m_data.size(), m_data.c_str());
-        m_type = Type::REQ_TYPE_UNKNOWN;
+        m_type = eGRequestType::REQ_TYPE_UNKNOWN;
         m_total = m_data.size();
         return false;
     }
@@ -101,7 +102,7 @@ int GRequest::getTotal() const {
     return m_total;
 }
 //===============================================
-const GRequest::Type& GRequest::getType() const {
+const eGRequestType& GRequest::getType() const {
     return m_type;
 }
 //===============================================

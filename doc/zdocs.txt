@@ -90,6 +90,16 @@ https://www.geeksforgeeks.org/how-to-get-a-unique-identifier-for-object-in-cpp/
 https://www.geeksforgeeks.org/uuid-function-in-mysql/
 
 #================================================
+# websocket
+#================================================
+
+https://http.dev/ws
+https://stackoverflow.com/questions/6934232/is-there-a-simple-c-or-c-function-that-calculates-the-sha1-hash-of-a-string
+https://stackoverflow.com/questions/9212793/websocket-handshake
+https://stackoverflow.com/questions/9412802/websockets-sec-websocket-accept-mismatch
+
+
+#================================================
 # lettres
 #================================================
 

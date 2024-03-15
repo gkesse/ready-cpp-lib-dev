@@ -1,16 +1,15 @@
 //===============================================
-#ifndef _GDispatcherHttpPost_
-#define _GDispatcherHttpPost_
+#ifndef _GChatUi_
+#define _GChatUi_
 //===============================================
-#include "GDispatcherHttp.h"
+#include "GPage.h"
 //===============================================
-class GDispatcherHttpPost : public GDispatcherHttp {
+class GChatUi : public GPage {
 public:
-    GDispatcherHttpPost();
-    ~GDispatcherHttpPost();
+    GChatUi();
+    ~GChatUi();
     void run();
-    void runCallback();
-    void runCarpool();
+    void runConnect();
 };
 //===============================================
 #endif

@@ -5,29 +5,28 @@
 #include "GSocket.h"
 #include "GRequestHttp.h"
 //===============================================
+enum class eGRequestType {
+    REQ_TYPE_UNKNOWN
+    , REQ_TYPE_HTTP_GET
+    , REQ_TYPE_HTTP_POST
+};
+//===============================================
 class GRequest : public GSocket {
-public:
-    enum class Type {
-        REQ_TYPE_UNKNOWN
-        , REQ_TYPE_HTTP_GET
-        , REQ_TYPE_HTTP_POST
-    };
-
 public:
     GRequest();
     ~GRequest();
     void setData(const GString& _data);
-    virtual void setRequest(const GRequest& _request);
+    virtual void setRequest(const GRequest& _obj);
     bool analyzeHeader();
     bool analyzeRequest();
     int getTotal() const;
-    const Type& getType() const;
+    const eGRequestType& getType() const;
     const GRequestHttp& getHttp() const;
 
 protected:
     GRequestHttp m_http;
     GString m_data;
-    Type m_type;
+    eGRequestType m_type;
     int m_total;
 };
 //===============================================

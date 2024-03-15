@@ -1,6 +1,7 @@
 //===============================================
 #include "GDispatcherHttpPost.h"
-#include "GPage.h"
+#include "GCallback.h"
+#include "GCarpoolUi.h"
 //===============================================
 GDispatcherHttpPost::GDispatcherHttpPost()
 : GDispatcherHttp() {
@@ -22,34 +23,30 @@ void GDispatcherHttpPost::run() {
         runCarpool();
     }
     else {
-        createUnknown();
+        slog(eGERR, "L'uri n'est pas gérée."
+                    "|uri=%s", m_uri.c_str());
+        m_logs.addProblem();
+        m_page.createUnknown();
     }
+    m_page.createResponse();
+    setResponse(m_page);
 }
 //===============================================
 void GDispatcherHttpPost::runCallback() {
-    GPage lPage;
-    lPage.setCommon(*this);
-    lPage.setDispatcher(*this);
-    lPage.createCallback();
-    m_logs.addLogs(lPage.getLogs());
-    setResponse(lPage);
+    GCallback lObj;
+    lObj.setCommon(*this);
+    lObj.setDispatcher(*this);
+    lObj.run();
+    m_logs.addLogs(lObj.getLogs());
+    m_page.setResponseHttp(lObj);
 }
 //===============================================
 void GDispatcherHttpPost::runCarpool() {
-    GPage lPage;
-    lPage.setCommon(*this);
-    lPage.setDispatcher(*this);
-    lPage.createCarpool();
-    m_logs.addLogs(lPage.getLogs());
-    setResponse(lPage);
-}
-//===============================================
-void GDispatcherHttpPost::createUnknown() {
-    GPage lPage;
-    lPage.setCommon(*this);
-    lPage.setDispatcher(*this);
-    lPage.createUnknown();
-    m_logs.addLogs(lPage.getLogs());
-    setResponse(lPage);
+    GCarpoolUi lObj;
+    lObj.setCommon(*this);
+    lObj.setDispatcher(*this);
+    lObj.run();
+    m_logs.addLogs(lObj.getLogs());
+    m_page.setResponseHttp(lObj);
 }
 //===============================================

@@ -15,12 +15,13 @@ void GRequestHttp::setData(const GString& _data) {
     m_data = _data;
 }
 //===============================================
-void GRequestHttp::setRequest(const GRequestHttp& _request) {
-    m_method = _request.m_method;
-    m_uri = _request.m_uri;
-    m_version = _request.m_version;
-    m_contentType = _request.m_contentType;
-    m_request = _request.m_request;
+void GRequestHttp::setRequest(const GRequestHttp& _obj) {
+    m_method            = _obj.m_method;
+    m_uri               = _obj.m_uri;
+    m_version           = _obj.m_version;
+    m_contentType       = _obj.m_contentType;
+    m_request           = _obj.m_request;
+    m_secWebSocketKey   = _obj.m_secWebSocketKey;
 }
 //===============================================
 int GRequestHttp::getTotal() const {
@@ -50,12 +51,11 @@ bool GRequestHttp::analyzeGet() {
     const GString SPACE = " ";
     const GString DOUBLE_POINT = ":";
 
-    // data=GET /home/admin HTTP/1.1
-    GString lMethod = m_data.extract(CRLF, 0);
-
-    m_method = lMethod.extract(SPACE, 0);
-    m_uri = lMethod.extract(SPACE, 1);
-    m_version = lMethod.extract(SPACE, 2);
+    // GET /home/admin HTTP/1.1
+    GString lData = m_data.extract(CRLF, 0);
+    GString lMethod = lData.extract(SPACE, 0);
+    GString lUri = lData.extract(SPACE, 1);
+    GString lVersion = lData.extract(SPACE, 2);
 
     // Host: 192.168.1.8:9050
     GString lHost = m_data.extract("Host:", CRLF).trim();
@@ -73,11 +73,28 @@ bool GRequestHttp::analyzeGet() {
     GString lAcceptEncoding = m_data.extract("Accept-Encoding:", CRLF).trim();
     // Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6,zh;q=0.5
     GString lAcceptLanguage = m_data.extract("Accept-Language:", CRLF).trim();
+    // Sec-WebSocket-Version: 13
+    GString lSecWebSocketVersion = m_data.extract("Sec-WebSocket-Version:", CRLF).trim();
+    // Sec-WebSocket-Key: p5oc3ITL2LPtsOroR04Ztw==
+    GString lSecWebSocketKey = m_data.extract("Sec-WebSocket-Key:", CRLF).trim();
+    // Upgrade: websocket
+    GString lUpgrade = m_data.extract("Upgrade:", CRLF).trim();
+    // Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+    GString lSecWebSocketExtensions = m_data.extract("Sec-WebSocket-Extensions:", CRLF).trim();
 
-    slog(eGINF, "Méthode de la requête HTTP GET."
+    m_method            = lMethod;
+    m_uri               = lUri;
+    m_version           = lVersion;
+    m_secWebSocketKey   = lSecWebSocketKey;
+
+    slog(eGINF, "Analyse de la requête HTTP GET."
                 "|method=%s"
                 "|uri=%s"
-                "|version=%s", m_method.c_str(), m_uri.c_str(), m_version.c_str());
+                "|version=%s"
+                "|connection=%s"
+                "|upgrade=%s"
+                "|sec_websocket_key=%s", m_method.c_str(), m_uri.c_str(), m_version.c_str()
+                , lConnection.c_str(), lUpgrade.c_str(), m_secWebSocketKey.c_str());
 
     return true;
 }
@@ -93,11 +110,10 @@ bool GRequestHttp::analyzePost() {
     const GString DATA_SEP = "=";
 
     // POST /carpool/inscription/email HTTP/1.1
-    GString lMethod = m_data.extract(CRLF, 0);
-
-    m_method = lMethod.extract(SPACE, 0);
-    m_uri = lMethod.extract(SPACE, 1);
-    m_version = lMethod.extract(SPACE, 2);
+    GString lData = m_data.extract(CRLF, 0);
+    GString lMethod = lData.extract(SPACE, 0);
+    GString lUri = lData.extract(SPACE, 1);
+    GString lVersion = lData.extract(SPACE, 2);
 
     // Host: 192.168.1.8:9050
     GString lHost = m_data.extract("Host:", CRLF).trim();
@@ -122,7 +138,12 @@ bool GRequestHttp::analyzePost() {
     // Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6,zh;q=0.5
     GString lAcceptLanguage = m_data.extract("Accept-Language:", CRLF).trim();
     // request
-    m_request = m_data.extractEnd(CRLFCRLF);
+    GString lRequest = m_data.extractEnd(CRLFCRLF);
+
+    m_method            = lMethod;
+    m_uri               = lUri;
+    m_version           = lVersion;
+    m_request           = lRequest;
 
     slog(eGINF, "Méthode de la requête HTTP POST."
                 "|method=%s"
@@ -147,6 +168,10 @@ const GString& GRequestHttp::getVersion() const {
 //===============================================
 const GString& GRequestHttp::getContentType() const {
     return m_contentType;
+}
+//===============================================
+const GString& GRequestHttp::getSecWebSocketKey() const {
+    return m_secWebSocketKey;
 }
 //===============================================
 const GString& GRequestHttp::getRequest() const {

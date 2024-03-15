@@ -87,6 +87,8 @@ public:
     void setContent(const GString& _content);
     void setResponseHttp(const GResponseHttp& _obj);
     void create();
+    void createHttp();
+    void createWebsocket();
     GString toReason(const eGResponseHttpStatus& _status) const;
     const GString& toContent() const;
 
@@ -95,6 +97,7 @@ protected:
     GString m_content;
     GString m_contentType;
     GString m_connection;
+    GString m_secWebSocketKey;
 };
 //===============================================
 #endif

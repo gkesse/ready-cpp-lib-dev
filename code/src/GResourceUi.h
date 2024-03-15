@@ -1,16 +1,15 @@
 //===============================================
-#ifndef _GDispatcherHttpPost_
-#define _GDispatcherHttpPost_
+#ifndef _GResourceUi_
+#define _GResourceUi_
 //===============================================
-#include "GDispatcherHttp.h"
+#include "GPage.h"
 //===============================================
-class GDispatcherHttpPost : public GDispatcherHttp {
+class GResourceUi : public GPage {
 public:
-    GDispatcherHttpPost();
-    ~GDispatcherHttpPost();
-    void run();
-    void runCallback();
-    void runCarpool();
+    GResourceUi();
+    ~GResourceUi();
+    bool loadResource();
+    bool isResource() const;
 };
 //===============================================
 #endif

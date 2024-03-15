@@ -1,13 +1,17 @@
 //===============================================
-#ifndef _GResponseHttpXml_
-#define _GResponseHttpXml_
+#ifndef _GPageGet_
+#define _GPageGet_
 //===============================================
-#include "GResponseHttp.h"
+#include "GPage.h"
 //===============================================
-class GResponseHttpXml : public GResponseHttp {
+class GPageGet : public GPage {
 public:
-    GResponseHttpXml();
-    ~GResponseHttpXml();
+    GPageGet();
+    ~GPageGet();
+    void run();
+    bool loadResource();
+    void runCarpool();
+    void runChat();
 };
 //===============================================
 #endif

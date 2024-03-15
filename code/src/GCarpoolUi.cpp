@@ -14,89 +14,19 @@ void GCarpoolUi::init() {
 
 }
 //===============================================
-void GCarpoolUi::create() {
-    slog(eGINF, "Création de la page carpool."
+void GCarpoolUi::run() {
+    slog(eGINF, "Préparation de la page carpool."
                 "|uri=%s", m_uri.c_str());
 
     init();
 
     if(!isRedirectUrl()) {
-        m_content += sformat("<!DOCTYPE html>\n");
-        m_content += sformat("<html lang='fr'>\n");
-        m_content += sformat("<head>\n");
-        //
-        m_content += sformat("<title>ReadyCar</title>\n");
-        m_content += sformat("<meta name='viewport' content='width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0, user-scalable=no'/>\n");
-        m_content += sformat("<meta charset='UTF-8'/>\n");
-        m_content += sformat("<link rel='shortcut icon' type='image/png' href='/data/img/logo.png'/>\n");
-        m_content += sformat("<link rel='stylesheet' href='/css/styles.css'/>\n");
-        //
-        m_content += sformat("</head>\n");
-        m_content += sformat("<body>\n");
-        //
-        createLog();
-        createHome();
-        // test
-        if(m_uri == "/carpool/test") {
-            createTest();
-        }
-        else if(m_uri == "/carpool/test/js") {
-            createTestJs();
-        }
-        else if(m_uri == "/carpool/test/get") {
-            createTestGet();
-        }
-        else if(m_uri == "/carpool/test/post") {
-            createTestPost();
-        }
-        else if(m_uri == "/carpool/test/server") {
-            createTestServer();
-        }
-        // profil
-        else if(m_uri == "/carpool/profil") {
-            createProfil();
-        }
-        else if(m_uri == "/carpool/connexion") {
-            createConnexion();
-        }
-        else if(m_uri == "/carpool/inscription") {
-            createInscription();
-        }
-        else if(m_uri == "/carpool/inscription/email") {
-            createInscriptionEmail();
-        }
-        else {
-            createUnknown();
-        }
-        // scripts
-        m_content += sformat("<script src='/js/functions.js'></script>\n");
-        m_content += sformat("<script src='/js/GConstant.js'></script>\n");
-        m_content += sformat("<script src='/js/GXml.js'></script>\n");
-        m_content += sformat("<script src='/js/GCode.js'></script>\n");
-        m_content += sformat("<script src='/js/GLog.js'></script>\n");
-        m_content += sformat("<script src='/js/GObject.js'></script>\n");
-        m_content += sformat("<script src='/js/GAjax.js'></script>\n");
-        m_content += sformat("<script src='/js/GServer.js'></script>\n");
-        m_content += sformat("<script src='/js/GCarpoolCB.js'></script>\n");
-        m_content += sformat("<script src='/js/GCarpoolTest.js'></script>\n");
-        m_content += sformat("<script src='/js/GCarpoolEmail.js'></script>\n");
-        m_content += sformat("<script src='/js/GTestJs.js'></script>\n");
-        m_content += sformat("<script src='/js/scripts.js'></script>\n");
-        // footer
-        m_content += sformat("</body>\n");
-        m_content += sformat("</html>\n");
+        createPage();
     }
-
-    GResponseHttp lResponse;
-    lResponse.setCommon(*this);
-    lResponse.setContent(m_content);
-    lResponse.create();
-    m_logs.addLogs(lResponse.getLogs());
-    setResponse(lResponse);
 }
 //===============================================
 bool GCarpoolUi::isRedirectUrl() {
-    if(m_type == Type::REQ_TYPE_HTTP_POST) {
+    if(m_type == eGRequestType::REQ_TYPE_HTTP_POST) {
         if(m_uri == "/carpool/test/post") {
             return redirectTestPost();
         }
@@ -106,6 +36,76 @@ bool GCarpoolUi::isRedirectUrl() {
 //===============================================
 void GCarpoolUi::redirectUrl(const GString& _url) {
     m_content += sformat("<meta http-equiv='refresh' content='0; url=%s'>\n", _url.c_str());
+}
+//===============================================
+void GCarpoolUi::createPage() {
+    slog(eGINF, "Création de la page carpool."
+                "|uri=%s", m_uri.c_str());
+
+    m_content += sformat("<!DOCTYPE html>\n");
+    m_content += sformat("<html lang='fr'>\n");
+    m_content += sformat("<head>\n");
+    //
+    m_content += sformat("<title>ReadyCar</title>\n");
+    m_content += sformat("<meta name='viewport' content='width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0, user-scalable=no'/>\n");
+    m_content += sformat("<meta charset='UTF-8'/>\n");
+    m_content += sformat("<link rel='shortcut icon' type='image/png' href='/data/img/logo.png'/>\n");
+    m_content += sformat("<link rel='stylesheet' href='/css/styles.css'/>\n");
+    //
+    m_content += sformat("</head>\n");
+    m_content += sformat("<body>\n");
+    //
+    createLog();
+    createHome();
+    // test
+    if(m_uri == "/carpool/test") {
+        createTest();
+    }
+    else if(m_uri == "/carpool/test/js") {
+        createTestJs();
+    }
+    else if(m_uri == "/carpool/test/get") {
+        createTestGet();
+    }
+    else if(m_uri == "/carpool/test/post") {
+        createTestPost();
+    }
+    else if(m_uri == "/carpool/test/server") {
+        createTestServer();
+    }
+    // profil
+    else if(m_uri == "/carpool/profil") {
+        createProfil();
+    }
+    else if(m_uri == "/carpool/connexion") {
+        createConnexion();
+    }
+    else if(m_uri == "/carpool/inscription") {
+        createInscription();
+    }
+    else if(m_uri == "/carpool/inscription/email") {
+        createInscriptionEmail();
+    }
+    else {
+        createUnknown();
+    }
+    // scripts
+    m_content += sformat("<script src='/js/functions.js'></script>\n");
+    m_content += sformat("<script src='/js/GConstant.js'></script>\n");
+    m_content += sformat("<script src='/js/GXml.js'></script>\n");
+    m_content += sformat("<script src='/js/GCode.js'></script>\n");
+    m_content += sformat("<script src='/js/GLog.js'></script>\n");
+    m_content += sformat("<script src='/js/GObject.js'></script>\n");
+    m_content += sformat("<script src='/js/GAjax.js'></script>\n");
+    m_content += sformat("<script src='/js/GServer.js'></script>\n");
+    m_content += sformat("<script src='/js/GCarpoolCB.js'></script>\n");
+    m_content += sformat("<script src='/js/GCarpoolTest.js'></script>\n");
+    m_content += sformat("<script src='/js/GCarpoolEmail.js'></script>\n");
+    m_content += sformat("<script src='/js/GTestJs.js'></script>\n");
+    m_content += sformat("<script src='/js/scripts.js'></script>\n");
+    // footer
+    m_content += sformat("</body>\n");
+    m_content += sformat("</html>\n");
 }
 //===============================================
 void GCarpoolUi::createHome() {
@@ -193,7 +193,7 @@ bool GCarpoolUi::redirectTestPost() {
 //===============================================
 void GCarpoolUi::createTestPost() {
     // post
-    if(m_type == Type::REQ_TYPE_HTTP_POST) {
+    if(m_type == eGRequestType::REQ_TYPE_HTTP_POST) {
         GMap lForms;
         lForms.createMap();
         lForms.loadMap(m_request);

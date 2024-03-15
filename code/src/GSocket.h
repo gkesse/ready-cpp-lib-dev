@@ -29,7 +29,7 @@ private:
 
 protected:
     GString m_response;
-    bool m_isClose;
+    bool m_isContinue;
 };
 //===============================================
 #endif

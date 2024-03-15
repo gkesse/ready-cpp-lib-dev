@@ -1,6 +1,6 @@
 //===============================================
 #include "GDispatcher.h"
-#include "GDispatcherHttpGet.h"
+#include "GPageGet.h"
 #include "GDispatcherHttpPost.h"
 //===============================================
 GDispatcher::GDispatcher()
@@ -13,23 +13,24 @@ GDispatcher::~GDispatcher() {
 }
 //===============================================
 void GDispatcher::run() {
-    if(m_type == Type::REQ_TYPE_HTTP_GET) {
+    if(m_type == eGRequestType::REQ_TYPE_HTTP_GET) {
         runHttpGet();
     }
-    else if(m_type == Type::REQ_TYPE_HTTP_POST) {
+    else if(m_type == eGRequestType::REQ_TYPE_HTTP_POST) {
         runHttpPost();
     }
     else {
         slog(eGERR, "Le type de la requête est inconnu."
                     "|type=%d", m_type);
+        m_logs.addProblem();
         createUnknown();
     }
 }
 //===============================================
 void GDispatcher::runHttpGet() {
-    GDispatcherHttpGet lObj;
+    GPageGet lObj;
     lObj.setCommon(*this);
-    lObj.setDispatcher(*this);
+    lObj.setRequest(*this);
     lObj.run();
     m_logs.addLogs(lObj.getLogs());
     setResponse(lObj);

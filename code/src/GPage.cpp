@@ -1,11 +1,11 @@
 //===============================================
 #include "GPage.h"
 #include "GDispatcherHttp.h"
-#include "GCarpoolUi.h"
-#include "GCallback.h"
 //===============================================
 GPage::GPage()
 : GResponseHttp() {
+
+
 
 }
 //===============================================
@@ -13,60 +13,61 @@ GPage::~GPage() {
 
 }
 //===============================================
-void GPage::setPage(const GPage& _page) {
-    m_method = _page.m_method;
-    m_uri = _page.m_uri;
-    m_version = _page.m_version;
-    m_contentType = _page.m_contentType;
-    m_request = _page.m_request;
-    m_type = _page.m_type;
+void GPage::setPage(const GPage& _obj) {
+    m_method            = _obj.m_method;
+    m_uri               = _obj.m_uri;
+    m_version           = _obj.m_version;
+    m_contentTypeReq    = _obj.m_contentTypeReq;
+    m_secWebSocketKey   = _obj.m_secWebSocketKey;
+    m_request           = _obj.m_request;
+    m_type              = _obj.m_type;
 }
 //===============================================
-void GPage::setDispatcher(const GDispatcherHttp& _dispatcher) {
-    m_method = _dispatcher.getMethod();
-    m_uri = _dispatcher.getUri();
-    m_version = _dispatcher.getVersion();
-    m_contentType = _dispatcher.getContentType();
-    m_request = _dispatcher.getRequest();
-    m_type = _dispatcher.getType();
+void GPage::setRequest(const GRequest& _obj) {
+    m_method            = _obj.getHttp().getMethod();
+    m_uri               = _obj.getHttp().getUri();
+    m_version           = _obj.getHttp().getVersion();
+    m_contentTypeReq    = _obj.getHttp().getContentType();
+    m_secWebSocketKey   = _obj.getHttp().getSecWebSocketKey();
+    m_request           = _obj.getHttp().getRequest();
+    m_type              = _obj.getType();
 }
 //===============================================
-void GPage::createCallback() {
-    slog(eGINF, "Traitement du callback."
-                "|uri=%s", m_uri.c_str());
-
-    GCallback lPage;
-    lPage.setCommon(*this);
-    lPage.setPage(*this);
-    lPage.run();
-    m_logs.addLogs(lPage.getLogs());
-    setResponse(lPage);
+void GPage::setDispatcher(const GDispatcherHttp& _obj) {
+    m_method            = _obj.getMethod();
+    m_uri               = _obj.getUri();
+    m_version           = _obj.getVersion();
+    m_contentTypeReq    = _obj.getContentType();
+    m_secWebSocketKey   = _obj.getSecWebSocketKey();
+    m_request           = _obj.getRequest();
+    m_type              = _obj.getType();
 }
 //===============================================
-void GPage::createCarpool() {
-    slog(eGINF, "Création de la page carpool."
-                "|uri=%s", m_uri.c_str());
-
-    GCarpoolUi lPage;
-    lPage.setCommon(*this);
-    lPage.setPage(*this);
-    lPage.create();
-    m_logs.addLogs(lPage.getLogs());
-    setResponse(lPage);
-}
-//===============================================
-void GPage::createUnknown() {
-    slog(eGWAR, "La ressource est introuvable."
-                "|uri=%s", m_uri.c_str());
-
-    GString lContent;
-    lContent += sformat("Page non trouvée.\n");
+void GPage::createResponse() {
+    if(m_content.isEmpty()) {
+        if(m_logs.isEmpty()) {
+            createUnknown();
+        }
+        else if(m_logs.hasErrors()) {
+            createUnknown();
+        }
+        else {
+            createOK();
+        }
+    }
 
     GResponseHttp lResponse;
     lResponse.setCommon(*this);
-    lResponse.setContent(lContent);
+    lResponse.setResponseHttp(*this);
     lResponse.create();
-    m_logs.addLogs(lResponse.getLogs());
     setResponse(lResponse);
+}
+//===============================================
+void GPage::createOK() {
+    m_content += sformat("L'opération s'est bien déroulée.\n");
+}
+//===============================================
+void GPage::createUnknown() {
+    m_content += sformat("Page non trouvée.\n");
 }
 //===============================================

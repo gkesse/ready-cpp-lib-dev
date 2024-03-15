@@ -1,9 +1,10 @@
 //===============================================
 #include "GDispatcherHttpGet.h"
+#include "GPageGet.h"
 #include "GResponseHttp.h"
-#include "GPage.h"
-#include "GFile.h"
-#include "GMimeType.h"
+#include "GResourceUi.h"
+#include "GCarpoolUi.h"
+#include "GChatUi.h"
 //===============================================
 GDispatcherHttpGet::GDispatcherHttpGet()
 : GDispatcherHttp() {
@@ -15,92 +16,40 @@ GDispatcherHttpGet::~GDispatcherHttpGet() {
 }
 //===============================================
 void GDispatcherHttpGet::run() {
-    slog(eGINF, "Traitement de la requête HTTP GET."
-                "|uri=%s", m_uri.c_str());
-
-    if(!loadResource()) {
-        if(m_uri.startsWith("/carpool")) {
-            runCarpool();
-        }
-        else {
-            slog(eGERR, "L'uri n'est pas gérée."
-                        "|uri=%s", m_uri.c_str());
-            createUnknown();
-        }
-    }
-    else {
-        slog(eGINF, "La ressource a bien été chargée."
-                    "|uri=%s", m_uri.c_str());
-    }
+    GPageGet lObj;
+    lObj.setCommon(*this);
+    lObj.setDispatcher(*this);
+    lObj.run();
+    m_logs.addLogs(lObj.getLogs());
+    setResponse(lObj);
 }
 //===============================================
 bool GDispatcherHttpGet::loadResource() {
-    if(!isResource()) {
-        slog(eGERR, "La ressource n'est pas autorisée."
-                    "|uri=%s", m_uri.c_str());
-        return false;
+    GResourceUi lObj;
+    lObj.setCommon(*this);
+    lObj.setDispatcher(*this);
+    if(lObj.loadResource()) {
+        m_page.setResponseHttp(lObj);
+        return true;
     }
-    GString lPath = sres(m_uri);
-    struct stat lStat;
-    // la ressource existe ?
-    if(!stat(lPath.c_str(), &lStat)) {
-        // la ressource est un répertoire ?
-        if(lStat.st_mode & S_IFDIR) {
-            if(lPath.back() != '/') lPath += "/";
-            lPath += "index.html";
-            // le fichier (index.html) existe ?
-            if(!stat(lPath.c_str(), &lStat) && !(lStat.st_mode & S_IFDIR)) {
-                // on charge le fichier (index.html).
-                GFile lFile(lPath, GFile::Mode::FILE_MODE_READ_BIN);
-                lFile.setCommon(*this);
-                GResponseHttp lResponse;
-                lResponse.setCommon(*this);
-                lResponse.setContent(lFile.readData());
-                lResponse.create();
-                setResponse(lResponse);
-                return true;
-            }
-        }
-        // la ressource est un fichier.
-        else {
-            // on charge la ressource.
-            GFile lFile(lPath, GFile::Mode::FILE_MODE_READ_BIN);
-            GMimeType lMimeType;
-            lMimeType.setCommon(*this);
-            GResponseHttp lResponse;
-            lResponse.setCommon(*this);
-            lResponse.setContentType(lMimeType.getMimeType(lPath.getExtension()));
-            lResponse.setContent(lFile.readData());
-            lResponse.create();
-            setResponse(lResponse);
-            return true;
-        }
-    }
-    return false;
-}
-//===============================================
-bool GDispatcherHttpGet::isResource() const {
-    if(m_uri.startsWith("/data/img")) return true;
-    if(m_uri.startsWith("/css")) return true;
-    if(m_uri.startsWith("/js")) return true;
     return false;
 }
 //===============================================
 void GDispatcherHttpGet::runCarpool() {
-    GPage lPage;
-    lPage.setCommon(*this);
-    lPage.setDispatcher(*this);
-    lPage.createCarpool();
-    m_logs.addLogs(lPage.getLogs());
-    setResponse(lPage);
+    GCarpoolUi lObj;
+    lObj.setCommon(*this);
+    lObj.setDispatcher(*this);
+    lObj.run();
+    m_logs.addLogs(lObj.getLogs());
+    m_page.setResponseHttp(lObj);
 }
 //===============================================
-void GDispatcherHttpGet::createUnknown() {
-    GPage lPage;
-    lPage.setCommon(*this);
-    lPage.setDispatcher(*this);
-    lPage.createUnknown();
-    m_logs.addLogs(lPage.getLogs());
-    setResponse(lPage);
+void GDispatcherHttpGet::runChat() {
+    GChatUi lObj;
+    lObj.setCommon(*this);
+    lObj.setDispatcher(*this);
+    lObj.run();
+    m_logs.addLogs(lObj.getLogs());
+    m_page.setResponseHttp(lObj);
 }
 //===============================================

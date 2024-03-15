@@ -19,7 +19,7 @@ GINCS =\
 GLIBS =\
 	-L$(GDEVS)/lib \
     -L/usr/local/lib \
-    -lxml2 -ljson-c -lbase64 -lmysqlcppconn -lboost_regex \
+    -lxml2 -ljson-c -lbase64 -lmysqlcppconn -lssl -lcrypto \
 	
 GOBJS =\
     $(patsubst $(GSRC)/%.cpp, $(GBUILD)/%.o, $(wildcard $(GSRC)/*.cpp)) \
