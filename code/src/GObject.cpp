@@ -36,7 +36,7 @@ void GObject::init() {
     }
     else {
         slog(eGINF, "La racine du serveur web a été bien configurée."
-                    "|webroot=%s", m_webRoot.c_str());
+                    "|webRoot=%s", m_webRoot.c_str());
     }
 }
 //===============================================

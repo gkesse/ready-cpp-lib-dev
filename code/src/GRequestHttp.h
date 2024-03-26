@@ -8,19 +8,20 @@ class GRequestHttp : public GObject {
 public:
     GRequestHttp();
     ~GRequestHttp();
-    void setData(const GString& _data);
     void setRequest(const GRequestHttp& _request);
-    int getTotal() const;
     bool analyzeHeader();
     bool analyzeGet();
     bool analyzePost();
 
-    const GString& getMethod() const;
-    const GString& getUri() const;
-    const GString& getVersion() const;
-    const GString& getContentType() const;
-    const GString& getSecWebSocketKey() const;
-    const GString& getRequest() const;
+    void setData(const GString& _data)          {m_data = _data;}
+    int getTotal() const                        {return m_total;}
+    const GString& getMethod() const            {return m_method;}
+    const GString& getUri() const               {return m_uri;}
+    const GString& getVersion() const           {return m_version;}
+    const GString& getContentType() const       {return m_contentType;}
+    const GString& getSecWebSocketKey() const   {return m_secWebSocketKey;}
+    const GString& getRequest() const           {return m_request;}
+    bool isWebsocket() const                    {return (!m_secWebSocketKey.isEmpty());}
 
 private:
     GString m_data;

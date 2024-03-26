@@ -10,12 +10,13 @@ public:
     GDispatcherHttp();
     ~GDispatcherHttp();
     void setDispatcher(const GDispatcher& _dispatcher);
-    const GString& getMethod() const;
-    const GString& getUri() const;
-    const GString& getVersion() const;
-    const GString& getContentType() const;
-    const GString& getSecWebSocketKey() const;
-    const GString& getRequest() const;
+
+    const GString& getMethod() const            {return m_method;}
+    const GString& getUri() const               {return m_uri;}
+    const GString& getVersion() const           {return m_version;}
+    const GString& getContentType() const       {return m_contentType;}
+    const GString& getSecWebSocketKey() const   {return m_secWebSocketKey;}
+    const GString& getRequest() const           {return m_request;}
 
 protected:
     GString m_method;

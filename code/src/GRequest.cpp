@@ -4,7 +4,6 @@
 //===============================================
 GRequest::GRequest()
 : GSocket()
-, m_type(eGRequestType::REQ_TYPE_UNKNOWN)
 , m_total(0) {
 
 }
@@ -13,13 +12,10 @@ GRequest::~GRequest() {
 
 }
 //===============================================
-void GRequest::setData(const GString& _data) {
-    m_data = _data;
-}
-//===============================================
 void GRequest::setRequest(const GRequest& _obj) {
-    m_type  = _obj.m_type;
-    m_http.setRequest(_obj.m_http);
+    m_type                  = _obj.m_type;
+    m_http.setRequest       (_obj.m_http);
+    m_websocket.setRequest  (_obj.m_websocket);
 }
 //===============================================
 bool GRequest::analyzeHeader() {
@@ -48,6 +44,17 @@ bool GRequest::analyzeHeader() {
         }
         m_total = m_http.getTotal();
     }
+    else if(m_type == eGRequestType::REQ_TYPE_HTTP_WEBSOCKET) {
+        m_websocket.setData(m_data);
+        if(!m_websocket.analyzeHeader()) {
+            slog(eGERR, "L'analyse de la requête WEBSOCKET a échoué."
+                        "|type=%d"
+                        "|size=%d"
+                        "|data=%s", m_type, m_data.size(), m_data.c_str());
+            return false;
+        }
+        m_total = m_websocket.getTotal();
+    }
     else {
         slog(eGERR, "La méthode de la requête est inconnue."
                     "|type=%d"
@@ -57,7 +64,8 @@ bool GRequest::analyzeHeader() {
         m_total = m_data.size();
         return false;
     }
-    return true;
+
+    return !m_logs.hasErrors();
 }
 //===============================================
 bool GRequest::analyzeRequest() {
@@ -73,6 +81,9 @@ bool GRequest::analyzeRequest() {
                         "|data=%s", m_type, m_data.size(), m_data.c_str());
             return false;
         }
+        if(m_http.isWebsocket()) {
+            m_type = eGRequestType::REQ_TYPE_HTTP_WEBSOCKET;
+        }
     }
     else if(m_data.startsWith("POST")) {
         m_type = eGRequestType::REQ_TYPE_HTTP_POST;
@@ -86,6 +97,16 @@ bool GRequest::analyzeRequest() {
             return false;
         }
     }
+    else if(m_type == eGRequestType::REQ_TYPE_HTTP_WEBSOCKET) {
+        m_websocket.setData(m_data);
+        if(!m_websocket.analyzeRequest()) {
+            slog(eGERR, "L'analyse de la requête WEBSOCKET a échoué."
+                        "|type=%d"
+                        "|size=%d", m_type, m_data.size());
+            return false;
+        }
+        setCommon(m_websocket);
+    }
     else {
         slog(eGERR, "La méthode de la requête est inconnue."
                     "|type=%d"
@@ -95,18 +116,7 @@ bool GRequest::analyzeRequest() {
         m_total = m_data.size();
         return false;
     }
-    return true;
-}
-//===============================================
-int GRequest::getTotal() const {
-    return m_total;
-}
-//===============================================
-const eGRequestType& GRequest::getType() const {
-    return m_type;
-}
-//===============================================
-const GRequestHttp& GRequest::getHttp() const {
-    return m_http;
+
+    return !m_logs.hasErrors();
 }
 //===============================================

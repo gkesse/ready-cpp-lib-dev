@@ -21,27 +21,3 @@ void GDispatcherHttp::setDispatcher(const GDispatcher& _dispatcher) {
     m_type = _dispatcher.getType();
 }
 //===============================================
-const GString& GDispatcherHttp::getMethod() const {
-    return m_method;
-}
-//===============================================
-const GString& GDispatcherHttp::getUri() const {
-    return m_uri;
-}
-//===============================================
-const GString& GDispatcherHttp::getVersion() const {
-    return m_version;
-}
-//===============================================
-const GString& GDispatcherHttp::getContentType() const {
-    return m_contentType;
-}
-//===============================================
-const GString& GDispatcherHttp::getSecWebSocketKey() const {
-    return m_secWebSocketKey;
-}
-//===============================================
-const GString& GDispatcherHttp::getRequest() const {
-    return m_request;
-}
-//===============================================

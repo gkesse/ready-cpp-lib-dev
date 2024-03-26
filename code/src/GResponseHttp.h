@@ -82,15 +82,16 @@ class GResponseHttp : public GResponse {
 public:
     GResponseHttp();
     ~GResponseHttp();
-    void setStatus(const eGResponseHttpStatus& _status);
-    void setContentType(const GString& _contentType);
-    void setContent(const GString& _content);
     void setResponseHttp(const GResponseHttp& _obj);
     void create();
     void createHttp();
     void createWebsocket();
     GString toReason(const eGResponseHttpStatus& _status) const;
-    const GString& toContent() const;
+
+    void setStatus(const eGResponseHttpStatus& _status)     {m_status = _status;}
+    void setContentType(const GString& _contentType)        {m_contentType = _contentType;}
+    void setContent(const GString& _content)                {m_content = _content;}
+    const GString& toContent() const                        {return m_content;}
 
 protected:
     eGResponseHttpStatus m_status;

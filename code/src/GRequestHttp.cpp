@@ -11,10 +11,6 @@ GRequestHttp::~GRequestHttp() {
 
 }
 //===============================================
-void GRequestHttp::setData(const GString& _data) {
-    m_data = _data;
-}
-//===============================================
 void GRequestHttp::setRequest(const GRequestHttp& _obj) {
     m_method            = _obj.m_method;
     m_uri               = _obj.m_uri;
@@ -22,10 +18,6 @@ void GRequestHttp::setRequest(const GRequestHttp& _obj) {
     m_contentType       = _obj.m_contentType;
     m_request           = _obj.m_request;
     m_secWebSocketKey   = _obj.m_secWebSocketKey;
-}
-//===============================================
-int GRequestHttp::getTotal() const {
-    return m_total;
 }
 //===============================================
 bool GRequestHttp::analyzeHeader() {
@@ -93,7 +85,7 @@ bool GRequestHttp::analyzeGet() {
                 "|version=%s"
                 "|connection=%s"
                 "|upgrade=%s"
-                "|sec_websocket_key=%s", m_method.c_str(), m_uri.c_str(), m_version.c_str()
+                "|secWebSocketKey=%s", m_method.c_str(), m_uri.c_str(), m_version.c_str()
                 , lConnection.c_str(), lUpgrade.c_str(), m_secWebSocketKey.c_str());
 
     return true;
@@ -149,32 +141,8 @@ bool GRequestHttp::analyzePost() {
                 "|method=%s"
                 "|uri=%s"
                 "|version=%s"
-                "|content_type=%s", m_method.c_str(), m_uri.c_str(), m_version.c_str(), m_contentType.c_str());
+                "|contentType=%s", m_method.c_str(), m_uri.c_str(), m_version.c_str(), m_contentType.c_str());
 
     return true;
-}
-//===============================================
-const GString& GRequestHttp::getMethod() const {
-    return m_method;
-}
-//===============================================
-const GString& GRequestHttp::getUri() const {
-    return m_uri;
-}
-//===============================================
-const GString& GRequestHttp::getVersion() const {
-    return m_version;
-}
-//===============================================
-const GString& GRequestHttp::getContentType() const {
-    return m_contentType;
-}
-//===============================================
-const GString& GRequestHttp::getSecWebSocketKey() const {
-    return m_secWebSocketKey;
-}
-//===============================================
-const GString& GRequestHttp::getRequest() const {
-    return m_request;
 }
 //===============================================

@@ -18,7 +18,7 @@ void GCallback::run() {
     else {
         slog(eGERR, "Le content-type est inconnu."
                     "|uri=%s"
-                    "|content_type=%s"
+                    "|contentTypeRequest=%s"
                     "|request=%s", m_uri.c_str(), m_contentTypeReq.c_str(), m_request.c_str());
         createUnknown();
     }

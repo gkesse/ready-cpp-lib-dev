@@ -1,17 +1,14 @@
 //===============================================
-#ifndef _GDispatcher_
-#define _GDispatcher_
+#ifndef _GPageWebsocket_
+#define _GPageWebsocket_
 //===============================================
-#include "GRequest.h"
+#include "GPage.h"
 //===============================================
-class GDispatcher : public GRequest {
+class GPageWebsocket : public GPage {
 public:
-    GDispatcher();
-    ~GDispatcher();
+    GPageWebsocket();
+    ~GPageWebsocket();
     void run();
-    void runHttpGet();
-    void runHttpPost();
-    void runWebsocket();
 };
 //===============================================
 #endif

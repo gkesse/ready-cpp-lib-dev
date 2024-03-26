@@ -104,7 +104,7 @@ bool GCarpoolEmail::insertEmail() {
     slog(eGINF, "Enregistrement des données."
                 "|id=%d"
                 "|email=%s"
-                "|is_newsletter=%d", m_id, m_email.c_str(), m_isNewsletter);
+                "|isNewsletter=%d", m_id, m_email.c_str(), m_isNewsletter);
 
     return !m_logs.hasErrors();
 }

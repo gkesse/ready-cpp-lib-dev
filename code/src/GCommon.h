@@ -6,16 +6,26 @@
 //===============================================
 class GSocket;
 //===============================================
+enum class eGRequestType {
+    REQ_TYPE_UNKNOWN
+    , REQ_TYPE_HTTP_GET
+    , REQ_TYPE_HTTP_POST
+    , REQ_TYPE_HTTP_WEBSOCKET
+};
+//===============================================
 class GCommon {
 public:
     GCommon();
     virtual ~GCommon();
     virtual void setCommon(const GCommon& _obj);
-    virtual void setDebug(const GDebug& _obj);
-    virtual void setSocket(const GSocket& _obj);
+
+    const eGRequestType& getType() const    {return m_type;}
 
 protected:
     GDebug slog;
+    eGRequestType m_type;
+    bool m_isContinue;
+    bool m_isClose;
 };
 //===============================================
 #endif

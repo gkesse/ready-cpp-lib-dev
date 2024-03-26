@@ -13,13 +13,15 @@ public:
     void runThread();
     virtual void createUnknown();
     bool sendData(const GString& _data);
-    GString readData() const;
-    const GString& getAddressIP() const;
-    int getPort() const;
-    pid_t getPid() const;
-    const GDebug& getDebug() const;
+    GString readData();
     void sendResponse();
+    void closeSocket();
+    void continueSocket();
     static void* onThread(void* _params);
+
+    const GString& getAddressIP() const     {return m_addressIP;}
+    int getPort() const                     {return m_port;}
+    pid_t getPid() const                    {return m_pid;}
 
 private:
     int m_socket;
@@ -29,7 +31,6 @@ private:
 
 protected:
     GString m_response;
-    bool m_isContinue;
 };
 //===============================================
 #endif

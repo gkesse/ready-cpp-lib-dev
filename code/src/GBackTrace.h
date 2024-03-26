@@ -4,20 +4,19 @@
 //===============================================
 #include "GObject.h"
 //===============================================
+struct sGBackTraceSignal {
+    int m_signo;
+    const char* m_name;
+    const char* m_desc;
+};
+//===============================================
 class GBackTrace : public GObject {
-public:
-    struct GSignal {
-        int m_signo;
-        const char* m_name;
-        const char* m_desc;
-    };
-
 public:
     GBackTrace();
     ~GBackTrace();
     void init();
     size_t convertToVMA(size_t addr);
-    GSignal getSignal(int _signo);
+    sGBackTraceSignal getSignal(int _signo);
     void print();
     void runSignal(int _signo);
     static void onSignal(int _signo);

@@ -86,18 +86,6 @@ GResponseHttp::~GResponseHttp() {
 
 }
 //===============================================
-void GResponseHttp::setStatus(const eGResponseHttpStatus& _status) {
-    m_status = _status;
-}
-//===============================================
-void GResponseHttp::setContentType(const GString& _contentType) {
-    m_contentType = _contentType;
-}
-//===============================================
-void GResponseHttp::setContent(const GString& _content) {
-    m_content = _content;
-}
-//===============================================
 void GResponseHttp::setResponseHttp(const GResponseHttp& _obj) {
     m_status            = _obj.m_status;
     m_content           = _obj.m_content;
@@ -122,10 +110,6 @@ GString GResponseHttp::toReason(const eGResponseHttpStatus& _status) const {
     return lStatus.name;
 }
 //===============================================
-const GString& GResponseHttp::toContent() const {
-    return m_content;
-}
-//===============================================
 void GResponseHttp::create() {
     if(!m_secWebSocketKey.isEmpty()) {
         createWebsocket();
@@ -140,7 +124,7 @@ void GResponseHttp::createHttp() {
 
     slog(eGINF, "Création de la réponse à envoyer au client."
                 "|status=%d"
-                "|content_type=%s"
+                "|contentType=%s"
                 "|continue=%d"
                 "|connection=%s", m_status, m_contentType.c_str(), m_isContinue, m_connection.c_str());
 
@@ -160,10 +144,10 @@ void GResponseHttp::createWebsocket() {
 
     slog(eGINF, "Création de la réponse à envoyer au client."
                 "|status=%d"
-                "|content_type=%s"
+                "|contentType=%s"
                 "|continue=%d"
                 "|connection=%s"
-                "|sec_websocket_key=%s", m_status, m_contentType.c_str(), m_isContinue
+                "|secWebSocketKey=%s", m_status, m_contentType.c_str(), m_isContinue
                 , m_connection.c_str(), m_secWebSocketKey.c_str());
 
     GString lSecWebSocketAccept = m_secWebSocketKey + WEBSOCKET_MAGGIC_NUMBER;

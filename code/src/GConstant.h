@@ -67,6 +67,13 @@ const int SOCKET_BUFFER_MAX                     = 1*1024*1024;
 // websocket
 //===============================================
 const char* const WEBSOCKET_MAGGIC_NUMBER       = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+const int WEBSOCKET_OPCODE_CONTINUE             = 0x0;
+const int WEBSOCKET_OPCODE_TEXT                 = 0x1;
+const int WEBSOCKET_OPCODE_BINARY               = 0x2;
+const int WEBSOCKET_OPCODE_CLOSE                = 0x8;
+const int WEBSOCKET_OPCODE_PING                 = 0x9;
+const int WEBSOCKET_OPCODE_PONG                 = 0xA;
+const int WEBSOCKET_FRAME_CLOSE                 = 1000;
 //===============================================
 #endif
 //===============================================

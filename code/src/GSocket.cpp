@@ -8,8 +8,7 @@ GSocket::GSocket()
 , m_socket(-1)
 , m_addressIP("0.0.0.0")
 , m_port(0)
-, m_pid(0)
-, m_isContinue(false) {
+, m_pid(0) {
 
 }
 //===============================================
@@ -18,8 +17,10 @@ GSocket::~GSocket() {
 }
 //===============================================
 void GSocket::setResponse(const GSocket& _obj) {
-    m_response = _obj.m_response;
-    m_isContinue = _obj.m_isContinue;
+    m_response      = _obj.m_response;
+    m_type          = _obj.m_type;
+    m_isContinue    = _obj.m_isContinue;
+    m_isClose       = _obj.m_isClose;
 }
 //===============================================
 void GSocket::runServer() {
@@ -125,17 +126,27 @@ void GSocket::runThread() {
     m_pid = gettid();
     slog.setSocket(*this);
 
-    slog(eGSTA, "Début du traitement de la requête du client.");
+    slog(eGSTA, "Début du traitement de la requête du client."
+                "|isContinue=%d"
+                "|type=%d", m_isContinue, m_type);
 
     GString lRequest = readData();
 
     if(!lRequest.isEmpty()) {
-        slog(eGINF, "Réception de la requête du client."
-                    "|size=%d"
-                    "|data=%s", lRequest.size(), lRequest.c_str());
+        if(m_type == eGRequestType::REQ_TYPE_HTTP_WEBSOCKET) {
+            slog(eGINF, "Réception de la requête du client."
+                        "|type=%d"
+                        "|size=%d", m_type, lRequest.size());
+        }
+        else {
+            slog(eGINF, "Réception de la requête du client."
+                        "|type=%d"
+                        "|size=%d"
+                        "|data=%s", m_type, lRequest.size(), lRequest.c_str());
+        }
 
         GRequest lReq;
-        lReq.setSocket(*this);
+        lReq.setCommon(*this);
         lReq.setData(lRequest);
 
         if(lReq.analyzeRequest()) {
@@ -184,7 +195,7 @@ bool GSocket::sendData(const GString& _data) {
     return true;
 }
 //===============================================
-GString GSocket::readData() const {
+GString GSocket::readData() {
     char lBuffer[SOCKET_BUFFER_SIZE + 1];
     GString lData;
     GRequest lReq;
@@ -214,6 +225,7 @@ GString GSocket::readData() const {
             lReq.setData(lData);
             lReq.setCommon(*this);
             if(!lReq.analyzeHeader()) return "";
+            setResponse(lReq);
             isData = true;
         }
         int lRemaing = 0;
@@ -231,38 +243,37 @@ GString GSocket::readData() const {
     return lData;
 }
 //===============================================
-const GString& GSocket::getAddressIP() const {
-    return m_addressIP;
-}
-//===============================================
-int GSocket::getPort() const {
-    return m_port;
-}
-//===============================================
-pid_t GSocket::getPid() const {
-    return m_pid;
-}
-//===============================================
-const GDebug& GSocket::getDebug() const {
-    return slog;
-}
-//===============================================
 void GSocket::sendResponse() {
     sendData(m_response);
     if(!m_isContinue) {
-        slog(eGINF, "Fermeture du point de connexion socket.");
-        close(m_socket);
+        closeSocket();
     }
+    else {
+        continueSocket();
+    }
+}
+//===============================================
+void GSocket::closeSocket() {
+    slog(eGINF, "Fermeture du point de connexion socket.");
+    close(m_socket);
+    delete this;
     slog(eGEND, "Fin du traitement de la requête du client.");
+}
+//===============================================
+void GSocket::continueSocket() {
+    pthread_t lThread;
+    int isThread = pthread_create(&lThread, 0, onThread, this);
+    if(isThread == -1) {
+        closeSocket();
+        slog(eGERR, "La création du thread de la connexion en continue a échoué."
+                    "|errno=%d"
+                    "|errmsg=%s", errno, strerror(errno));
+    }
 }
 //===============================================
 void* GSocket::onThread(void* _params) {
     GSocket* lClient = (GSocket*)_params;
     lClient->runThread();
-    if(!m_isContinue) {
-        slog(eGINF, "Suppression du point de connexion socket.");
-        delete lClient;
-    }
     return 0;
 }
 //===============================================

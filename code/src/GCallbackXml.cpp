@@ -22,7 +22,7 @@ void GCallbackXml::run() {
     else {
         slog(eGERR, "Le callback n'est pas géré."
                     "|uri=%s"
-                    "|content_type=%s"
+                    "|contentTypeRequest=%s"
                     "|request=%s", m_uri.c_str(), m_contentTypeReq.c_str(), m_request.c_str());
         createUnknown();
     }

@@ -187,7 +187,7 @@ bool GCarpoolUi::redirectTestPost() {
     slog(eGINF, "Les données du test post."
                 "|email=%s"
                 "|newletter=%s"
-                "|is_newsletter=%d", lEmail.c_str(), lNewletter.c_str(), isNewsletter);
+                "|isNewsletter=%d", lEmail.c_str(), lNewletter.c_str(), isNewsletter);
     return false;
 }
 //===============================================

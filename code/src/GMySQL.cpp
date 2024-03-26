@@ -90,9 +90,9 @@ bool GMySQL::openDatabase(std::shared_ptr<sql::Connection>& _conn) {
     }
     catch(sql::SQLException& e) {
         slog(eGERR, "Le connecteur mysql n'est pas initialisé."
-                    "|error_code=%d"
-                    "|error_state=%s"
-                    "|error_msg=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what());
+                    "|errorCode=%d"
+                    "|errorState=%s"
+                    "|errorMsg=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what());
         m_logs.addProblem();
         m_errorCode = e.getErrorCode();
         return false;
@@ -286,17 +286,17 @@ bool GMySQL::execQuery(const GString& _sql, ...) {
     catch (sql::SQLException& e) {
         if(e.getErrorCode() == MYSQL_ERROR_DUPLICATION) {
             slog(eGWAR, "La donnée existe déjà."
-                        "|error_code=%d"
-                        "|error_state=%s"
-                        "|error_msg=%s"
+                        "|errorCode=%d"
+                        "|errorState=%s"
+                        "|errorMsg=%s"
                         "|sql=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what(), _sql.c_str());
         }
         else {
             slog(eGERR, "L'exécution de la requête a échoué."
-                    "|error_code=%d"
-                    "|error_state=%s"
-                    "|error_msg=%s"
-                    "|sql=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what(), _sql.c_str());
+                        "|errorCode=%d"
+                        "|errorState=%s"
+                        "|errorMsg=%s"
+                        "|sql=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what(), _sql.c_str());
         }
         m_logs.addProblem();
         m_errorCode = e.getErrorCode();
@@ -703,9 +703,9 @@ GString GMySQL::readData(const GString& _sql, ...) {
     }
     catch (sql::SQLException &e) {
         slog(eGERR, "L'exécution de la requête a échoué."
-                "|error_code=%d"
-                "|error_state=%s"
-                "|error_msg=%s"
+                "|errorCode=%d"
+                "|errorState=%s"
+                "|errorMsg=%s"
                 "|sql=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what(), _sql.c_str());
         m_logs.addProblem();
         m_errorCode = e.getErrorCode();
@@ -908,9 +908,9 @@ GMySQLRow GMySQL::readCol(const GString& _sql, ...) {
     }
     catch (sql::SQLException &e) {
         slog(eGERR, "L'exécution de la requête a échoué."
-                "|error_code=%d"
-                "|error_state=%s"
-                "|error_msg=%s"
+                "|errorCode=%d"
+                "|errorState=%s"
+                "|errorMsg=%s"
                 "|sql=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what(), _sql.c_str());
         m_logs.addProblem();
         m_errorCode = e.getErrorCode();
@@ -1112,9 +1112,9 @@ GMySQLRow GMySQL::readRow(const GString& _sql, ...) {
     }
     catch (sql::SQLException &e) {
         slog(eGERR, "L'exécution de la requête a échoué."
-                "|error_code=%d"
-                "|error_state=%s"
-                "|error_msg=%s"
+                "|errorCode=%d"
+                "|errorState=%s"
+                "|errorMsg=%s"
                 "|sql=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what(), _sql.c_str());
         m_logs.addProblem();
         m_errorCode = e.getErrorCode();
@@ -1319,9 +1319,9 @@ GMySQLMap GMySQL::readMap(const GString& _sql, ...) {
     }
     catch (sql::SQLException &e) {
         slog(eGERR, "L'exécution de la requête a échoué."
-                "|error_code=%d"
-                "|error_state=%s"
-                "|error_msg=%s"
+                "|errorCode=%d"
+                "|errorState=%s"
+                "|errorMsg=%s"
                 "|sql=%s", e.getErrorCode(), e.getSQLStateCStr(), e.what(), _sql.c_str());
         m_logs.addProblem();
         m_errorCode = e.getErrorCode();
