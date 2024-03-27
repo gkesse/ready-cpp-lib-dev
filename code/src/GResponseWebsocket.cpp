@@ -80,8 +80,8 @@ void GResponseWebsocket::createResponse() {
     }
     else {
         slog(eGERR, "La taille maximale des données est atteinte."
-                "|payloadLength=%d"
-                "|size=%d", m_payloadLength, lSize);
+                    "|payloadLength=%d"
+                    "|size=%d", m_payloadLength, lSize);
         m_logs.addProblem();
     }
 

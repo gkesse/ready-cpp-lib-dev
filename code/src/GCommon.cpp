@@ -5,7 +5,8 @@
 GCommon::GCommon()
 : m_type(eGRequestType::REQ_TYPE_UNKNOWN)
 , m_isContinue(false)
-, m_isClose(false) {
+, m_isClose(false)
+, m_client(0) {
 
 }
 //===============================================
@@ -18,5 +19,6 @@ void GCommon::setCommon(const GCommon& _obj) {
     m_type          = _obj.m_type;
     m_isContinue    = _obj.m_isContinue;
     m_isClose       = _obj.m_isClose;
+    m_client        = _obj.m_client;
 }
 //===============================================

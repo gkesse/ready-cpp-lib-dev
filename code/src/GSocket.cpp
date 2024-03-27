@@ -8,7 +8,9 @@ GSocket::GSocket()
 , m_socket(-1)
 , m_addressIP("0.0.0.0")
 , m_port(0)
-, m_pid(0) {
+, m_pid(0)
+, m_server(0)
+, m_isServer(false) {
 
 }
 //===============================================
@@ -24,6 +26,7 @@ void GSocket::setResponse(const GSocket& _obj) {
 }
 //===============================================
 void GSocket::runServer() {
+    m_isServer = true;
     m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if(m_socket == -1) {
         slog(eGERR, "La création du socket a échoué."
@@ -88,6 +91,7 @@ void GSocket::runServer() {
 
     while(1) {
         GSocket* lClient = new GSocket;
+        lClient->m_server = this;
 
         lClient->m_socket = accept(m_socket, (struct sockaddr*)&lAddressOut, &lSize);
         if(lClient->m_socket == -1) {
@@ -125,6 +129,7 @@ void GSocket::runThread() {
     if(m_socket == -1) return;
     m_pid = gettid();
     slog.setSocket(*this);
+    m_client = this;
 
     slog(eGSTA, "Début du traitement de la requête du client."
                 "|isContinue=%d"
@@ -253,16 +258,20 @@ void GSocket::sendResponse() {
     }
 }
 //===============================================
+void GSocket::writeResponse() {
+    sendData(m_response);
+}
+//===============================================
 void GSocket::closeSocket() {
     slog(eGINF, "Fermeture du point de connexion socket.");
     close(m_socket);
-    delete this;
     slog(eGEND, "Fin du traitement de la requête du client.");
+    delete this;
 }
 //===============================================
 void GSocket::continueSocket() {
     pthread_t lThread;
-    int isThread = pthread_create(&lThread, 0, onThread, this);
+    int isThread = pthread_create(&lThread, 0, onThreadCB, this);
     if(isThread == -1) {
         closeSocket();
         slog(eGERR, "La création du thread de la connexion en continue a échoué."
@@ -271,9 +280,42 @@ void GSocket::continueSocket() {
     }
 }
 //===============================================
+bool GSocket::addClient(const GString& _name) {
+    if(m_isServer) return false;
+    if(m_server->m_clients.count(_name))return false;
+    m_server->m_clients[_name] = this;
+    return true;
+}
+//===============================================
+void GSocket::printClients() const {
+    if(m_isServer) return;
+    GSocketClients::iterator it = m_server->m_clients.begin();
+    for(; it != m_server->m_clients.end(); it++) {
+        slog(eGINF, "Les points de connexion socket client connectés."
+                    "|name=%s"
+                    "|client=%p", it->first.c_str(), it->second);
+    }
+}
+//===============================================
+GSocket* GSocket::getClient(const GString& _name) const {
+    if(m_isServer) return 0;
+    if(m_server->m_clients.count(_name)) {
+        return m_server->m_clients.at(_name);
+    }
+    return 0;
+}
+//===============================================
 void* GSocket::onThread(void* _params) {
     GSocket* lClient = (GSocket*)_params;
     lClient->runThread();
+    return 0;
+}
+//===============================================
+void* GSocket::onThreadCB(void* _params) {
+    GSocket* lClient = (GSocket*)_params;
+    while(lClient->m_isContinue) {
+        lClient->runThread();
+    }
     return 0;
 }
 //===============================================

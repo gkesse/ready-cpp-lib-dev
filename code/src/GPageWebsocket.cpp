@@ -19,6 +19,7 @@ void GPageWebsocket::run() {
                 "|secWebSocketKey=%s", m_uri.c_str(), m_isContinue, m_type, m_secWebSocketKey.c_str());
     if(!m_isContinue) {
         m_isContinue = true;
+        m_client->addClient("mon_client");
         createResponse();
     }
     else if(m_isClose) {

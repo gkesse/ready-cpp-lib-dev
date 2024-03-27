@@ -27,6 +27,7 @@ protected:
     eGRequestType m_type;
     bool m_isContinue;
     bool m_isClose;
+    GSocket* m_client;
 };
 //===============================================
 #endif

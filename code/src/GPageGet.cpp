@@ -3,6 +3,7 @@
 #include "GResourceUi.h"
 #include "GCarpoolUi.h"
 #include "GChatUi.h"
+#include "GResponseWebsocket.h"
 //===============================================
 GPageGet::GPageGet()
 : GPage() {
@@ -16,6 +17,17 @@ GPageGet::~GPageGet() {
 void GPageGet::run() {
     slog(eGINF, "Traitement de la requête HTTP GET."
                 "|uri=%s", m_uri.c_str());
+
+    m_client->printClients();
+    GSocket* lClient = m_client->getClient("mon_client");
+    if(lClient) {
+        GResponseWebsocket lObj;
+        lObj.setCommon(*lClient);
+        lObj.setData("Bonjour tout le monde.");
+        lObj.createResponse();
+        lClient->setResponse(lObj);
+        lClient->writeResponse();
+    }
 
     if(!loadResource()) {
         if(m_uri.startsWith("/carpool")) {
