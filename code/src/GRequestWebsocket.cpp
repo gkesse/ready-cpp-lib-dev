@@ -100,7 +100,7 @@ bool GRequestWebsocket::analyzeHeader() {
     }
 
     iMask = 0;
-    slog(eGINF, "Les données de la trame WEBSOCKET."
+    slog(eGINF, "Analyse de la requête WEBSOCKET."
                 "|isFin=%d"
                 "|rsv=%d"
                 "|opcode=%d"
@@ -143,7 +143,7 @@ bool GRequestWebsocket::analyzeRequest() {
     }
 
     if(lOpcode == WEBSOCKET_OPCODE_CLOSE) {
-        m_isClose = false;
+        m_isClose = true;
     }
 
     if(lRsv) {

@@ -21,11 +21,17 @@ void GPageWebsocket::run() {
         m_isContinue = true;
         createResponse();
     }
+    else if(m_isClose) {
+        GResponseWebsocket lObj;
+        lObj.setCommon(*this);
+        lObj.createClose();
+        setResponse(lObj);
+    }
     else {
         GResponseWebsocket lObj;
         lObj.setCommon(*this);
         lObj.setData("Bonjour tout le monde.");
-        lObj.create();
+        lObj.createResponse();
         setResponse(lObj);
     }
 }

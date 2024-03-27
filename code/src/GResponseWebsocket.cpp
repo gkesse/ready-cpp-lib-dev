@@ -15,10 +15,10 @@ GResponseWebsocket::~GResponseWebsocket() {
 
 }
 //===============================================
-void GResponseWebsocket::create() {
+void GResponseWebsocket::createResponse() {
     int lSize = m_data.size();
     int lLength = getLength();
-    char* lData = new char[lLength];
+    char lData[lLength];
     char lMasks[4];
     ulong lByte;
     ulong lChar;
@@ -33,6 +33,10 @@ void GResponseWebsocket::create() {
     lChar = m_opcode;
     lByte |= (lChar << 0);
     lData[lPos++] = lByte;
+
+    if(m_opcode == WEBSOCKET_OPCODE_CLOSE) {
+        m_isContinue = false;
+    }
 
     // 1B : MASK-LENGTH1-LENGTH2-LENGTH3-LENGTH4-LENGTH5-LENGTH6-LENGTH7
     lByte = 0;
@@ -103,6 +107,20 @@ void GResponseWebsocket::create() {
     }
 
     m_response = GString(lData, lPos);
+}
+//===============================================
+void GResponseWebsocket::createClose() {
+    char lBuffer[2];
+    uint lByte = WEBSOCKET_FRAME_CLOSE;
+    lBuffer[0] = ((lByte & 0xFF00) >> 8);
+    lBuffer[1] = ((lByte & 0x00FF) >> 0);
+    GString lData(lBuffer, 2);
+    GResponseWebsocket lObj;
+    lObj.setCommon(*this);
+    lObj.setOpcode(WEBSOCKET_OPCODE_CLOSE);
+    lObj.setData(lData);
+    lObj.createResponse();
+    setResponse(lObj);
 }
 //===============================================
 int GResponseWebsocket::getLength() {

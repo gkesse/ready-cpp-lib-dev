@@ -8,7 +8,8 @@ class GResponseWebsocket : public GResponse {
 public:
     GResponseWebsocket();
     ~GResponseWebsocket();
-    void create();
+    void createResponse();
+    void createClose();
     int getLength();
 
     void setIsFin(bool _isFin)          {m_isFin = _isFin;}

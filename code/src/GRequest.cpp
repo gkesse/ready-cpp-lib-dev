@@ -105,7 +105,7 @@ bool GRequest::analyzeRequest() {
                         "|size=%d", m_type, m_data.size());
             return false;
         }
-        setCommon(m_websocket);
+        m_isClose = m_websocket.isClose();
     }
     else {
         slog(eGERR, "La méthode de la requête est inconnue."

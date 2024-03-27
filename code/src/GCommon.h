@@ -20,6 +20,7 @@ public:
     virtual void setCommon(const GCommon& _obj);
 
     const eGRequestType& getType() const    {return m_type;}
+    bool isClose() const                    {return m_isClose;}
 
 protected:
     GDebug slog;
